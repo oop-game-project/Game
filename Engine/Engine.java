@@ -1,4 +1,4 @@
-public class Engine
+class Engine
 {
     public class GeometryVector
     {
@@ -6,7 +6,7 @@ public class Engine
         private int Y;
         private int Z;
 
-        public GeometryVector(int inputX, int inputY, int inputZ)
+        GeometryVector(int inputX, int inputY, int inputZ)
         {
             this.X = inputX;
             this.Y = inputY;
@@ -15,11 +15,11 @@ public class Engine
 
         public int[] getCoordinates() { return new int[] { this.X, this.Y, this.Z }; }
 
-        public int getX() { return this.X; }
+        int getX() { return this.X; }
 
-        public int getY() { return this.Y; }
+        int getY() { return this.Y; }
 
-        public int getZ() { return this.Z; }
+        int getZ() { return this.Z; }
 
     }
 }
