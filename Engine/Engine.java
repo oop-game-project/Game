@@ -21,6 +21,4 @@ class Engine
 
         int getZ() { return this.Z; }
     }
-
-    
 }
