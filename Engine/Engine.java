@@ -1,6 +1,6 @@
 class Engine
 {
-    public class GeometryVector
+    class GeometryVector
     {
         private int X;
         private int Y;
@@ -13,13 +13,12 @@ class Engine
             this.Z = inputZ;
         }
 
-        public int[] getCoordinates() { return new int[] { this.X, this.Y, this.Z }; }
+        int[] getCoordinates() { return new int[] { this.X, this.Y, this.Z }; }
 
         int getX() { return this.X; }
 
         int getY() { return this.Y; }
 
         int getZ() { return this.Z; }
-
     }
 }
