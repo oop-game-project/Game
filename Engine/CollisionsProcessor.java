@@ -3,7 +3,7 @@ package Game.Engine;
 
 public class CollisionsProcessor
 {
-    public CollisionsProcessor(GameObjects.GameFieldObject gameField)
+    public CollisionsProcessor(GameObjects.GameField gameField)
     {
         int[] size = gameField.getGameFieldSize();
         sizeX = size[0];
