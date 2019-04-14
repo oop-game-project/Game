@@ -1,7 +1,16 @@
 package Game.Engine;
 
 
-public class CollisionsProcessor
+enum Event
+{
+    OUT_TERRITORY,
+    KILLED,
+    DISAPPEARED,
+    OK
+}
+
+
+class CollisionsProcessor
 {
     public CollisionsProcessor(GameObjects.GameField gameField)
     {
@@ -16,14 +25,7 @@ public class CollisionsProcessor
     private int sizeZ;
     private int border;
 
-    private enum Event
-    {
-        OUT_TERRITORY,
-        KILLED,
-        DISAPPEARED,
-        OK
-    }
-    private class Collision<T>
+    class Collision<T>
     {
         private T gameObject;
         private Event event;
