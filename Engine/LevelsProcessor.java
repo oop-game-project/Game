@@ -1,7 +1,9 @@
 package Game.Engine;
 
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 class LevelsProcessor
 {
@@ -14,7 +16,7 @@ class LevelsProcessor
         SinglePlayerLevel(
                 @NotNull GameObjects.GameField inputGameField,
                 @NotNull GameObjects.Player inputPlayerOne,
-                GameObjects.GameObject[] inputGameObjects)
+                @Nullable GameObjects.GameObject[] inputGameObjects)
         {
             this.gameField = inputGameField;
             this.playerOne = inputPlayerOne;

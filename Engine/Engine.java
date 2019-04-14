@@ -5,18 +5,12 @@ import org.jetbrains.annotations.NotNull;
 
 class Engine
 {
-    private GameObjects gameObjects;
-    private GameObjects.GameField gameField;
-    private GameObjects.Player playerOne;
+    private LevelsProcessor.SinglePlayerLevel currentLevel;
 
     // TODO : constructor with "String levelFileName"
-    public Engine(
-            @NotNull GameObjects.GameField inputGameField,
-            @NotNull GameObjects.Player inputPlayerOne)
+    public Engine(LevelsProcessor.SinglePlayerLevel inputLevel)
     {
-        this.gameObjects = new GameObjects();
-        this.gameField = gameObjects.new GameField(inputGameField);
-        this.playerOne = gameObjects.new Player(inputPlayerOne);
+        this.currentLevel = inputLevel;
     }
 
     class GeometryVector
