@@ -5,12 +5,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class GameObjects
 {
-    private GameFieldObject gameField;
+    private GameField gameField;
     private Player playerOne;
 
-    public GameObjects(@NotNull GameFieldObject inputGameField, @NotNull Player inputPlayerOne)
+    public GameObjects(@NotNull GameField inputGameField, @NotNull Player inputPlayerOne)
     {
-        this.gameField = new GameFieldObject(inputGameField);
+        this.gameField = new GameField(inputGameField);
         this.playerOne = new Player(inputPlayerOne);
     }
 
@@ -20,13 +20,13 @@ public class GameObjects
         GameObject() { }
     }
 
-    public class GameFieldObject extends GameObject
+    class GameField extends GameObject
     {
         private int sizeX;
         private int sizeY;
         private int sizeZ;
 
-        GameFieldObject(int inputSizeX, int inputSizeY, int inputSizeZ)
+        GameField(int inputSizeX, int inputSizeY, int inputSizeZ)
         {
             assert inputSizeX > 0;
             assert inputSizeY > 0;
@@ -37,7 +37,7 @@ public class GameObjects
             this.sizeZ = inputSizeZ;
         }
 
-        GameFieldObject(@NotNull GameFieldObject inputGameField)
+        GameField(@NotNull GameField inputGameField)
         {
             int[] inputGameFieldSize = inputGameField.getGameFieldSize();
 
@@ -132,7 +132,7 @@ public class GameObjects
         return this.playerOne;
     }
 
-    public GameFieldObject getGameField()
+    public GameField getGameField()
     {
         return this.gameField;
     }
