@@ -3,18 +3,8 @@ package Game.Engine;
 
 import org.jetbrains.annotations.NotNull;
 
-public class GameObjects
+class GameObjects
 {
-    private GameField gameField;
-    private Player playerOne;
-
-    public GameObjects(@NotNull GameField inputGameField, @NotNull Player inputPlayerOne)
-    {
-        this.gameField = new GameField(inputGameField);
-        this.playerOne = new Player(inputPlayerOne);
-    }
-
-
     abstract class GameObject
     {
         GameObject() { }
@@ -114,7 +104,7 @@ public class GameObjects
 //        }
 //    }
 
-    public class Player extends MovableObject
+    class Player extends MovableObject
     {
         Player(int inputLocationX, int inputLocationY, int inputLocationZ)
         {
@@ -125,15 +115,5 @@ public class GameObjects
         {
             super(inputPlayer.getCurrentLocation());
         }
-    }
-
-    public Player getPlayerOne()
-    {
-        return this.playerOne;
-    }
-
-    public GameField getGameField()
-    {
-        return this.gameField;
     }
 }
