@@ -9,6 +9,7 @@ class Engine
     private GameObjects.GameField gameField;
     private GameObjects.Player playerOne;
 
+    // TODO : constructor with "String levelFileName"
     public Engine(
             @NotNull GameObjects.GameField inputGameField,
             @NotNull GameObjects.Player inputPlayerOne)
