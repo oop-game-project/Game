@@ -3,8 +3,7 @@ package Game.Engine;
 
 public class CollisionsProcessor
 {
-    private static CollisionsProcessor instance;
-    private CollisionsProcessor(GameObjects.GameFieldObject gameField)
+    public CollisionsProcessor(GameObjects.GameFieldObject gameField)
     {
         int[] size = gameField.getGameFieldSize();
         sizeX = size[0];
@@ -16,12 +15,6 @@ public class CollisionsProcessor
     private int sizeY;
     private int sizeZ;
     private int border;
-    public static CollisionsProcessor getInstance(GameObjects.GameFieldObject gameField)
-    {
-        if (instance == null)
-            instance = new CollisionsProcessor(gameField);
-        return instance;
-    }
 
     private enum Event
     {
