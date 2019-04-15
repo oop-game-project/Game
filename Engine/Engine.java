@@ -1,9 +1,10 @@
 package Game.Engine;
 
 
+import Game.GUI;
 import org.jetbrains.annotations.NotNull;
 
-class Engine
+public class Engine
 {
     private LevelsProcessor.SinglePlayerLevel currentLevel;
 
@@ -33,5 +34,14 @@ class Engine
         int getY() { return this.Y; }
 
         int getZ() { return this.Z; }
+    }
+
+    public void runGameLoop()
+    {
+        GUI gui = new GUI();
+
+        gui.init();
+        gui.loop();
+        gui.dispose();
     }
 }
