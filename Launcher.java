@@ -6,13 +6,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import Game.Engine.Engine;
+import Game.Engine.LevelsProcessor;
+import Game.Engine.GameObjects;
 
 public class Launcher extends JFrame
 {
 
     private class Records extends JFrame
     {
-        public Records()
+        Records()
         {
             super("Рекорды");
             setLayout(new GridLayout(10, 1));
@@ -34,7 +37,7 @@ public class Launcher extends JFrame
         }
     }
 
-    public Launcher()
+    Launcher()
     {
         super("Старт");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -56,9 +59,7 @@ public class Launcher extends JFrame
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
-                        //TODO
-                        //Launcher.this.setVisible(false);
-                        System.out.print("Запускаемся");
+                        startGame();
                     }
                 }
         );
@@ -67,9 +68,7 @@ public class Launcher extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                //TODO
-                //Launcher.this.setVisible(false);
-                System.out.print("Продолжаемся");
+                continueGame();
             }
         });
         JButton records = new JButton(new AbstractAction("Рекорды")
@@ -97,6 +96,20 @@ public class Launcher extends JFrame
         Launcher.this.add(records);
         Launcher.this.add(exitGame);
 
+    }
+
+    private void startGame()
+    {
+        LevelsProcessor levelsProcessor = new LevelsProcessor();
+        LevelsProcessor.SinglePlayerLevel singlePlayerLevel = levelsProcessor.getSinglePlayerLevel();
+        Engine engine = new Engine(singlePlayerLevel);
+        setVisible(false);
+        engine.runGameLoop();
+        setVisible(true);
+    }
+    private void continueGame()
+    {
+        //TODO
     }
 
     public static void main(String[] args)

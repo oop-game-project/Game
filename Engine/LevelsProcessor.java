@@ -1,41 +1,39 @@
 package Game.Engine;
 
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-class LevelsProcessor
+public class LevelsProcessor
 {
-    class SinglePlayerLevel
+    public class SinglePlayerLevel
     {
         private GameObjects.GameField gameField;
         private GameObjects.Player playerOne;
-        private GameObjects.GameObject[] gameObjects;
+        private GameObjects.MovableObject[] mobs;
 
-        SinglePlayerLevel(
-                @NotNull GameObjects.GameField inputGameField,
-                @NotNull GameObjects.Player inputPlayerOne,
-                @Nullable GameObjects.GameObject[] inputGameObjects)
+        SinglePlayerLevel()
         {
-            this.gameField = inputGameField;
-            this.playerOne = inputPlayerOne;
-            this.gameObjects = inputGameObjects;
+            GameObjects gameObjects = new GameObjects();
+            gameField = gameObjects.new GameField(700, 700, 0);
+            playerOne = gameObjects.new Player(175, 350, 0);
+            mobs = new GameObjects.MovableObject[3];
+            mobs[0] = gameObjects.new SphereMob(420, 175, 0, 50);
+            mobs[1] = gameObjects.new SphereMob(350, 250, 0, 50);
+            mobs[2] = gameObjects.new SphereMob(420, 420, 0, 50);
+
         }
 
-        GameObjects.GameField getGameField()
+        private void parseLevelFile()
         {
-            return this.gameField;
+            //TODO parse level in file
         }
 
-        GameObjects.Player getPlayerOne()
-        {
-            return this.playerOne;
-        }
+        public GameObjects.GameField getGameField() { return gameField; }
 
-        GameObjects.GameObject[] getGameObjects()
-        {
-            return this.gameObjects;
-        }
+        public GameObjects.Player getPlayerOne() { return playerOne; }
+
+        public GameObjects.MovableObject[] getMobs() { return mobs; }
+    }
+    public SinglePlayerLevel getSinglePlayerLevel()
+    {
+        return new SinglePlayerLevel();
     }
 }

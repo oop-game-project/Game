@@ -3,20 +3,20 @@ package Game.Engine;
 
 import org.jetbrains.annotations.NotNull;
 
-class GameObjects
+public class GameObjects
 {
     abstract class GameObject
     {
         GameObject() { }
     }
 
-    class GameField extends GameObject
+    public class GameField extends GameObject
     {
         private int sizeX;
         private int sizeY;
         private int sizeZ;
 
-        GameField(int inputSizeX, int inputSizeY, int inputSizeZ)
+        public GameField(int inputSizeX, int inputSizeY, int inputSizeZ)
         {
             assert inputSizeX > 0;
             assert inputSizeY > 0;
@@ -42,13 +42,13 @@ class GameObjects
         }
     }
 
-    public abstract class MovableObject
+    public class MovableObject
     {
         private int currentLocationX;
         private int currentLocationY;
         private int currentLocationZ;
 
-        MovableObject(int inputLocationX, int inputLocationY, int inputLocationZ)
+        public MovableObject(int inputLocationX, int inputLocationY, int inputLocationZ)
         {
             this.currentLocationX = inputLocationX;
             this.currentLocationY = inputLocationY;
@@ -104,9 +104,9 @@ class GameObjects
 //        }
 //    }
 
-    class Player extends MovableObject
+    public class Player extends MovableObject
     {
-        Player(int inputLocationX, int inputLocationY, int inputLocationZ)
+        public Player(int inputLocationX, int inputLocationY, int inputLocationZ)
         {
             super(inputLocationX, inputLocationY, inputLocationZ);
         }
@@ -115,5 +115,16 @@ class GameObjects
         {
             super(inputPlayer.getCurrentLocation());
         }
+    }
+
+    public class SphereMob extends MovableObject
+    {
+        private int radius;
+        public SphereMob(int inputLocationX, int inputLocationY, int inputLocationZ, int radius)
+        {
+            super(inputLocationX, inputLocationY, inputLocationZ);
+            this.radius = radius;
+        }
+        public int getRadius() { return radius; }
     }
 }

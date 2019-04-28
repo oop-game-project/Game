@@ -10,7 +10,7 @@ enum Event
 }
 
 
-class CollisionsProcessor
+public class CollisionsProcessor
 {
     public CollisionsProcessor(GameObjects.GameField gameField)
     {
@@ -25,7 +25,7 @@ class CollisionsProcessor
     private int sizeZ;
     private int border;
 
-    class Collision<T>
+    public class Collision<T>
     {
         private T gameObject;
         private Event event;
@@ -38,17 +38,17 @@ class CollisionsProcessor
         public Event getEvent() {return event;}
     }
 
-    public Collision getCollision(Engine.GeometryVector vector, GameObjects.Player player)
+    public Collision getCollision(Engine.GeometryVector vector, GameObjects.MovableObject object)
     {
-        int[] location = player.getCurrentLocation();
-        int playerX = location[0];
-        int playerY = location[1];
-        int playerZ = location[2];
-        if (isOutTerritory(vector.getX(), playerX, sizeX) ||
-                isOutTerritory(vector.getY(), playerY, sizeY) ||
-                isOutTerritory(vector.getZ(), playerZ, sizeZ))
-            return new Collision<>(player, Event.OUT_TERRITORY);
-        return new Collision<>(player, Event.OK);
+        int[] location = object.getCurrentLocation();
+        int objectX = location[0];
+        int objectY = location[1];
+        int objectZ = location[2];
+        if (isOutTerritory(vector.getX(), objectX, sizeX) ||
+                isOutTerritory(vector.getY(), objectY, sizeY))
+//                isOutTerritory(vector.getZ(), objectZ, sizeZ))
+            return new Collision<>(object, Event.OUT_TERRITORY);
+        return new Collision<>(object, Event.OK);
     }
 
     private boolean isOutTerritory(int vectorCoordinate, int playerCoordinate, int size)
@@ -56,4 +56,6 @@ class CollisionsProcessor
         return ((vectorCoordinate >= 0) && (playerCoordinate + border >= size)) ||
                 ((vectorCoordinate <= 0) && (playerCoordinate - border <= 0));
     }
+
+
 }
