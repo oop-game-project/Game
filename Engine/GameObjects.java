@@ -1,6 +1,5 @@
 package Game.Engine;
 
-
 import org.jetbrains.annotations.NotNull;
 
 public class GameObjects
@@ -36,7 +35,7 @@ public class GameObjects
             this.sizeZ = inputGameFieldSize[2];
         }
 
-        int[] getGameFieldSize()
+        public int[] getGameFieldSize()
         {
             return new int[] { this.sizeX, this.sizeY, this.sizeZ };
         }
@@ -64,7 +63,7 @@ public class GameObjects
             this.currentLocationZ = inputLocation[2];
         }
 
-        int[] getCurrentLocation()
+        public int[] getCurrentLocation()
         {
             return new int[] {
                     this.currentLocationX,
