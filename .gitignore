@@ -1,7 +1,3 @@
-.idea/*
-
-Compiled/
-
 # Compiled class file
 *.class
 
@@ -24,3 +20,7 @@ Compiled/
 *.rar
            
 Debug.java
+
+.idea/*
+Compiled/
+

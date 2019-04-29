@@ -48,7 +48,7 @@ public class GameObjects
         private int currentLocationY;
         private int currentLocationZ;
 
-        public MovableObject(int inputLocationX, int inputLocationY, int inputLocationZ)
+        MovableObject(int inputLocationX, int inputLocationY, int inputLocationZ)
         {
             this.currentLocationX = inputLocationX;
             this.currentLocationY = inputLocationY;
@@ -87,22 +87,30 @@ public class GameObjects
         }
     }
 
-//    public class Creature extends MovableObject
+//    public class MortalCreature extends MovableObject
 //    {
 //        int hitPointsMax;
 //        int hitPointsCurrent;
 //
-//        public Creature(Integer[] inputLocation, int inputHitPointsMax, int inputHitPointsCurrent)
+//        public MortalCreature(
+//                @NotNull int[] inputLocation,
+//                int inputHitPointsMax,
+//                int inputHitPointsCurrent)
 //        {
 //            super(inputLocation);
 //
 //            assert inputHitPointsMax > 0;
-//            assert inputHitPointsCurrent > 0;
+//            assert 0 < inputHitPointsCurrent && inputHitPointsCurrent <= inputHitPointsMax;
 //
 //            this.hitPointsMax = inputHitPointsMax;
 //            this.hitPointsCurrent = inputHitPointsCurrent;
 //        }
 //    }
+//    publc class MobObject { }
+//
+//    public class PlayerProjectile { }
+//
+//    public class MobProjectile { }
 
     public class Player extends MovableObject
     {
@@ -120,11 +128,13 @@ public class GameObjects
     public class SphereMob extends MovableObject
     {
         private int radius;
+
         public SphereMob(int inputLocationX, int inputLocationY, int inputLocationZ, int radius)
         {
             super(inputLocationX, inputLocationY, inputLocationZ);
             this.radius = radius;
         }
+
         public int getRadius() { return radius; }
     }
 }

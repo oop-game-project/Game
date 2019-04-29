@@ -1,6 +1,5 @@
 package Game.Engine;
 
-
 public class LevelsProcessor
 {
     public class SinglePlayerLevel

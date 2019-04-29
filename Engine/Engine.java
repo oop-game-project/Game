@@ -1,7 +1,8 @@
 package Game.Engine;
 
 
-import Game.GUI;
+import Game.GUI.GUI_2D;
+import Game.GUI.GUI;
 import org.jetbrains.annotations.NotNull;
 
 public class Engine
@@ -38,10 +39,12 @@ public class Engine
 
     public void runGameLoop()
     {
-        GUI gui = new GUI();
+        GUI gui = new GUI_2D();  //
 
         gui.init();
-        gui.loop();
+
+
+
         gui.dispose();
     }
 }

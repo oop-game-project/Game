@@ -1,4 +1,4 @@
-package Game;
+package Game.GUI;
 
 
 import org.lwjgl.*;
@@ -14,7 +14,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.opengl.GL32.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
-public class GUI {
+public class GUI_3D {
 
     // The window handle
     private long window;
