@@ -4,10 +4,17 @@ import Game.GUI.GUI_2D;
 import Game.GUI.GUI;
 import Game.Engine.LevelsProcessor.SinglePlayerLevel;
 
-import org.jetbrains.annotations.NotNull;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.concurrent.locks.ReentrantLock;
 
-public class Engine {
+//import java.awt.event.
+
+public class Engine implements KeyListener
+{
     private SinglePlayerLevel currentLevel;
+    private GeometryVector inputMove;
+    private final ReentrantLock inputMoveLock = new ReentrantLock();
 
     // TODO : constructor with "String levelFileName"
     public Engine(SinglePlayerLevel inputLevel) {
@@ -42,12 +49,72 @@ public class Engine {
         }
     }
 
-    public void runGameLoop() {
+    @Override
+    public void keyTyped(KeyEvent e) { }
+
+    @Override
+    public void keyPressed(KeyEvent e)
+    {
+        try
+        {
+            inputMoveLock.lock();
+
+            switch (e.getKeyCode())
+            {
+                case KeyEvent.VK_RIGHT:
+                {
+                    inputMove = new GeometryVector(1, 0, 0);
+                    break;
+                }
+
+                case KeyEvent.VK_DOWN:
+                {
+                    inputMove = new GeometryVector(0, 1, 0);
+                    break;
+                }
+
+                case KeyEvent.VK_LEFT:
+                {
+                    inputMove = new GeometryVector(-1, 0, 0);
+                    break;
+                }
+
+                case KeyEvent.VK_UP:
+                {
+                    inputMove = new GeometryVector(0, -1, 0);
+                    break;
+                }
+            }
+        }
+        finally
+        {
+            inputMoveLock.unlock();
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) { }
+
+    public void runGameLoop()
+    {
         GUI gui = new GUI_2D();  // Change main GUI here: GUI_2D or GUI_3D
 
-        gui.init(currentLevel);
+        gui.init(this);
 
-        gui.render(currentLevel);
+//        while (true)
+//        {
+//            this.input();
+//            this.update();
+//            gui.render(currentLevel);
+//        }
+        try
+        {
+            Thread.sleep(1000 * 20);
+        }
+        catch (InterruptedException exception)
+        {
+
+        }
 
         gui.dispose();
     }

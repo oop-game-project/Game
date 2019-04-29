@@ -1,45 +1,68 @@
 package Game.GUI;
 
-import Game.Engine.GameObjects;
+import Game.Engine.Engine;
 import Game.Engine.LevelsProcessor.SinglePlayerLevel;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
-import java.awt.Canvas;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Color;
 
-public class GUI_2D implements GUI
+public class GUI_2D extends JPanel implements GUI
 {
-    private JFrame gameMainFrame = new JFrame();
+    private static JFrame gameMainFrame = new JFrame();
 
-    private class GameCanvas extends Canvas
+    public GUI_2D()
     {
-        public void paint(Graphics graphics)
-        {
-            graphics.drawString("Hello",40,40);
-            setBackground(Color.WHITE);
-            graphics.fillRect(130, 30,100, 80);
-            graphics.drawOval(30,130,50, 60);
-            setForeground(Color.RED);
-            graphics.fillOval(130,130,50, 60);
-            graphics.drawArc(30, 200, 40,50,90,60);
-            graphics.fillArc(30, 130, 40,50,180,40);
-        }
     }
 
-    public GUI_2D() { }
-
-    public void init(SinglePlayerLevel renderingLevel)
+    @Override
+    public Dimension getPreferredSize()
     {
-        GameCanvas gameCanvas = new GameCanvas();
-        this.gameMainFrame.add(gameCanvas);
-        this.gameMainFrame.setSize(700,700);
-        this.gameMainFrame.setLayout(null);
-        this.gameMainFrame.setVisible(true);
+        return new Dimension(700,700);
     }
 
-    public void render(SinglePlayerLevel renderingLevel) { }
+    @Override
+    public void paintComponent(Graphics graphics)
+    {
+        super.paintComponent(graphics);
+        graphics.drawString("Hello", 40, 40);
+        setBackground(Color.WHITE);
+        graphics.fillRect(130, 30, 100, 80);
+        graphics.drawOval(30, 130, 50, 60);
+        setForeground(Color.RED);
+        graphics.fillOval(130, 130, 50, 60);
+        graphics.drawArc(30, 200, 40, 50, 90, 60);
+        graphics.fillArc(30, 130, 40, 50, 180, 40);
+    }
 
-    public void dispose() { }
+    private static void createAndShowGUI()
+    {
+        GUI_2D.gameMainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        GUI_2D.gameMainFrame.setSize(700, 700);
+
+        GUI_2D.gameMainFrame.add(new GUI_2D());
+        GUI_2D.gameMainFrame.pack();
+        GUI_2D.gameMainFrame.setVisible(true);
+    }
+
+    @Override
+    public void init(Engine engineAsKeyListener)
+    {
+        SwingUtilities.invokeLater(GUI_2D::createAndShowGUI);
+    }
+
+    @Override
+    public void render(SinglePlayerLevel renderingLevel)
+    {
+    }
+
+    @Override
+    public void dispose()
+    {
+        GUI_2D.gameMainFrame.dispose();
+    }
 }
