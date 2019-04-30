@@ -10,14 +10,16 @@ import javax.swing.SwingUtilities;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class GUI_2D extends JPanel implements GUI
 {
-    private static JFrame gameMainFrame = new JFrame();
+    private JFrame gameMainFrame = new JFrame();
+    private int PLAYER_TRIANGLE_SIDE_LENGTH = 30;
+    private SinglePlayerLevel currentLevelState;
 
-    public GUI_2D()
-    {
-    }
+    public GUI_2D() { }
 
     @Override
     public Dimension getPreferredSize()
@@ -25,44 +27,55 @@ public class GUI_2D extends JPanel implements GUI
         return new Dimension(700,700);
     }
 
+    private void paintPlayer(Graphics graphics, int[] playerLocation)
+    {
+        graphics.fillPolygon(
+                new int[] {
+                        playerLocation[0],
+                        playerLocation[0] + PLAYER_TRIANGLE_SIDE_LENGTH / 2,
+                        playerLocation[0] - PLAYER_TRIANGLE_SIDE_LENGTH / 2 },
+                new int[] {
+                        playerLocation[1],
+                        playerLocation[1] + (int)(PLAYER_TRIANGLE_SIDE_LENGTH * 0.75),
+                        playerLocation[1] + (int)(PLAYER_TRIANGLE_SIDE_LENGTH * 0.75)},
+                3);
+    }
+
     @Override
     public void paintComponent(Graphics graphics)
     {
         super.paintComponent(graphics);
-        graphics.drawString("Hello", 40, 40);
-        setBackground(Color.WHITE);
-        graphics.fillRect(130, 30, 100, 80);
-        graphics.drawOval(30, 130, 50, 60);
-        setForeground(Color.RED);
-        graphics.fillOval(130, 130, 50, 60);
-        graphics.drawArc(30, 200, 40, 50, 90, 60);
-        graphics.fillArc(30, 130, 40, 50, 180, 40);
-    }
 
-    private static void createAndShowGUI()
-    {
-        GUI_2D.gameMainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        GUI_2D.gameMainFrame.setSize(700, 700);
+//        this.setBackground(Color.WHITE);
+//        this.setForeground(Color.RED);
 
-        GUI_2D.gameMainFrame.add(new GUI_2D());
-        GUI_2D.gameMainFrame.pack();
-        GUI_2D.gameMainFrame.setVisible(true);
+        this.paintPlayer(
+                graphics,
+                this.currentLevelState.getPlayerOne().getCurrentLocation());
     }
 
     @Override
-    public void init(Engine engineAsKeyListener)
+    public void init()
     {
-        SwingUtilities.invokeLater(GUI_2D::createAndShowGUI);
+        this.gameMainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.gameMainFrame.setSize(700, 700);
+        this.gameMainFrame.setResizable(false);
+
+        this.gameMainFrame.add(this);
+        this.gameMainFrame.pack();
+        this.gameMainFrame.setVisible(true);
     }
 
     @Override
     public void render(SinglePlayerLevel renderingLevel)
     {
+        this.currentLevelState = renderingLevel;
+        this.paintComponent(this.getGraphics());
     }
 
     @Override
     public void dispose()
     {
-        GUI_2D.gameMainFrame.dispose();
+        this.gameMainFrame.dispose();
     }
 }

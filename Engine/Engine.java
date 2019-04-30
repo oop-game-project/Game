@@ -4,6 +4,9 @@ import Game.GUI.GUI_2D;
 import Game.GUI.GUI;
 import Game.Engine.LevelsProcessor.SinglePlayerLevel;
 
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.concurrent.locks.ReentrantLock;
@@ -14,7 +17,10 @@ public class Engine implements KeyListener
 {
     private SinglePlayerLevel currentLevel;
     private GeometryVector inputMove;
-    private final ReentrantLock inputMoveLock = new ReentrantLock();
+    private ReentrantLock inputMoveLock = new ReentrantLock();
+    private boolean closeGame = false;
+    private ReentrantLock closeGameLock = new ReentrantLock();
+
 
     // TODO : constructor with "String levelFileName"
     public Engine(SinglePlayerLevel inputLevel) {
@@ -55,6 +61,7 @@ public class Engine implements KeyListener
     @Override
     public void keyPressed(KeyEvent e)
     {
+        System.out.println(123);
         try
         {
             inputMoveLock.lock();
@@ -84,6 +91,14 @@ public class Engine implements KeyListener
                     inputMove = new GeometryVector(0, -1, 0);
                     break;
                 }
+
+                case KeyEvent.VK_Q:
+                {
+                    closeGameLock.lock();
+                    this.closeGame = true;
+                    closeGameLock.unlock();
+                    break;
+                }
             }
         }
         finally
@@ -95,25 +110,45 @@ public class Engine implements KeyListener
     @Override
     public void keyReleased(KeyEvent e) { }
 
-    public void runGameLoop()
+    private void updateLevel()
     {
-        GUI gui = new GUI_2D();  // Change main GUI here: GUI_2D or GUI_3D
-
-        gui.init(this);
-
-//        while (true)
-//        {
-//            this.input();
-//            this.update();
-//            gui.render(currentLevel);
-//        }
         try
         {
-            Thread.sleep(1000 * 20);
+            this.inputMoveLock.lock();
+            if (this.inputMove != null)
+            {
+                this.currentLevel.getPlayerOne().modifyCurrentLocation(this.inputMove);
+                this.inputMove = null;
+            }
         }
-        catch (InterruptedException exception)
+        finally
         {
+            this.inputMoveLock.unlock();
+        }
+    }
 
+    public void runGameLoop()
+    {
+        GUI_2D gui = new GUI_2D();  // Change main GUI here: GUI_2D or GUI_3D
+
+        gui.init();
+        gui.addKeyListener(this);
+        gui.render(this.currentLevel);
+
+        while (!this.closeGame)
+        {
+            this.updateLevel();
+
+            gui.render(currentLevel);
+
+            try
+            {
+                Thread.sleep(1000 / 60);
+            }
+            catch (InterruptedException exception)
+            {
+                exception.printStackTrace();
+            }
         }
 
         gui.dispose();
