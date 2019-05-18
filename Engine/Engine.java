@@ -39,19 +39,7 @@ public class Engine implements KeyListener
         }
 
         int[] getCoordinates() {
-            return new int[]{this.X, this.Y, this.Z};
-        }
-
-        int getX() {
-            return this.X;
-        }
-
-        int getY() {
-            return this.Y;
-        }
-
-        int getZ() {
-            return this.Z;
+            return new int[]{ this.X, this.Y, this.Z };
         }
     }
 
@@ -61,10 +49,9 @@ public class Engine implements KeyListener
     @Override
     public void keyPressed(KeyEvent e)
     {
-        System.out.println(123);
+        inputMoveLock.lock();
         try
         {
-            inputMoveLock.lock();
 
             switch (e.getKeyCode())
             {
@@ -112,9 +99,9 @@ public class Engine implements KeyListener
 
     private void updateLevel()
     {
+        this.inputMoveLock.lock();
         try
         {
-            this.inputMoveLock.lock();
             if (this.inputMove != null)
             {
                 this.currentLevel.getPlayerOne().modifyCurrentLocation(this.inputMove);

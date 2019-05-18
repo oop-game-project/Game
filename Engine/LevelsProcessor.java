@@ -4,35 +4,33 @@ public class LevelsProcessor
 {
     public class SinglePlayerLevel
     {
-        private GameObjects.GameField gameField;
-        private GameObjects.Player playerOne;
-        private GameObjects.MovableObject[] mobs;
+        public final int gameFieldSizeX;
+        public final int gameFieldSizeY;
+        public final int gameFieldSizeZ;
 
-        SinglePlayerLevel()
+        public GameObjects.Player player;
+        public GameObjects.MovableObject[] mobs;
+
+        public SinglePlayerLevel()
         {
-            GameObjects gameObjects = new GameObjects();
-            gameField = gameObjects.new GameField(700, 700, 0);
-            playerOne = gameObjects.new Player(175, 350, 0);
-            mobs = new GameObjects.MovableObject[3];
-            mobs[0] = gameObjects.new SphereMob(420, 175, 0, 50);
-            mobs[1] = gameObjects.new SphereMob(350, 250, 0, 50);
-            mobs[2] = gameObjects.new SphereMob(420, 420, 0, 50);
+            // TODO: Вытащить ручную инициализацию конкретного уровня из конструктора общего класса
 
+            GameObjects gameObjects = new GameObjects();
+
+            this.gameFieldSizeX = 700;
+            this.gameFieldSizeY = 700;
+            this.gameFieldSizeZ = 0;
+
+            this.player = gameObjects.new Player(new int[] { 175, 350, 0 });
+            this.mobs = new GameObjects.MovableObject[3];
+            this.mobs[0] = gameObjects.new SphereMob(new int[] { 420, 175, 0 }, 50);
+            this.mobs[1] = gameObjects.new SphereMob(new int[] { 350, 250, 0 }, 50);
+            this.mobs[2] = gameObjects.new SphereMob(new int[] { 420, 420, 0 }, 50);
         }
 
         private void parseLevelFile()
         {
             //TODO parse level in file
         }
-
-        public GameObjects.GameField getGameField() { return gameField; }
-
-        public GameObjects.Player getPlayerOne() { return playerOne; }
-
-        public GameObjects.MovableObject[] getMobs() { return mobs; }
-    }
-    public SinglePlayerLevel getSinglePlayerLevel()
-    {
-        return new SinglePlayerLevel();
     }
 }

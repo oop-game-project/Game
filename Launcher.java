@@ -100,7 +100,8 @@ public class Launcher extends JFrame
     private void startGame()
     {
         LevelsProcessor levelsProcessor = new LevelsProcessor();
-        LevelsProcessor.SinglePlayerLevel singlePlayerLevel = levelsProcessor.getSinglePlayerLevel();
+        LevelsProcessor.SinglePlayerLevel singlePlayerLevel =
+                levelsProcessor.new SinglePlayerLevel();
         Engine engine = new Engine(singlePlayerLevel);
         setVisible(false);
         engine.runGameLoop();

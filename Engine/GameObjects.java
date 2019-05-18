@@ -9,113 +9,42 @@ public class GameObjects
         GameObject() { }
     }
 
-    public class GameField extends GameObject
-    {
-        private int sizeX;
-        private int sizeY;
-        private int sizeZ;
-
-        public GameField(int inputSizeX, int inputSizeY, int inputSizeZ)
-        {
-            assert inputSizeX > 0;
-            assert inputSizeY > 0;
-            assert inputSizeZ > 0;
-
-            this.sizeX = inputSizeX;
-            this.sizeY = inputSizeY;
-            this.sizeZ = inputSizeZ;
-        }
-
-        GameField(@NotNull GameField inputGameField)
-        {
-            int[] inputGameFieldSize = inputGameField.getGameFieldSize();
-
-            this.sizeX = inputGameFieldSize[0];
-            this.sizeY = inputGameFieldSize[1];
-            this.sizeZ = inputGameFieldSize[2];
-        }
-
-        public int[] getGameFieldSize()
-        {
-            return new int[] { this.sizeX, this.sizeY, this.sizeZ };
-        }
-    }
-
     public class MovableObject
     {
-        private int currentLocationX;
-        private int currentLocationY;
-        private int currentLocationZ;
+        public final int hitPointsMax;
+        public int hitPointsCurrent;
 
-        MovableObject(int inputLocationX, int inputLocationY, int inputLocationZ)
-        {
-            this.currentLocationX = inputLocationX;
-            this.currentLocationY = inputLocationY;
-            this.currentLocationZ = inputLocationZ;
-        }
+        public int currentLocationX;
+        public int currentLocationY;
+        public int currentLocationZ;
 
-        MovableObject(@NotNull int[] inputLocation)
+        MovableObject(
+                @NotNull int[] inputLocation,
+                int inputHitPointsMax,
+                int inputHitPointsCurrent)
         {
             assert inputLocation.length == 3;
 
             this.currentLocationX = inputLocation[0];
             this.currentLocationY = inputLocation[1];
             this.currentLocationZ = inputLocation[2];
-        }
 
-        public int[] getCurrentLocation()
-        {
-            return new int[] {
-                    this.currentLocationX,
-                    this.currentLocationY,
-                    this.currentLocationZ };
-        }
+            assert inputHitPointsMax > 0;
+            assert 0 < inputHitPointsCurrent && inputHitPointsCurrent <= inputHitPointsMax;
 
-        public void setCurrentLocation(int inputLocationX, int inputLocationY, int inputLocationZ)
-        {
-            this.currentLocationX = inputLocationX;
-            this.currentLocationY = inputLocationY;
-            this.currentLocationZ = inputLocationZ;
-        }
-
-        public void modifyCurrentLocation(Engine.GeometryVector vector)
-        {
-            this.currentLocationX += vector.getX();
-            this.currentLocationY += vector.getY();
-            this.currentLocationZ += vector.getZ();
+            this.hitPointsMax = inputHitPointsMax;
+            this.hitPointsCurrent = inputHitPointsCurrent;
         }
     }
 
-//    public class MortalCreature extends MovableObject
-//    {
-//        int hitPointsMax;
-//        int hitPointsCurrent;
-//
-//        public MortalCreature(
-//                @NotNull int[] inputLocation,
-//                int inputHitPointsMax,
-//                int inputHitPointsCurrent)
-//        {
-//            super(inputLocation);
-//
-//            assert inputHitPointsMax > 0;
-//            assert 0 < inputHitPointsCurrent && inputHitPointsCurrent <= inputHitPointsMax;
-//
-//            this.hitPointsMax = inputHitPointsMax;
-//            this.hitPointsCurrent = inputHitPointsCurrent;
-//        }
-//    }
-//    publc class MobObject { }
-//
-//    public class PlayerProjectile { }
-//
-//    public class MobProjectile { }
-
     public class Player extends MovableObject
     {
-        public Player(int inputLocationX, int inputLocationY, int inputLocationZ)
+        public Player(
+                @NotNull int[] inputLocation,
+                int inputHitPointsMax,
+                int inputHitPointsCurrent)
         {
-            super(inputLocationX, inputLocationY, inputLocationZ);
+            super(inputLocation, inputHitPointsMax, inputHitPointsCurrent);
         }
 
         Player(@NotNull Player inputPlayer)
@@ -126,11 +55,12 @@ public class GameObjects
 
     public class SphereMob extends MovableObject
     {
+
         private int radius;
 
-        public SphereMob(int inputLocationX, int inputLocationY, int inputLocationZ, int radius)
+        public SphereMob(int[] inputLocation, int radius)
         {
-            super(inputLocationX, inputLocationY, inputLocationZ);
+            super(inputLocation);
             this.radius = radius;
         }
 
