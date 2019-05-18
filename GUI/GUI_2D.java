@@ -16,7 +16,7 @@ import java.awt.event.KeyListener;
 public class GUI_2D extends JPanel implements GUI
 {
     private JFrame gameMainFrame = new JFrame();
-    private int PLAYER_TRIANGLE_SIDE_LENGTH = 30;
+    private final int PLAYER_TRIANGLE_SIDE_LENGTH = 30;
     private SinglePlayerLevel currentLevelState;
 
     public GUI_2D() { }
@@ -46,22 +46,24 @@ public class GUI_2D extends JPanel implements GUI
     {
         super.paintComponent(graphics);
 
-//        this.setBackground(Color.WHITE);
-//        this.setForeground(Color.RED);
+        this.setBackground(Color.WHITE);
+        this.setForeground(Color.RED);
 
         this.paintPlayer(
                 graphics,
-                this.currentLevelState.getPlayerOne().getCurrentLocation());
+                this.currentLevelState.player.currentLocation);
     }
 
     @Override
-    public void init()
+    public void init(Engine engineAsKeyListener)
     {
-        this.gameMainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.gameMainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.gameMainFrame.setSize(700, 700);
         this.gameMainFrame.setResizable(false);
 
+        this.gameMainFrame.addKeyListener(engineAsKeyListener);
         this.gameMainFrame.add(this);
+
         this.gameMainFrame.pack();
         this.gameMainFrame.setVisible(true);
     }
@@ -71,11 +73,5 @@ public class GUI_2D extends JPanel implements GUI
     {
         this.currentLevelState = renderingLevel;
         this.paintComponent(this.getGraphics());
-    }
-
-    @Override
-    public void dispose()
-    {
-        this.gameMainFrame.dispose();
     }
 }

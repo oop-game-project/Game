@@ -12,9 +12,9 @@ enum Event
 
 public class CollisionsProcessor
 {
-    public CollisionsProcessor(GameObjects.GameField gameField)
+    public CollisionsProcessor(LevelsProcessor.SinglePlayerLevel currentLevel)
     {
-        int[] size = gameField.getGameFieldSize();
+        int[] size = currentLevel.gameFieldSize;
         sizeX = size[0];
         sizeY = size[1];
         sizeZ = size[2];
@@ -38,14 +38,14 @@ public class CollisionsProcessor
         public Event getEvent() {return event;}
     }
 
-    public Collision getCollision(Engine.GeometryVector vector, GameObjects.MovableObject object)
+    public Collision getCollision(int[] vector, GameObjects.MovableObject object)
     {
-        int[] location = object.getCurrentLocation();
+        int[] location = object.currentLocation;
         int objectX = location[0];
         int objectY = location[1];
         int objectZ = location[2];
-        if (isOutTerritory(vector.getX(), objectX, sizeX) ||
-                isOutTerritory(vector.getY(), objectY, sizeY))
+        if (isOutTerritory(vector[0], objectX, sizeX) ||
+                isOutTerritory(vector[1], objectY, sizeY))
 //                isOutTerritory(vector.getZ(), objectZ, sizeZ))
             return new Collision<>(object, Event.OUT_TERRITORY);
         return new Collision<>(object, Event.OK);

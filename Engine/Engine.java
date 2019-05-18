@@ -1,50 +1,31 @@
 package Game.Engine;
-
-import Game.GUI.GUI_2D;
+// TODO: get rid of '*'
 import Game.GUI.GUI;
+import Game.GUI.GUI_2D;
 import Game.Engine.LevelsProcessor.SinglePlayerLevel;
 
-import javax.swing.Timer;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.KeyAdapter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.locks.ReentrantLock;
 
-//import java.awt.event.
-
-public class Engine implements KeyListener
+public class Engine extends KeyAdapter
 {
+
     private SinglePlayerLevel currentLevel;
-    private GeometryVector inputMove;
+    private GUI gui;
+
+    private int[] inputMoveVector;
     private ReentrantLock inputMoveLock = new ReentrantLock();
+
     private boolean closeGame = false;
     private ReentrantLock closeGameLock = new ReentrantLock();
-
 
     // TODO : constructor with "String levelFileName"
     public Engine(SinglePlayerLevel inputLevel) {
         this.currentLevel = inputLevel;
     }
-
-    class GeometryVector {
-        private int X;
-        private int Y;
-        private int Z;
-
-        GeometryVector(int inputX, int inputY, int inputZ) {
-            this.X = inputX;
-            this.Y = inputY;
-            this.Z = inputZ;
-        }
-
-        int[] getCoordinates() {
-            return new int[]{ this.X, this.Y, this.Z };
-        }
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) { }
 
     @Override
     public void keyPressed(KeyEvent e)
@@ -57,25 +38,25 @@ public class Engine implements KeyListener
             {
                 case KeyEvent.VK_RIGHT:
                 {
-                    inputMove = new GeometryVector(1, 0, 0);
+                    this.inputMoveVector = new int[] { 1, 0, 0 };
                     break;
                 }
 
                 case KeyEvent.VK_DOWN:
                 {
-                    inputMove = new GeometryVector(0, 1, 0);
+                    this.inputMoveVector = new int[] { 0, 1, 0 };
                     break;
                 }
 
                 case KeyEvent.VK_LEFT:
                 {
-                    inputMove = new GeometryVector(-1, 0, 0);
+                    this.inputMoveVector = new int[] { -1, 0, 0 };
                     break;
                 }
 
                 case KeyEvent.VK_UP:
                 {
-                    inputMove = new GeometryVector(0, -1, 0);
+                    this.inputMoveVector = new int[] { 0, -1, 0 };
                     break;
                 }
 
@@ -94,18 +75,27 @@ public class Engine implements KeyListener
         }
     }
 
-    @Override
-    public void keyReleased(KeyEvent e) { }
+    public void timeAlignment()  // TODO
+    {
+        try
+        {
+            Thread.sleep(1000 / 60);
+        }
+        catch (InterruptedException exception)
+        {
+            exception.printStackTrace();
+        }
+    }
 
-    private void updateLevel()
+    private void updateLevel()  // TODO: Зависимость от процессора коллизий
     {
         this.inputMoveLock.lock();
         try
         {
-            if (this.inputMove != null)
+            if (this.inputMoveVector != null)
             {
-                this.currentLevel.getPlayerOne().modifyCurrentLocation(this.inputMove);
-                this.inputMove = null;
+                this.currentLevel.player.modifyLocation(inputMoveVector);
+                this.inputMoveVector = null;
             }
         }
         finally
@@ -114,30 +104,29 @@ public class Engine implements KeyListener
         }
     }
 
-    public void runGameLoop()
+    public void runGameLoop()  // TODO: check window closing
     {
-        GUI_2D gui = new GUI_2D();  // Change main GUI here: GUI_2D or GUI_3D
+        this.gui = new GUI_2D();  // Change main GUI here: GUI_2D or GUI_3D
 
-        gui.init();
-        gui.addKeyListener(this);
-        gui.render(this.currentLevel);
+        this.gui.init(this);
+        this.gui.render(this.currentLevel);
 
+        new Thread(this::gameLoop).start();
+    }
+
+    public void gameLoop()
+    {
         while (!this.closeGame)
         {
             this.updateLevel();
 
-            gui.render(currentLevel);
-
-            try
-            {
-                Thread.sleep(1000 / 60);
-            }
-            catch (InterruptedException exception)
+            try { SwingUtilities.invokeAndWait(() -> gui.render(currentLevel)); }
+            catch (InterruptedException|InvocationTargetException exception)
             {
                 exception.printStackTrace();
             }
-        }
 
-        gui.dispose();
+            this.timeAlignment();
+        }
     }
 }

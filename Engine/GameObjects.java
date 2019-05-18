@@ -11,59 +11,72 @@ public class GameObjects
 
     public class MovableObject
     {
-        public final int hitPointsMax;
-        public int hitPointsCurrent;
+        public int[] currentLocation;
 
-        public int currentLocationX;
-        public int currentLocationY;
-        public int currentLocationZ;
-
-        MovableObject(
-                @NotNull int[] inputLocation,
-                int inputHitPointsMax,
-                int inputHitPointsCurrent)
+        MovableObject(@NotNull int[] inputLocation)
         {
             assert inputLocation.length == 3;
 
-            this.currentLocationX = inputLocation[0];
-            this.currentLocationY = inputLocation[1];
-            this.currentLocationZ = inputLocation[2];
+            this.currentLocation = inputLocation;
+        }
 
-            assert inputHitPointsMax > 0;
-            assert 0 < inputHitPointsCurrent && inputHitPointsCurrent <= inputHitPointsMax;
-
-            this.hitPointsMax = inputHitPointsMax;
-            this.hitPointsCurrent = inputHitPointsCurrent;
+        public void modifyLocation(int[] locationModifier)
+        {
+            this.currentLocation[0] += locationModifier[0];
+            this.currentLocation[1] += locationModifier[1];
+            this.currentLocation[2] += locationModifier[2];
         }
     }
 
     public class Player extends MovableObject
     {
+        public static final int hitPointsMax = 20;
+        public int hitPointsCurrent;
+
         public Player(
                 @NotNull int[] inputLocation,
-                int inputHitPointsMax,
                 int inputHitPointsCurrent)
         {
-            super(inputLocation, inputHitPointsMax, inputHitPointsCurrent);
-        }
+            super(inputLocation);
 
-        Player(@NotNull Player inputPlayer)
-        {
-            super(inputPlayer.getCurrentLocation());
+            assert inputHitPointsCurrent > 0;
+
+            this.hitPointsCurrent = inputHitPointsCurrent;
         }
     }
 
     public class SphereMob extends MovableObject
     {
+        public static final int hitPointsMax = 5;
+        public int hitPointsCurrent;
 
-        private int radius;
+        public final int radius;
 
-        public SphereMob(int[] inputLocation, int radius)
+        public SphereMob(
+                int[] inputLocation,
+                int inputHitPointsCurrent,
+                int inputRadius)
         {
             super(inputLocation);
-            this.radius = radius;
+
+            assert inputHitPointsCurrent > 0;
+
+            this.hitPointsCurrent = inputHitPointsCurrent;
+            this.radius = inputRadius;
+        }
+    }
+
+    public class Projectile extends MovableObject
+    {
+        // public final A projectileType
+        public final boolean firedByPlayer;
+
+        public Projectile(int[] inputLocation, boolean inputFiredByPlayer)
+        {
+            super(inputLocation);
+
+            this.firedByPlayer = inputFiredByPlayer;
         }
 
-        public int getRadius() { return radius; }
     }
 }

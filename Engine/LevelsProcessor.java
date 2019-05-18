@@ -4,9 +4,7 @@ public class LevelsProcessor
 {
     public class SinglePlayerLevel
     {
-        public final int gameFieldSizeX;
-        public final int gameFieldSizeY;
-        public final int gameFieldSizeZ;
+        public final int[] gameFieldSize;
 
         public GameObjects.Player player;
         public GameObjects.MovableObject[] mobs;
@@ -17,20 +15,27 @@ public class LevelsProcessor
 
             GameObjects gameObjects = new GameObjects();
 
-            this.gameFieldSizeX = 700;
-            this.gameFieldSizeY = 700;
-            this.gameFieldSizeZ = 0;
+            this.gameFieldSize = new int[] { 700, 700, 0 };
 
-            this.player = gameObjects.new Player(new int[] { 175, 350, 0 });
+            this.player = gameObjects.new Player(new int[] { 175, 350, 0 }, 20);
             this.mobs = new GameObjects.MovableObject[3];
-            this.mobs[0] = gameObjects.new SphereMob(new int[] { 420, 175, 0 }, 50);
-            this.mobs[1] = gameObjects.new SphereMob(new int[] { 350, 250, 0 }, 50);
-            this.mobs[2] = gameObjects.new SphereMob(new int[] { 420, 420, 0 }, 50);
+            this.mobs[0] = gameObjects.new SphereMob(
+                    new int[] { 420, 175, 0 },
+                    5,
+                    20);
+            this.mobs[1] = gameObjects.new SphereMob(
+                    new int[] { 350, 250, 0 },
+                    5,
+                    20);
+            this.mobs[2] = gameObjects.new SphereMob(
+                    new int[] { 420, 420, 0 },
+                    5,
+                    20);
         }
 
-        private void parseLevelFile()
-        {
-            //TODO parse level in file
-        }
+//        private SinglePlayerLevel parseLevelFile(String filename)
+//        {
+//            //TODO parse level in file
+//        }
     }
 }
