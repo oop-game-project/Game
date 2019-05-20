@@ -5,13 +5,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.EventListener;
+
 import Game.Engine.Engine;
 import Game.Engine.LevelsProcessor;
 import Game.Engine.GameObjects;
 
 public class Launcher extends JFrame
 {
-
     private class Records extends JFrame
     {
         Records()
@@ -102,10 +103,13 @@ public class Launcher extends JFrame
         LevelsProcessor levelsProcessor = new LevelsProcessor();
         LevelsProcessor.SinglePlayerLevel singlePlayerLevel =
                 levelsProcessor.new SinglePlayerLevel();
-        Engine engine = new Engine(singlePlayerLevel);
+        Engine engine = new Engine(singlePlayerLevel, this);
+
+        this.setVisible(false);
 
         engine.runGameLoop();
     }
+
     private void continueGame()
     {
         //TODO

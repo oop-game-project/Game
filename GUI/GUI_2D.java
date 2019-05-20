@@ -7,16 +7,18 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.EventListener;
 
-public class GUI_2D extends JPanel implements GUI
+public class GUI_2D extends JPanel implements GUI, KeyListener
 {
-    private JFrame gameMainFrame = new JFrame();
     private final int PLAYER_TRIANGLE_SIDE_LENGTH = 30;
+    private final JFrame gameMainFrame = new JFrame();
+
     private SinglePlayerLevel currentLevelState;
 
     public GUI_2D() { }
@@ -27,8 +29,20 @@ public class GUI_2D extends JPanel implements GUI
         return new Dimension(700,700);
     }
 
+    public void keyTyped(KeyEvent e) { }
+    public void keyReleased(KeyEvent e) { }
+
+    public void keyPressed(KeyEvent keyEvent)
+    {
+        if (keyEvent.getKeyCode() == KeyEvent.VK_Q)
+            this.gameMainFrame.dispatchEvent(
+                new WindowEvent(this.gameMainFrame, WindowEvent.WINDOW_CLOSING));
+    }
+
     private void paintPlayer(Graphics graphics, int[] playerLocation)
     {
+        graphics.setColor(Color.BLUE);
+
         graphics.fillPolygon(
                 new int[] {
                         playerLocation[0],
@@ -46,22 +60,20 @@ public class GUI_2D extends JPanel implements GUI
     {
         super.paintComponent(graphics);
 
-        this.setBackground(Color.WHITE);
-        this.setForeground(Color.RED);
-
         this.paintPlayer(
                 graphics,
                 this.currentLevelState.player.currentLocation);
     }
 
     @Override
-    public void init(Engine engineAsKeyListener)
+    public void init(EventListener engine)
     {
         this.gameMainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.gameMainFrame.setSize(700, 700);
         this.gameMainFrame.setResizable(false);
 
-        this.gameMainFrame.addKeyListener(engineAsKeyListener);
+        this.gameMainFrame.addKeyListener((KeyListener)engine);
+        this.gameMainFrame.addWindowListener((WindowListener)engine);
         this.gameMainFrame.add(this);
 
         this.gameMainFrame.pack();
