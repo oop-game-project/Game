@@ -1,61 +1,88 @@
 package Game.Engine;
 
-
-enum Event
-{
-    OUT_TERRITORY,
-    KILLED,
-    DISAPPEARED,
-    OK
-}
-
+import Game.Engine.GameObjects.*;
+import Game.Engine.LevelsProcessor.SinglePlayerLevel;
 
 public class CollisionsProcessor
 {
-    public CollisionsProcessor(LevelsProcessor.SinglePlayerLevel currentLevel)
-    {
-        int[] size = currentLevel.gameFieldSize;
-        sizeX = size[0];
-        sizeY = size[1];
-        sizeZ = size[2];
-        border = 5;
-    }
-    private int sizeX;
-    private int sizeY;
-    private int sizeZ;
-    private int border;
+    private int[] FIELD_SIZE = new int[3];
 
-    public class Collision<T>
+    public CollisionsProcessor(int[] gameFieldSize)
     {
-        private T gameObject;
-        private Event event;
-        Collision(T gameObject, Event event)
+        this.FIELD_SIZE[0] = gameFieldSize[0];
+        this.FIELD_SIZE[1] = gameFieldSize[1];
+        this.FIELD_SIZE[2] = gameFieldSize[2];
+    }
+
+//
+//  Checking section
+//
+
+    public boolean playerOutOfHorizontalBorders(int[] moveVector, Player movableObject)
+    {
+        int[] playerLocation = movableObject.currentLocation;
+
+        return playerLocation[0] + moveVector[0] + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2
+               >= this.FIELD_SIZE[0]
+            || playerLocation[0] + moveVector[0] - PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2
+               < 0;
+    }
+
+    public boolean playerOutOfVerticalBorders(int[] moveVector, Player movableObject)
+    {
+        int[] playerLocation = movableObject.currentLocation;
+
+        return playerLocation[1] + moveVector[1]
+            + (int) (PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH * 0.75) >= this.FIELD_SIZE[1]
+            || playerLocation[1] + moveVector[1] < 0;
+    }
+
+//
+//  Main section
+//
+
+    public enum GameEvent
+    {
+        OUT_OF_BOUNDS,
+        COLLISION,
+        OK
+    }
+
+    public class Collision
+    {
+        public final MovableObject movingObject;
+        public final GameEvent event;
+        public final MovableObject collidedObject;
+
+        public Collision(
+            MovableObject inputMovingObject,
+            GameEvent inputEvent,
+            MovableObject inputCollidedObject)
         {
-            this.gameObject = gameObject;
-            this.event = event;
+            this.movingObject = inputMovingObject;
+            this.event = inputEvent;
+            this.collidedObject = inputCollidedObject;
         }
-        public T getGameObject() {return gameObject;}
-        public Event getEvent() {return event;}
     }
 
-    public Collision getCollision(int[] vector, GameObjects.MovableObject object)
+    public Collision[] getCollision(
+        SinglePlayerLevel currentLevel,
+        int[] moveVector,
+        MovableObject movableObject)
     {
-        int[] location = object.currentLocation;
-        int objectX = location[0];
-        int objectY = location[1];
-        int objectZ = location[2];
-        if (isOutTerritory(vector[0], objectX, sizeX) ||
-                isOutTerritory(vector[1], objectY, sizeY))
-//                isOutTerritory(vector.getZ(), objectZ, sizeZ))
-            return new Collision<>(object, Event.OUT_TERRITORY);
-        return new Collision<>(object, Event.OK);
+        if (movableObject instanceof Player)
+        // All player's moves should be checked here
+        {
+            if (this.playerOutOfHorizontalBorders(moveVector, (Player)movableObject)
+                || this.playerOutOfVerticalBorders(moveVector, (Player)movableObject))
+                return new Collision[] {
+                    new Collision(movableObject, GameEvent.OUT_OF_BOUNDS, null) };
+        }
+
+        return new Collision[] {
+            new Collision(movableObject, GameEvent.OK, null) };
     }
 
-    private boolean isOutTerritory(int vectorCoordinate, int playerCoordinate, int size)
-    {
-        return ((vectorCoordinate >= 0) && (playerCoordinate + border >= size)) ||
-                ((vectorCoordinate <= 0) && (playerCoordinate - border <= 0));
-    }
 
 
 }

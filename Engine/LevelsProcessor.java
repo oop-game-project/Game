@@ -1,5 +1,7 @@
 package Game.Engine;
 
+import Game.Engine.GameObjects.*;
+
 public class LevelsProcessor
 {
     public class SinglePlayerLevel
@@ -9,33 +11,50 @@ public class LevelsProcessor
         public GameObjects.Player player;
         public GameObjects.MovableObject[] mobs;
 
-        public SinglePlayerLevel()
+        public SinglePlayerLevel(
+            int[] inputGameFieldSize,
+            Player inputPlayer,
+            MovableObject[] inputMobs)
         {
-            // TODO: Вытащить ручную инициализацию конкретного уровня из конструктора общего класса
-
-            GameObjects gameObjects = new GameObjects();
-
-            this.gameFieldSize = new int[] { 700, 700, 0 };
-
-            this.player = gameObjects.new Player(new int[] { 175, 350, 0 }, 20);
-            this.mobs = new GameObjects.MovableObject[3];
-            this.mobs[0] = gameObjects.new SphereMob(
-                    new int[] { 420, 175, 0 },
-                    5,
-                    20);
-            this.mobs[1] = gameObjects.new SphereMob(
-                    new int[] { 350, 250, 0 },
-                    5,
-                    20);
-            this.mobs[2] = gameObjects.new SphereMob(
-                    new int[] { 420, 420, 0 },
-                    5,
-                    20);
+            this.gameFieldSize = inputGameFieldSize;
+            this.player = inputPlayer;
+            this.mobs = inputMobs;
         }
-
-//        private SinglePlayerLevel parseLevelFile(String filename)
-//        {
-//            //TODO parse level in file
-//        }
     }
+
+//
+//  Manual level init section
+//
+
+    public SinglePlayerLevel getLevelOne()
+    {
+        GameObjects gameObjects = new GameObjects();
+
+        int[] gameFieldSize = new int[] { 700, 700, 0 };
+
+        Player player = gameObjects.new Player(new int[] { 175, 350, 0 }, 20);
+
+        MovableObject[] mobs = new GameObjects.MovableObject[3];
+        mobs[0] = gameObjects.new SphereMob(
+            new int[]{420, 175, 0},
+            5);
+        mobs[1] = gameObjects.new SphereMob(
+            new int[]{350, 250, 0},
+            5);
+        mobs[2] = gameObjects.new SphereMob(
+            new int[]{420, 420, 0},
+            5);
+
+        return new SinglePlayerLevel(gameFieldSize, player, mobs);
+    }
+
+//
+//  Level parsing section
+//
+
+//      private SinglePlayerLevel parseLevelFile(String filename)
+//      {
+//          //TODO parse level in file
+//      }
+
 }

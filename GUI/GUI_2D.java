@@ -1,11 +1,11 @@
 package Game.GUI;
 
 import Game.Engine.Engine;
+import Game.Engine.GameObjects.PaintingConst;
 import Game.Engine.LevelsProcessor.SinglePlayerLevel;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -16,54 +16,10 @@ import java.util.EventListener;
 
 public class GUI_2D extends JPanel implements GUI, KeyListener
 {
-    private final int PLAYER_TRIANGLE_SIDE_LENGTH = 30;
     private final JFrame gameMainFrame = new JFrame();
-
     private SinglePlayerLevel currentLevelState;
 
     public GUI_2D() { }
-
-    @Override
-    public Dimension getPreferredSize()
-    {
-        return new Dimension(700,700);
-    }
-
-    public void keyTyped(KeyEvent e) { }
-    public void keyReleased(KeyEvent e) { }
-
-    public void keyPressed(KeyEvent keyEvent)
-    {
-        if (keyEvent.getKeyCode() == KeyEvent.VK_Q)
-            this.gameMainFrame.dispatchEvent(
-                new WindowEvent(this.gameMainFrame, WindowEvent.WINDOW_CLOSING));
-    }
-
-    private void paintPlayer(Graphics graphics, int[] playerLocation)
-    {
-        graphics.setColor(Color.BLUE);
-
-        graphics.fillPolygon(
-                new int[] {
-                        playerLocation[0],
-                        playerLocation[0] + PLAYER_TRIANGLE_SIDE_LENGTH / 2,
-                        playerLocation[0] - PLAYER_TRIANGLE_SIDE_LENGTH / 2 },
-                new int[] {
-                        playerLocation[1],
-                        playerLocation[1] + (int)(PLAYER_TRIANGLE_SIDE_LENGTH * 0.75),
-                        playerLocation[1] + (int)(PLAYER_TRIANGLE_SIDE_LENGTH * 0.75)},
-                3);
-    }
-
-    @Override
-    public void paintComponent(Graphics graphics)
-    {
-        super.paintComponent(graphics);
-
-        this.paintPlayer(
-                graphics,
-                this.currentLevelState.player.currentLocation);
-    }
 
     @Override
     public void init(EventListener engine)
@@ -78,7 +34,63 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 
         this.gameMainFrame.pack();
         this.gameMainFrame.setVisible(true);
+
+        this.setBackground(Color.GRAY);
     }
+
+//
+//  KeyListener implementations
+//
+
+    public void keyTyped(KeyEvent e) { }
+    public void keyReleased(KeyEvent e) { }
+
+    public void keyPressed(KeyEvent keyEvent)
+    {
+        if (keyEvent.getKeyCode() == KeyEvent.VK_Q)
+            this.gameMainFrame.dispatchEvent(
+                new WindowEvent(this.gameMainFrame, WindowEvent.WINDOW_CLOSING));
+    }
+
+//
+//  Paint components section
+//
+
+    @Override
+    public Dimension getPreferredSize()
+    {
+        return new Dimension(700,700);
+    }
+
+    private void paintPlayer(Graphics graphics, int[] playerLocation)
+    {
+        graphics.setColor(Color.BLUE);
+
+        graphics.fillPolygon(
+                new int[] {
+                    playerLocation[0],
+                    playerLocation[0] + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2,
+                    playerLocation[0] - PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2 },
+                new int[] {
+                    playerLocation[1],
+                    playerLocation[1] + (int)(PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH * 0.75),
+                    playerLocation[1] + (int)(PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH * 0.75)},
+                3);
+    }
+
+    @Override
+    public void paintComponent(Graphics graphics)
+    {
+        super.paintComponent(graphics);
+
+        this.paintPlayer(
+                graphics,
+                this.currentLevelState.player.currentLocation);
+    }
+
+//
+//  Render main section
+//
 
     @Override
     public void render(SinglePlayerLevel renderingLevel)

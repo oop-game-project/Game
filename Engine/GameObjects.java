@@ -9,6 +9,10 @@ public class GameObjects
         GameObject() { }
     }
 
+//
+//  Movable objects
+//
+
     public class MovableObject
     {
         public int[] currentLocation;
@@ -28,44 +32,6 @@ public class GameObjects
         }
     }
 
-    public class Player extends MovableObject
-    {
-        public static final int hitPointsMax = 20;
-        public int hitPointsCurrent;
-
-        public Player(
-                @NotNull int[] inputLocation,
-                int inputHitPointsCurrent)
-        {
-            super(inputLocation);
-
-            assert inputHitPointsCurrent > 0;
-
-            this.hitPointsCurrent = inputHitPointsCurrent;
-        }
-    }
-
-    public class SphereMob extends MovableObject
-    {
-        public static final int hitPointsMax = 5;
-        public int hitPointsCurrent;
-
-        public final int radius;
-
-        public SphereMob(
-                int[] inputLocation,
-                int inputHitPointsCurrent,
-                int inputRadius)
-        {
-            super(inputLocation);
-
-            assert inputHitPointsCurrent > 0;
-
-            this.hitPointsCurrent = inputHitPointsCurrent;
-            this.radius = inputRadius;
-        }
-    }
-
     public class Projectile extends MovableObject
     {
         // public final A projectileType
@@ -78,5 +44,67 @@ public class GameObjects
             this.firedByPlayer = inputFiredByPlayer;
         }
 
+    }
+
+//
+//  Mortal objects
+//
+
+    public abstract class MortalObject extends MovableObject
+    {
+        public static final int hitPointsMax = 0;
+        public int hitPointsCurrent;
+
+        public MortalObject(
+            int[] inputLocation,
+            int inputHitPointsCurrent)
+        {
+            super(inputLocation);
+
+            assert inputHitPointsCurrent > 0;
+
+            this.hitPointsCurrent = inputHitPointsCurrent;
+        }
+    }
+
+    public class Player extends MortalObject
+    {
+        public static final int hitPointsMax = 20;
+
+        public Player(
+                @NotNull int[] inputLocation,
+                int inputHitPointsCurrent)
+        {
+            super(inputLocation, inputHitPointsCurrent);
+        }
+    }
+
+    public class SphereMob extends MortalObject
+    {
+        public static final int hitPointsMax = 5;
+
+        public SphereMob(
+            int[] inputLocation,
+            int inputHitPointsCurrent)
+        {
+            super(inputLocation, inputHitPointsCurrent);
+        }
+    }
+
+//
+//  Interface objects
+//
+
+    public class InterfaceObject { }
+
+//
+//  For painting
+//
+
+    public abstract static class PaintingConst
+    {
+        public static final int PLAYER_TRIANGLE_SIDE_LENGTH = 30;
+        public static final int SPHERE_MOB_RADIUS = 20;
+        public static final int BASIC_PROJECTILE_SIDE_LENGTH = 2;
     }
 }

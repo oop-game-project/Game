@@ -5,11 +5,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.EventListener;
 
 import Game.Engine.Engine;
 import Game.Engine.LevelsProcessor;
-import Game.Engine.GameObjects;
 
 public class Launcher extends JFrame
 {
@@ -101,8 +99,7 @@ public class Launcher extends JFrame
     private void startGame()
     {
         LevelsProcessor levelsProcessor = new LevelsProcessor();
-        LevelsProcessor.SinglePlayerLevel singlePlayerLevel =
-                levelsProcessor.new SinglePlayerLevel();
+        LevelsProcessor.SinglePlayerLevel singlePlayerLevel = levelsProcessor.getLevelOne();
         Engine engine = new Engine(singlePlayerLevel, this);
 
         this.setVisible(false);
