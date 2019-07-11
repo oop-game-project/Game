@@ -36,7 +36,7 @@ public class CollisionsProcessor
 
         return playerLocation[1]
                + moveVector[1]
-               + (int) (PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH * 0.75) > this.FIELD_SIZE[1]
+               + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH > this.FIELD_SIZE[1]
             || playerLocation[1] + moveVector[1] < 0;
     }
 
