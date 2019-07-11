@@ -73,8 +73,8 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
                     playerLocation[0] - PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2 },
                 new int[] {
                     playerLocation[1],
-                    playerLocation[1] + (int)(PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH * 0.75),
-                    playerLocation[1] + (int)(PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH * 0.75)},
+                    playerLocation[1] + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH,
+                    playerLocation[1] + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH },
                 3);
     }
 

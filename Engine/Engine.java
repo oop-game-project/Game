@@ -72,7 +72,7 @@ public class Engine extends WindowAdapter implements KeyListener
         }
     }
 
-    public void modifyTernaryArray(int[] target, int[] modifier)
+    public void modifyThreeElementsArray(int[] target, int[] modifier)
     {
         target[0] += modifier[0];
         target[1] += modifier[1];
@@ -93,7 +93,7 @@ public class Engine extends WindowAdapter implements KeyListener
 
             int[] moveModifier = this.getKeyMoveModifier(keyEvent.getKeyCode());
             if (moveModifier != null)
-                this.modifyTernaryArray(this.inputMoveVector, moveModifier);
+                this.modifyThreeElementsArray(this.inputMoveVector, moveModifier);
         }
         finally
         {
@@ -115,7 +115,7 @@ public class Engine extends WindowAdapter implements KeyListener
                 moveModifier[0] *= -1;
                 moveModifier[1] *= -1;
                 moveModifier[2] *= -1;
-                this.modifyTernaryArray(this.inputMoveVector, moveModifier);
+                this.modifyThreeElementsArray(this.inputMoveVector, moveModifier);
             }
         }
         finally
@@ -168,15 +168,17 @@ public class Engine extends WindowAdapter implements KeyListener
                 }
                 else if (playerCollisions[0].event == GameEvent.OUT_OF_BOUNDS)
                 {
+                    /* TODO : teleport player to the right position, whether player
+                        deep out of bounds or not */
                     int[] modifiedInputMoveVector = this.inputMoveVector.clone();
                     if (this.collisionsProcessor.playerOutOfVerticalBorders(
                         this.inputMoveVector,
                         this.currentLevel.player))
-                        modifiedInputMoveVector[1] = 0;  // TODO : remove gap
+                        modifiedInputMoveVector[1] = 0;
                     if (this.collisionsProcessor.playerOutOfHorizontalBorders(
                         this.inputMoveVector,
                         this.currentLevel.player))
-                        modifiedInputMoveVector[0] = 0;  // TODO : remove gap
+                        modifiedInputMoveVector[0] = 0;
 
                     if (modifiedInputMoveVector[0] != 0
                         || modifiedInputMoveVector[1] != 0
