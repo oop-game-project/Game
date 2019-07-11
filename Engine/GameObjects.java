@@ -13,7 +13,7 @@ public class GameObjects
 //  Movable objects
 //
 
-    public class MovableObject
+    public abstract class MovableObject
     {
         public int[] currentLocation;
 
@@ -34,7 +34,6 @@ public class GameObjects
 
     public class Projectile extends MovableObject
     {
-        // public final A projectileType
         public final boolean firedByPlayer;
 
         public Projectile(int[] inputLocation, boolean inputFiredByPlayer)

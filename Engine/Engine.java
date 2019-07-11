@@ -168,8 +168,9 @@ public class Engine extends WindowAdapter implements KeyListener
                 }
                 else if (playerCollisions[0].event == GameEvent.OUT_OF_BOUNDS)
                 {
-                    /* TODO : teleport player to the right position, whether player
-                        deep out of bounds or not */
+                    /*  Would Be Better:
+                            Teleport player to the right position, whether player deep out of
+                        bounds or not. Not just leave player standing still */
                     int[] modifiedInputMoveVector = this.inputMoveVector.clone();
                     if (this.collisionsProcessor.playerOutOfVerticalBorders(
                         this.inputMoveVector,
