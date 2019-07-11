@@ -22,18 +22,21 @@ public class CollisionsProcessor
     {
         int[] playerLocation = movableObject.currentLocation;
 
-        return playerLocation[0] + moveVector[0] + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2
-               >= this.FIELD_SIZE[0]
-            || playerLocation[0] + moveVector[0] - PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2
-               < 0;
+        return playerLocation[0]
+               + moveVector[0]
+               + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2 > this.FIELD_SIZE[0]
+            || playerLocation[0]
+               + moveVector[0]
+               - PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2 < 0;
     }
 
     public boolean playerOutOfVerticalBorders(int[] moveVector, Player movableObject)
     {
         int[] playerLocation = movableObject.currentLocation;
 
-        return playerLocation[1] + moveVector[1]
-            + (int) (PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH * 0.75) >= this.FIELD_SIZE[1]
+        return playerLocation[1]
+               + moveVector[1]
+               + (int) (PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH * 0.75) > this.FIELD_SIZE[1]
             || playerLocation[1] + moveVector[1] < 0;
     }
 
@@ -76,7 +79,10 @@ public class CollisionsProcessor
             if (this.playerOutOfHorizontalBorders(moveVector, (Player)movableObject)
                 || this.playerOutOfVerticalBorders(moveVector, (Player)movableObject))
                 return new Collision[] {
-                    new Collision(movableObject, GameEvent.OUT_OF_BOUNDS, null) };
+                    new Collision(
+                        movableObject,
+                        GameEvent.OUT_OF_BOUNDS,
+                        null) };
         }
 
         return new Collision[] {

@@ -6,7 +6,6 @@ import Game.Engine.LevelsProcessor.SinglePlayerLevel;
 import Game.Engine.CollisionsProcessor.*;
 import Game.Launcher;
 
-import javax.sql.rowset.spi.SyncResolver;
 import javax.swing.*; // TODO: get rid of '*'
 
 import java.awt.event.KeyEvent;
@@ -38,24 +37,12 @@ public class Engine extends WindowAdapter implements KeyListener
 
     private boolean renderNeeded = false;
 
-    // TODO : constructor with "String levelFileName"
     public Engine(SinglePlayerLevel inputLevel, Launcher inputLauncher)
     {
         this.launcher = inputLauncher;
         this.currentLevel = inputLevel;
 
         this.collisionsProcessor = new CollisionsProcessor(this.currentLevel.gameFieldSize);
-    }
-
-//
-//  Global helper section
-//
-
-    public void modifyArray(int[] target, int[] modifier)
-    {
-        target[0] += modifier[0];
-        target[1] += modifier[1];
-        target[2] += modifier[2];
     }
 
 //
@@ -85,6 +72,13 @@ public class Engine extends WindowAdapter implements KeyListener
         }
     }
 
+    public void modifyTernaryArray(int[] target, int[] modifier)
+    {
+        target[0] += modifier[0];
+        target[1] += modifier[1];
+        target[2] += modifier[2];
+    }
+
     public void keyTyped(KeyEvent keyEvent) { }
 
     public void keyPressed(KeyEvent keyEvent)
@@ -99,7 +93,7 @@ public class Engine extends WindowAdapter implements KeyListener
 
             int[] moveModifier = this.getKeyMoveModifier(keyEvent.getKeyCode());
             if (moveModifier != null)
-                this.modifyArray(this.inputMoveVector, moveModifier);
+                this.modifyTernaryArray(this.inputMoveVector, moveModifier);
         }
         finally
         {
@@ -121,7 +115,7 @@ public class Engine extends WindowAdapter implements KeyListener
                 moveModifier[0] *= -1;
                 moveModifier[1] *= -1;
                 moveModifier[2] *= -1;
-                this.modifyArray(this.inputMoveVector, moveModifier);
+                this.modifyTernaryArray(this.inputMoveVector, moveModifier);
             }
         }
         finally
@@ -153,22 +147,10 @@ public class Engine extends WindowAdapter implements KeyListener
     }
 
 //
-//  Main game loop section
+//  Level update section
 //
 
-    public void timeAlignment()  // TODO
-    {
-        try
-        {
-            Thread.sleep(1000 / 60);
-        }
-        catch (InterruptedException exception)
-        {
-            exception.printStackTrace();
-        }
-    }
-
-    private void updateLevel()
+    private void updatePlayerPosition()
     {
         this.inputMoveLock.lock();
         try
@@ -178,7 +160,7 @@ public class Engine extends WindowAdapter implements KeyListener
                 || this.inputMoveVector[2] != 0)
             {
                 Collision[] playerCollisions = collisionsProcessor.getCollision(
-                        this.currentLevel, this.inputMoveVector, this.currentLevel.player);
+                    this.currentLevel, this.inputMoveVector, this.currentLevel.player);
                 if (playerCollisions[0].event == GameEvent.OK)
                 {
                     this.currentLevel.player.modifyLocation(inputMoveVector);
@@ -188,13 +170,13 @@ public class Engine extends WindowAdapter implements KeyListener
                 {
                     int[] modifiedInputMoveVector = this.inputMoveVector.clone();
                     if (this.collisionsProcessor.playerOutOfVerticalBorders(
-                            this.inputMoveVector,
-                            this.currentLevel.player))
-                        modifiedInputMoveVector[1] = 0;
+                        this.inputMoveVector,
+                        this.currentLevel.player))
+                        modifiedInputMoveVector[1] = 0;  // TODO : remove gap
                     if (this.collisionsProcessor.playerOutOfHorizontalBorders(
-                            this.inputMoveVector,
-                            this.currentLevel.player))
-                        modifiedInputMoveVector[0] = 0;
+                        this.inputMoveVector,
+                        this.currentLevel.player))
+                        modifiedInputMoveVector[0] = 0;  // TODO : remove gap
 
                     if (modifiedInputMoveVector[0] != 0
                         || modifiedInputMoveVector[1] != 0
@@ -211,6 +193,27 @@ public class Engine extends WindowAdapter implements KeyListener
         finally
         {
             this.inputMoveLock.unlock();
+        }
+    }
+
+    private void updateLevel()
+    {
+        updatePlayerPosition();
+    }
+
+//
+//  Main game loop section
+//
+
+    public void timeAlignment()
+    {
+        try
+        {
+            Thread.sleep(1000 / 60);
+        }
+        catch (InterruptedException exception)
+        {
+            exception.printStackTrace();
         }
     }
 
