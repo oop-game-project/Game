@@ -184,6 +184,8 @@ public class Engine extends WindowAdapter implements KeyListener
 
     private void updateLevel()
     {
+        // Check if pause is active (Latin 'P' was pressed)
+
         updatePlayerPosition();
 
         // Move all MovableObject elements

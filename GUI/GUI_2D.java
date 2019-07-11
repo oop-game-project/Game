@@ -29,6 +29,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         this.gameMainFrame.setResizable(false);
 
         this.gameMainFrame.addKeyListener((KeyListener)engine);
+        this.gameMainFrame.addKeyListener(this);
         this.gameMainFrame.addWindowListener((WindowListener)engine);
         this.gameMainFrame.add(this);
 
@@ -47,7 +48,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 
     public void keyPressed(KeyEvent keyEvent)
     {
-        if (keyEvent.getKeyCode() == KeyEvent.VK_Q)
+        if (keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE)
             this.gameMainFrame.dispatchEvent(
                 new WindowEvent(this.gameMainFrame, WindowEvent.WINDOW_CLOSING));
     }
