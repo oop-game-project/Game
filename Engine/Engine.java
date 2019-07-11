@@ -51,7 +51,33 @@ public class Engine extends WindowAdapter implements KeyListener
 
     private HashSet<Integer> keysPressed = new HashSet<>();
 
-    private int[] getKeyMoveModifier(int keyCode)
+    private enum PlayerAction
+    {
+        Unknown,
+        Fire,
+        Move,
+        OpenMenu
+    }
+
+    private PlayerAction getPlayerActionFromKey(int keyCode)
+    {
+        switch (keyCode)
+        {
+            case KeyEvent.VK_RIGHT:
+            case KeyEvent.VK_DOWN:
+            case KeyEvent.VK_LEFT:
+            case KeyEvent.VK_UP:
+                return PlayerAction.Move;
+
+            case KeyEvent.VK_Z:
+                return PlayerAction.Fire;
+
+            default:
+                return PlayerAction.Unknown;
+        }
+    }
+
+    private int[] getMoveModifierFromKey(int keyCode)
     {
         switch (keyCode)
         {
@@ -68,7 +94,7 @@ public class Engine extends WindowAdapter implements KeyListener
                 return new int[] { 0, -PLAYER_MOVE_SPEED, 0 };
 
             default:
-                return null;
+                throw new IllegalArgumentException("Incorrect input key code");
         }
     }
 
@@ -81,11 +107,13 @@ public class Engine extends WindowAdapter implements KeyListener
 
     public void keyTyped(KeyEvent keyEvent) { }
 
-    private void addModifierToMoveVector(KeyEvent keyEvent, int[] moveModifier)
+    private void addModifierToMoveVector(int keyCode)
     {
-        this.keysPressed.add(keyEvent.getKeyCode());
+        this.keysPressed.add(keyCode);
 
-        this.modifyThreeElementArray(this.inputMoveVector, moveModifier);
+        this.modifyThreeElementArray(
+            this.inputMoveVector,
+            this.getMoveModifierFromKey(keyCode));
     }
 
     public void keyPressed(KeyEvent keyEvent)
@@ -93,45 +121,42 @@ public class Engine extends WindowAdapter implements KeyListener
         if (this.keysPressed.contains(keyEvent.getKeyCode()))
             return;
 
-        int[] moveModifier = this.getKeyMoveModifier(keyEvent.getKeyCode());
-        if (moveModifier != null)
+        switch (this.getPlayerActionFromKey(keyEvent.getKeyCode()))
         {
-            inputMoveLock.lock();
-            try
+            case Move:
             {
-                addModifierToMoveVector(keyEvent, moveModifier);
+                inputMoveLock.lock();
+                try
+                {
+                    addModifierToMoveVector(keyEvent.getKeyCode());
+                }
+                finally
+                {
+                    inputMoveLock.unlock();
+                }
+
+                break;
             }
-            finally
-            {
-                inputMoveLock.unlock();
-            }
+            case Fire: // TODO
+                break;
+
+            case OpenMenu: // TODO
+                break;
+
+            case Unknown:
+                break;
         }
-//        else
-//        {
-//
-//        }
     }
 
-    private void subtractModifierFromMoveVector(KeyEvent keyEvent)
+    private void subtractModifierFromMoveVector(int keyCode)
     {
-        this.inputMoveLock.lock();
-        try
-        {
-            int[] moveModifier = this.getKeyMoveModifier(keyEvent.getKeyCode());
-            if (moveModifier != null)
-            {
-                moveModifier[0] *= -1;
-                moveModifier[1] *= -1;
-                moveModifier[2] *= -1;
-                this.modifyThreeElementArray(this.inputMoveVector, moveModifier);
-            }
-        }
-        finally
-        {
-            this.inputMoveLock.unlock();
-        }
+        int[] moveModifier = this.getMoveModifierFromKey(keyCode);
+        moveModifier[0] *= -1;
+        moveModifier[1] *= -1;
+        moveModifier[2] *= -1;
+        this.modifyThreeElementArray(this.inputMoveVector, moveModifier);
 
-        this.keysPressed.remove(keyEvent.getKeyCode());
+        this.keysPressed.remove(keyCode);
     }
 
     public void keyReleased(KeyEvent keyEvent)
@@ -139,7 +164,26 @@ public class Engine extends WindowAdapter implements KeyListener
         if (!this.keysPressed.contains(keyEvent.getKeyCode()))
             return;
 
-        subtractModifierFromMoveVector(keyEvent);
+        switch (this.getPlayerActionFromKey(keyEvent.getKeyCode()))
+        {
+            case Move:
+            {
+                this.inputMoveLock.lock();
+                try
+                {
+                    subtractModifierFromMoveVector(keyEvent.getKeyCode());
+                }
+                finally
+                {
+                    this.inputMoveLock.unlock();
+                }
+            }
+
+            case Fire:
+            case OpenMenu:
+            case Unknown:
+                break;
+        }
     }
 
 //
