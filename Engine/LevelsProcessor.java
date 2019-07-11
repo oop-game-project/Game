@@ -47,14 +47,4 @@ public class LevelsProcessor
 
         return new SinglePlayerLevel(gameFieldSize, player, mobs);
     }
-
-//
-//  Level parsing section
-//
-
-//      private SinglePlayerLevel parseLevelFile(String filename)
-//      {
-//          //TODO parse level in file
-//      }
-
 }

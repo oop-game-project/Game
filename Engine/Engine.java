@@ -20,17 +20,10 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Engine extends WindowAdapter implements KeyListener
 {
-//  Final engine's objects
     private final SinglePlayerLevel currentLevel;
-    private final GUI gui = new GUI_2D();  // Change main GUI here: GUI_2D or GUI_3D
-    private final Launcher launcher;
-    private final Thread gameLoopThread = new Thread(this::gameLoop);
-    private final CollisionsProcessor collisionsProcessor;
 
-    private final int PLAYER_MOVE_SPEED = 5;
-
-    private int[] inputMoveVector = new int[] { 0, 0, 0 };
-    private ReentrantLock inputMoveLock = new ReentrantLock();
+    private HashSet<Integer> keysPressed = new HashSet<>();
+    private ReentrantLock keysPressedLock = new ReentrantLock();
 
     private boolean closeGame = false;
     private ReentrantLock closeGameLock = new ReentrantLock();
@@ -49,146 +42,39 @@ public class Engine extends WindowAdapter implements KeyListener
 //  KeyListener implementation
 //
 
-    private HashSet<Integer> keysPressed = new HashSet<>();
-
-    private enum PlayerAction
-    {
-        Unknown,
-        Fire,
-        Move,
-        OpenMenu
-    }
-
-    private PlayerAction getPlayerActionFromKey(int keyCode)
-    {
-        switch (keyCode)
-        {
-            case KeyEvent.VK_RIGHT:
-            case KeyEvent.VK_DOWN:
-            case KeyEvent.VK_LEFT:
-            case KeyEvent.VK_UP:
-                return PlayerAction.Move;
-
-            case KeyEvent.VK_Z:
-                return PlayerAction.Fire;
-
-            default:
-                return PlayerAction.Unknown;
-        }
-    }
-
-    private int[] getMoveModifierFromKey(int keyCode)
-    {
-        switch (keyCode)
-        {
-            case KeyEvent.VK_RIGHT:
-                return new int[] { PLAYER_MOVE_SPEED, 0, 0 };
-
-            case KeyEvent.VK_DOWN:
-                return new int[] { 0, PLAYER_MOVE_SPEED, 0 };
-
-            case KeyEvent.VK_LEFT:
-                return new int[] { -PLAYER_MOVE_SPEED, 0, 0 };
-
-            case KeyEvent.VK_UP:
-                return new int[] { 0, -PLAYER_MOVE_SPEED, 0 };
-
-            default:
-                throw new IllegalArgumentException("Incorrect input key code");
-        }
-    }
-
-    public void modifyThreeElementArray(int[] target, int[] modifier)
-    {
-        target[0] += modifier[0];
-        target[1] += modifier[1];
-        target[2] += modifier[2];
-    }
-
     public void keyTyped(KeyEvent keyEvent) { }
-
-    private void addModifierToMoveVector(int keyCode)
-    {
-        this.keysPressed.add(keyCode);
-
-        this.modifyThreeElementArray(
-            this.inputMoveVector,
-            this.getMoveModifierFromKey(keyCode));
-    }
 
     public void keyPressed(KeyEvent keyEvent)
     {
-        if (this.keysPressed.contains(keyEvent.getKeyCode()))
-            return;
-
-        switch (this.getPlayerActionFromKey(keyEvent.getKeyCode()))
+        this.keysPressedLock.lock();
+        try
         {
-            case Move:
-            {
-                inputMoveLock.lock();
-                try
-                {
-                    addModifierToMoveVector(keyEvent.getKeyCode());
-                }
-                finally
-                {
-                    inputMoveLock.unlock();
-                }
-
-                break;
-            }
-            case Fire: // TODO
-                break;
-
-            case OpenMenu: // TODO
-                break;
-
-            case Unknown:
-                break;
+            this.keysPressed.add(keyEvent.getKeyCode());
         }
-    }
-
-    private void subtractModifierFromMoveVector(int keyCode)
-    {
-        int[] moveModifier = this.getMoveModifierFromKey(keyCode);
-        moveModifier[0] *= -1;
-        moveModifier[1] *= -1;
-        moveModifier[2] *= -1;
-        this.modifyThreeElementArray(this.inputMoveVector, moveModifier);
-
-        this.keysPressed.remove(keyCode);
+        finally
+        {
+            this.keysPressedLock.unlock();
+        }
     }
 
     public void keyReleased(KeyEvent keyEvent)
     {
-        if (!this.keysPressed.contains(keyEvent.getKeyCode()))
-            return;
-
-        switch (this.getPlayerActionFromKey(keyEvent.getKeyCode()))
+        this.keysPressedLock.lock();
+        try
         {
-            case Move:
-            {
-                this.inputMoveLock.lock();
-                try
-                {
-                    subtractModifierFromMoveVector(keyEvent.getKeyCode());
-                }
-                finally
-                {
-                    this.inputMoveLock.unlock();
-                }
-            }
-
-            case Fire:
-            case OpenMenu:
-            case Unknown:
-                break;
+            this.keysPressed.remove(keyEvent.getKeyCode());
+        }
+        finally
+        {
+            this.keysPressedLock.unlock();
         }
     }
 
 //
 //  WindowAdapter overrides
 //
+
+    private final Launcher launcher;
 
     @Override
     public void windowClosing(WindowEvent windowEvent)
@@ -210,34 +96,73 @@ public class Engine extends WindowAdapter implements KeyListener
 //  Level update section
 //
 
-    private void updatePlayerPosition()
+    private final int PLAYER_MOVE_SPEED = 5;
+    private final CollisionsProcessor collisionsProcessor;
+
+    private int[] getInputMoveVector()
     {
-        this.inputMoveLock.lock();
+        int[] inputMoveVector = new int[] { 0, 0, 0 };
+        this.keysPressedLock.lock();
         try
         {
-            if (this.inputMoveVector[0] != 0
-                || this.inputMoveVector[1] != 0
-                || this.inputMoveVector[2] != 0)
+            for (int keyCode : keysPressed)
+                switch (keyCode)
+                {
+                    case KeyEvent.VK_RIGHT:
+                        inputMoveVector[0] += PLAYER_MOVE_SPEED;
+                        break;
+
+                    case KeyEvent.VK_DOWN:
+                        inputMoveVector[1] += PLAYER_MOVE_SPEED;
+                        break;
+
+                    case KeyEvent.VK_LEFT:
+                        inputMoveVector[0] -= PLAYER_MOVE_SPEED;
+                        break;
+
+                    case KeyEvent.VK_UP:
+                        inputMoveVector[1] -= PLAYER_MOVE_SPEED;
+                        break;
+                }
+        }
+        finally
+        {
+            this.keysPressedLock.unlock();
+        }
+
+        return inputMoveVector;
+    }
+
+    private void updatePlayerPosition()
+    {
+        int[] inputMoveVector = this.getInputMoveVector();
+
+        if (inputMoveVector[0] != 0 || inputMoveVector[1] != 0 || inputMoveVector[2] != 0)
+        {
+            Collision[] playerCollisions = collisionsProcessor.getCollision(
+                this.currentLevel, inputMoveVector, this.currentLevel.player);
+            switch (playerCollisions[0].event)
             {
-                Collision[] playerCollisions = collisionsProcessor.getCollision(
-                    this.currentLevel, this.inputMoveVector, this.currentLevel.player);
-                if (playerCollisions[0].event == GameEvent.OK)
+                case OK:
                 {
                     this.currentLevel.player.modifyLocation(inputMoveVector);
                     this.renderNeeded = true;
+
+                    break;
                 }
-                else if (playerCollisions[0].event == GameEvent.OUT_OF_BOUNDS)
+
+                case OUT_OF_BOUNDS:
                 {
-                    /*  Would Be Better:
-                            Teleport player to the right position, whether player deep out of
-                        bounds or not. Not just leave player standing still */
-                    int[] modifiedInputMoveVector = this.inputMoveVector.clone();
+                /*  Would Be Better:
+                        Teleport player to the right position, whether player deep out of
+                    bounds or not. Not just leave player standing still */
+                    int[] modifiedInputMoveVector = inputMoveVector.clone();
                     if (this.collisionsProcessor.playerOutOfVerticalBorders(
-                        this.inputMoveVector,
+                        inputMoveVector,
                         this.currentLevel.player))
                         modifiedInputMoveVector[1] = 0;
                     if (this.collisionsProcessor.playerOutOfHorizontalBorders(
-                        this.inputMoveVector,
+                        inputMoveVector,
                         this.currentLevel.player))
                         modifiedInputMoveVector[0] = 0;
 
@@ -248,25 +173,32 @@ public class Engine extends WindowAdapter implements KeyListener
                         this.currentLevel.player.modifyLocation(modifiedInputMoveVector);
                         this.renderNeeded = true;
                     }
+
+                    break;
                 }
-                else
-                    assert false;
+                default:
+                    throw new IllegalArgumentException("Unknown collision gotten");
             }
-        }
-        finally
-        {
-            this.inputMoveLock.unlock();
         }
     }
 
     private void updateLevel()
     {
         updatePlayerPosition();
+
+        // Move all MovableObject elements
+
+        // Spawn player's projectile
+
+        // Spawn all projectiles
     }
 
 //
 //  Main game loop section
 //
+
+    private final Thread gameLoopThread = new Thread(this::gameLoop);
+    private final GUI gui = new GUI_2D();  // Change main GUI here: GUI_2D or GUI_3D
 
     public void timeAlignment()
     {
