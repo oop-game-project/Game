@@ -12,15 +12,15 @@ public class LevelsProcessor
         public final int[] gameFieldSize;
 
         public Player player;
-        public List<MovableObject> mobs;
-        public List<MovableObject> projectiles;
+        public List<MortalObject> mobs;
+        public List<MortalObject> projectiles;
         public List<InterfaceObject> interfaceObjects;
 
         public SinglePlayerLevel(
             int[] inputGameFieldSize,
             Player inputPlayer,
-            List<MovableObject> inputMobs,
-            List<MovableObject> inputProjectiles,
+            List<MortalObject> inputMobs,
+            List<MortalObject> inputProjectiles,
             List<InterfaceObject> inputInterfaceObjects)
         {
             this.gameFieldSize = inputGameFieldSize;
@@ -45,7 +45,7 @@ public class LevelsProcessor
             new int[] { 175, 350, 0 },
             20);
 
-        List<MovableObject> mobs = new ArrayList<>();
+        List<MortalObject> mobs = new ArrayList<>();
         mobs.add(gameObjects.new SphereMob(
             new int[]{420, 175, 0},
             5));
