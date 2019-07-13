@@ -31,7 +31,6 @@ public class GameObjects
 
     public abstract class MortalObject extends MovableObject
     {
-        public static final int hitPointsMax = 0;
         public int hitPointsCurrent;
 
         public MortalObject(
@@ -57,6 +56,19 @@ public class GameObjects
             super(inputLocation, inputHitPointsCurrent);
         }
     }
+
+//    TODO
+//    public abstract class AutoMovingObject extends MortalObject
+//    {
+//        public AutoMovingObject(
+//            int[] inputLocation,
+//            int inputHitPointsCurrent,
+//            Function<Integer, >)
+//        {
+//            super(inputLocation, inputHitPointsCurrent);
+//        }
+//
+//    }
 
     public class SphereMob extends MortalObject
     {

@@ -1,6 +1,6 @@
 package Game.Engine;
 
-import Game.Engine.GameObjects.*;
+import Game.Engine.GameObjects.*; // TODO: get rid of '*'
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,7 @@ public class LevelsProcessor
         public final int[] gameFieldSize;
 
         public Player player;
+        //  TODO : Change later to AutoMovingObject
         public List<MortalObject> mobs;
         public List<MortalObject> projectiles;
         public List<InterfaceObject> interfaceObjects;
