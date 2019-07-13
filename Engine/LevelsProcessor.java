@@ -10,6 +10,8 @@ public class LevelsProcessor
 
         public GameObjects.Player player;
         public GameObjects.MovableObject[] mobs;
+        public GameObjects.MovableObject[] projectiles;
+        public GameObjects.InterfaceObject[] interfaceObjects;
 
         public SinglePlayerLevel(
             int[] inputGameFieldSize,
