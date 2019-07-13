@@ -2,10 +2,10 @@ package Game.GUI;
 
 import Game.Engine.LevelsProcessor.SinglePlayerLevel;
 
-import java.util.EventListener;
+import java.awt.event.KeyListener;
 
 public interface GUI
 {
-    public void init(EventListener engineAsKeyListener);
+    public void init(KeyListener engineAsKeyListener);
     public void render(SinglePlayerLevel renderingLevel);
 }
