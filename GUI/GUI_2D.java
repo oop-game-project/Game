@@ -1,7 +1,5 @@
 package Game.GUI;
 
-import Game.Engine.Engine;
-import Game.Engine.GameObjects.PaintingConst;
 import Game.Engine.LevelsProcessor.SinglePlayerLevel;
 
 import javax.swing.JFrame;
@@ -57,6 +55,10 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 //  Paint components section
 //
 
+    public static final int PLAYER_TRIANGLE_SIDE_LENGTH = 30;
+    public static final int SPHERE_MOB_RADIUS = 20;
+    public static final int BASIC_PROJECTILE_SIDE_LENGTH = 2;
+
     @Override
     public Dimension getPreferredSize()
     {
@@ -70,12 +72,12 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         graphics.fillPolygon(
                 new int[] {
                     playerLocation[0],
-                    playerLocation[0] + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2,
-                    playerLocation[0] - PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2 },
+                    playerLocation[0] + GUI_2D.PLAYER_TRIANGLE_SIDE_LENGTH / 2,
+                    playerLocation[0] - GUI_2D.PLAYER_TRIANGLE_SIDE_LENGTH / 2 },
                 new int[] {
                     playerLocation[1],
-                    playerLocation[1] + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH,
-                    playerLocation[1] + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH },
+                    playerLocation[1] + GUI_2D.PLAYER_TRIANGLE_SIDE_LENGTH,
+                    playerLocation[1] + GUI_2D.PLAYER_TRIANGLE_SIDE_LENGTH },
                 3);
     }
 
@@ -84,13 +86,18 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
     {
         super.paintComponent(graphics);
 
+        // Paint player
         this.paintPlayer(
                 graphics,
                 this.currentLevelState.player.currentLocation);
+
+        // Paint mobs
+
+        // Paint projectiles (after painting mobs for better debugging)
     }
 
 //
-//  Render main section
+//  Main render section
 //
 
     @Override
