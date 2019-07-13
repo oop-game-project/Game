@@ -4,16 +4,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class GameObjects
 {
-    abstract class GameObject
-    {
-        GameObject() { }
-    }
+    abstract class GameObject { }
 
 //
 //  Movable objects
 //
 
-    public abstract class MovableObject
+    public abstract class MovableObject extends GameObject
     {
         public int[] currentLocation;
 
@@ -31,23 +28,6 @@ public class GameObjects
             this.currentLocation[2] += locationModifier[2];
         }
     }
-
-    public class Projectile extends MovableObject
-    {
-        public final boolean firedByPlayer;
-
-        public Projectile(int[] inputLocation, boolean inputFiredByPlayer)
-        {
-            super(inputLocation);
-
-            this.firedByPlayer = inputFiredByPlayer;
-        }
-
-    }
-
-//
-//  Mortal objects
-//
 
     public abstract class MortalObject extends MovableObject
     {
@@ -88,6 +68,24 @@ public class GameObjects
         {
             super(inputLocation, inputHitPointsCurrent);
         }
+    }
+
+    public class BasicProjectile extends MortalObject
+    {
+        public static final int hitPointsMax = 1;
+
+        public final boolean firedByPlayer;
+
+        public BasicProjectile(
+            int[] inputLocation,
+            boolean inputFiredByPlayer,
+            int inputHitPointsCurrent)
+        {
+            super(inputLocation, inputHitPointsCurrent);
+
+            this.firedByPlayer = inputFiredByPlayer;
+        }
+
     }
 
 //
