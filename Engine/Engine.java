@@ -137,7 +137,9 @@ public class Engine extends WindowAdapter implements KeyListener
     {
         int[] inputMoveVector = this.getInputMoveVector();
 
-        if (inputMoveVector[0] != 0 || inputMoveVector[1] != 0 || inputMoveVector[2] != 0)
+        if (inputMoveVector[0] != 0
+            || inputMoveVector[1] != 0
+            || inputMoveVector[2] != 0)
         {
             Collision[] playerCollisions = collisionsProcessor.getCollision(
                 this.currentLevel, inputMoveVector, this.currentLevel.player);
@@ -153,9 +155,10 @@ public class Engine extends WindowAdapter implements KeyListener
 
                 case OUT_OF_BOUNDS:
                 {
-                /*  Would Be Better:
-                        Teleport player to the right position, whether player deep out of
-                    bounds or not. Not just leave player standing still */
+                    //  Would Be Better:
+                    //      Teleport player to the right position, whether
+                    //  player deep out of bounds or not. Not just leave
+                    //  player standing still
                     int[] modifiedInputMoveVector = inputMoveVector.clone();
                     if (this.collisionsProcessor.playerOutOfVerticalBorders(
                         inputMoveVector,
@@ -184,15 +187,16 @@ public class Engine extends WindowAdapter implements KeyListener
 
     private void updateLevel()
     {
-        // Check if pause is active (Latin 'P' was pressed)
+        //  Check if pause is active (Latin 'P' was pressed)
 
+        //  Move player
         updatePlayerPosition();
 
-        // Move all MovableObject elements
+        //  Move all MovableObject elements in the array
 
-        // Spawn player's projectile
+        //  Spawn player's projectile
 
-        // Spawn all projectiles
+        //  Spawn mobs' projectiles
     }
 
 //
@@ -200,10 +204,13 @@ public class Engine extends WindowAdapter implements KeyListener
 //
 
     private final Thread gameLoopThread = new Thread(this::gameLoop);
-    private final GUI gui = new GUI_2D();  // Change main GUI here: GUI_2D or GUI_3D
+    //  Change main GUI here: GUI_2D or GUI_3D
+    private final GUI gui = new GUI_2D();
 
     public void timeAlignment()
     {
+        //  Would Be Better:
+        //      Smart alignment based on update and render time passed
         try
         {
             Thread.sleep(1000 / 60);
@@ -226,8 +233,10 @@ public class Engine extends WindowAdapter implements KeyListener
     {
         while (!this.closeGame)
         {
+            //  Update
             this.updateLevel();
 
+            //  Render
             this.closeGameLock.lock();
             try
             {
@@ -244,6 +253,7 @@ public class Engine extends WindowAdapter implements KeyListener
                 this.renderNeeded = false;
             }
 
+            // Wait a little for time alignment
             this.timeAlignment();
         }
     }
