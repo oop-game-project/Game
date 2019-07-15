@@ -58,9 +58,6 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 //  Paint components section
 //
 
-    //  Painting constants
-    public static final int PLAYER_TRIANGLE_SIDE_LENGTH = 30;
-    public static final int BASIC_PROJECTILE_SIDE_LENGTH = 2;
 
     @Override
     public Dimension getPreferredSize()
@@ -76,12 +73,16 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         graphics.fillPolygon(
                 new int[] {
                     playerLocation[0],
-                    playerLocation[0] + GUI_2D.PLAYER_TRIANGLE_SIDE_LENGTH / 2,
-                    playerLocation[0] - GUI_2D.PLAYER_TRIANGLE_SIDE_LENGTH / 2},
+                    playerLocation[0]
+                    + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2,
+                    playerLocation[0]
+                    - PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2 },
                 new int[] {
                     playerLocation[1],
-                    playerLocation[1] + GUI_2D.PLAYER_TRIANGLE_SIDE_LENGTH,
-                    playerLocation[1] + GUI_2D.PLAYER_TRIANGLE_SIDE_LENGTH},
+                    playerLocation[1]
+                    + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH,
+                    playerLocation[1]
+                    + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH },
                 3);
     }
 
@@ -98,8 +99,8 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         graphics.fillRect(
             projectile.currentLocation[0],
             projectile.currentLocation[1],
-            GUI_2D.BASIC_PROJECTILE_SIDE_LENGTH,
-            GUI_2D.BASIC_PROJECTILE_SIDE_LENGTH);
+            PaintingConst.BASIC_PROJECTILE_SIDE_LENGTH,
+            PaintingConst.BASIC_PROJECTILE_SIDE_LENGTH);
     }
 
     private void paintMovableObjects(Graphics graphics)
