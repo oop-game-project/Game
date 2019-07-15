@@ -5,6 +5,7 @@ import Game.GUI.GUI_2D;
 import Game.Engine.LevelsProcessor.SinglePlayerLevel;
 import Game.Engine.CollisionsProcessor.*;
 import Game.Launcher;
+import Game.Engine.GameObjects.*;
 
 import javax.swing.*; // TODO: get rid of '*'
 
@@ -93,7 +94,18 @@ public class Engine extends WindowAdapter implements KeyListener
     }
 
 //
-//  Level update section
+//  Auto moving functions section
+//
+    //  final int SCREEN_MOVING_SPEED
+    private final int BASIC_PROJECTILE_MOVING_SPEED = 2;
+
+    private void moveObjectForward(MovableObject movableObject)
+    {
+
+    }
+
+//
+//  Level update main section
 //
 
     private final int PLAYER_MOVE_SPEED = 5;
@@ -200,20 +212,32 @@ public class Engine extends WindowAdapter implements KeyListener
     }
 
 //
-//  Main game loop section
+//  Game loop main section
 //
 
     private final Thread gameLoopThread = new Thread(this::gameLoop);
     //  Change main GUI here: GUI_2D or GUI_3D
     private final GUI gui = new GUI_2D();
 
+    /**
+     *  Как работает выравнивание по времени в этой игре.
+     *
+     *      Игра работает в режиме 60 итераций игрового цикла (обновление
+     *  И рендер уровня в одной итерации) в секунду.
+     *      По сути, секунда разбита на 60 частей. Выравнивание происходит
+     *  таким образом, что в начале каждой 1\60 части секунды должна начинаться
+     *  КАЖДАЯ итерация игрового цикла. НЕТ гарантии, что при таком подходе
+     *  не будет потеряна одна из 1\60-ой частей секунды
+     *      Таким образом, каждое обновление уровня происходит с рассчетом
+     *  ТОЛЬКО на текущую 1/60 часть секунды. Это позволяет избавиться от
+     *  дробных величин при модификации позиции движущихся объектов.
+     **/
     public void timeAlignment()
     {
-        //  Would Be Better:
-        //      Smart alignment based on update and render time passed
+        long millisInCurrentSecond = System.currentTimeMillis() % 1000;
         try
         {
-            Thread.sleep(1000 / 60);
+            Thread.sleep(1000 / 60 - millisInCurrentSecond % (1000 / 60));
         }
         catch (InterruptedException exception)
         {
@@ -241,7 +265,8 @@ public class Engine extends WindowAdapter implements KeyListener
             try
             {
                 if (!this.closeGame && this.renderNeeded)
-                    SwingUtilities.invokeAndWait(() -> gui.render(currentLevel));
+                    SwingUtilities.invokeAndWait(
+                        () -> gui.render(currentLevel));
             }
             catch (InterruptedException | InvocationTargetException exception)
             {

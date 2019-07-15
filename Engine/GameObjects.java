@@ -12,8 +12,10 @@ public class GameObjects
 
     public abstract class MovableObject extends GameObject
     {
+        //  Only needed for calculations around screen moving forward
         public final long spawnTime;
         public final int[] spawnLocation;
+
         public int[] currentLocation;
 
         MovableObject(@NotNull int[] inputLocation)

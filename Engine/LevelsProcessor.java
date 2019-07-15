@@ -12,7 +12,6 @@ public class LevelsProcessor
         public final int[] gameFieldSize;
 
         public Player player;
-        //  TODO : Change later to AutoMovingObject
         public List<MortalObject> mobs;
         public List<MortalObject> projectiles;
         public List<InterfaceObject> interfaceObjects;
