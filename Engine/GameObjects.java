@@ -12,13 +12,17 @@ public class GameObjects
 
     public abstract class MovableObject extends GameObject
     {
+        public final long spawnTime;
+        public final int[] spawnLocation;
         public int[] currentLocation;
 
         MovableObject(@NotNull int[] inputLocation)
         {
             assert inputLocation.length == 3;
 
-            this.currentLocation = inputLocation;
+            this.spawnTime = System.currentTimeMillis();
+            this.spawnLocation = inputLocation.clone();
+            this.currentLocation = inputLocation.clone();
         }
 
         public void modifyLocation(int[] locationModifier)
@@ -56,19 +60,6 @@ public class GameObjects
             super(inputLocation, inputHitPointsCurrent);
         }
     }
-
-//    TODO
-//    public abstract class AutoMovingObject extends MortalObject
-//    {
-//        public AutoMovingObject(
-//            int[] inputLocation,
-//            int inputHitPointsCurrent,
-//            Function<Integer, >)
-//        {
-//            super(inputLocation, inputHitPointsCurrent);
-//        }
-//
-//    }
 
     public class SphereMob extends MortalObject
     {
