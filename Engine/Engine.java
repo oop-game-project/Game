@@ -21,6 +21,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Engine extends WindowAdapter implements KeyListener
 {
+    private final GameObjects gameObjects = new GameObjects();
     private final SinglePlayerLevel currentLevel;
 
     private HashSet<Integer> keysPressed = new HashSet<>();
