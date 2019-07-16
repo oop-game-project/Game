@@ -49,11 +49,13 @@ public class GameObjects
 
             this.hitPointsCurrent = inputHitPointsCurrent;
         }
+
+        public abstract int getHitPointsMax();
     }
 
     public class Player extends MortalObject
     {
-        public static final int hitPointsMax = 20;
+        public int lastProjectileWasFiredTime = 0;
 
         public Player(
                 @NotNull int[] inputLocation,
@@ -61,18 +63,20 @@ public class GameObjects
         {
             super(inputLocation, inputHitPointsCurrent);
         }
+
+        public int getHitPointsMax() { return 30; }
     }
 
     public class SphereMob extends MortalObject
     {
-        public static final int hitPointsMax = 5;
-
         public SphereMob(
             int[] inputLocation,
             int inputHitPointsCurrent)
         {
             super(inputLocation, inputHitPointsCurrent);
         }
+
+        public int getHitPointsMax() { return 5; }
     }
 
     public class BasicProjectile extends MovableObject
