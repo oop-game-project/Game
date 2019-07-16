@@ -220,11 +220,11 @@ public class Engine extends WindowAdapter implements KeyListener
         //  TODO: Based on when last projectile was fired.
         if (this.keysPressed.contains(KeyEvent.VK_Z))
         {
-            //  BasicProjectile have 3x3 size
             int[] BasicProjectileSpawnLocation = new int[]{
-                this.currentLevel.player.currentLocation[0] - 1,
-                this.currentLevel.player.currentLocation[1] - 3,
+                this.currentLevel.player.currentLocation[0],
+                this.currentLevel.player.currentLocation[1] - 5,
                 this.currentLevel.player.currentLocation[2]};
+            //  TODO: Resolve concurrent array changing
             this.currentLevel.projectiles.add(
                 this.gameObjects.new BasicProjectile(
                     BasicProjectileSpawnLocation,
@@ -257,15 +257,15 @@ public class Engine extends WindowAdapter implements KeyListener
     private final GUI gui = new GUI_2D();
 
     /**
-     *      Как работает выравнивание по времени в этой игре.
-     *
-     *      Игра работает в режиме 60 итераций игрового цикла (обновление
+     *  Игра работает в режиме 60 итераций игрового цикла (обновление
      *  И рендер уровня в одной итерации) в секунду.
-     *      По сути, секунда разбита на 60 частей. Выравнивание происходит
+     *
+     *  По сути, секунда разбита на 60 частей. Выравнивание происходит
      *  таким образом, что в начале каждой 1\60 части секунды должна начинаться
      *  КАЖДАЯ итерация игрового цикла. НЕТ гарантии, что при таком подходе
      *  не будет потеряна одна из 1\60-ой частей секунды
-     *      Таким образом, каждое обновление уровня происходит с рассчетом
+     *
+     *  Таким образом, каждое обновление уровня происходит с рассчетом
      *  ТОЛЬКО на текущую 1/60 часть секунды. Это позволяет избавиться от
      *  дробных величин при модификации позиции движущихся объектов.
      **/
@@ -303,7 +303,8 @@ public class Engine extends WindowAdapter implements KeyListener
             {
                 if (!this.closeGame)
                     SwingUtilities.invokeAndWait(
-                        () -> gui.render(currentLevel));
+                        //  TODO: currentLevel must be cloned here
+                        () -> gui.render(this.currentLevel));
             }
             catch (InterruptedException | InvocationTargetException exception)
             {

@@ -110,8 +110,8 @@ public class GameObjects
     public class PaintingConst
     {
         public static final int PLAYER_TRIANGLE_SIDE_LENGTH = 30;
-        public static final int SPHERE_MOB_CIRCLE_DIAMETER = 30;
-        public static final int BASIC_PROJECTILE_SIDE_LENGTH = 3;
+        public static final int SPHERE_MOB_CIRCLE_DIAMETER = 30;  // TODO: test
+        public static final int BASIC_PROJECTILE_DIAMETER = 7;
     }
 
 }

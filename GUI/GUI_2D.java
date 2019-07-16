@@ -96,11 +96,11 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         BasicProjectile projectile)
     {
         graphics.setColor(Color.YELLOW);
-        graphics.fillRect(
+        graphics.fillOval(
             projectile.currentLocation[0],
             projectile.currentLocation[1],
-            PaintingConst.BASIC_PROJECTILE_SIDE_LENGTH,
-            PaintingConst.BASIC_PROJECTILE_SIDE_LENGTH);
+            PaintingConst.BASIC_PROJECTILE_DIAMETER,
+            PaintingConst.BASIC_PROJECTILE_DIAMETER);
     }
 
     private void paintMovableObjects(Graphics graphics)
