@@ -2,15 +2,17 @@ package Game.Engine;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.management.ClassLoadingMXBean;
+
 public class GameObjects
 {
-    abstract class GameObject { }
+    abstract class GameObject implements Cloneable { }
 
 //
 //  Movable objects
 //
 
-    public abstract class MovableObject extends GameObject
+    public abstract class MovableObject extends GameObject implements Cloneable
     {
         //  Only needed for calculations around screen moving forward
         public final long spawnTime;
@@ -33,9 +35,20 @@ public class GameObjects
             this.currentLocation[1] += locationModifier[1];
             this.currentLocation[2] += locationModifier[2];
         }
+
+        @Override
+        public Object clone() throws CloneNotSupportedException
+        {
+            MovableObject newMovableObject = (MovableObject)super.clone();
+
+            newMovableObject.currentLocation = this.currentLocation.clone();
+
+            return newMovableObject;
+        }
     }
 
     public abstract class MortalObject extends MovableObject
+        implements Cloneable
     {
         public int hitPointsCurrent;
 
@@ -51,9 +64,15 @@ public class GameObjects
         }
 
         public abstract int getHitPointsMax();
+
+        @Override
+        public Object clone() throws CloneNotSupportedException
+        {
+            return super.clone();
+        }
     }
 
-    public class Player extends MortalObject
+    public class Player extends MortalObject implements Cloneable
     {
         public int lastProjectileWasFiredTime = 0;
 
@@ -65,9 +84,15 @@ public class GameObjects
         }
 
         public int getHitPointsMax() { return 30; }
+
+        @Override
+        public Object clone() throws CloneNotSupportedException
+        {
+            return super.clone();
+        }
     }
 
-    public class SphereMob extends MortalObject
+    public class SphereMob extends MortalObject implements Cloneable
     {
         public SphereMob(
             int[] inputLocation,
@@ -77,12 +102,18 @@ public class GameObjects
         }
 
         public int getHitPointsMax() { return 5; }
+
+        @Override
+        public Object clone() throws CloneNotSupportedException
+        {
+            return super.clone();
+        }
     }
 
     /**
      *  It just flies forward. Up if fired by player and down otherwise
      **/
-    public class BasicProjectile extends MovableObject
+    public class BasicProjectile extends MovableObject implements Cloneable
     {
         public final boolean firedByPlayer;
 
@@ -95,13 +126,18 @@ public class GameObjects
             this.firedByPlayer = firedObject instanceof Player;
         }
 
+        @Override
+        public Object clone() throws CloneNotSupportedException
+        {
+            return super.clone();
+        }
     }
 
 //
 //  Interface objects
 //
 
-    public class InterfaceObject { }
+    public class InterfaceObject extends GameObject { }
 
 //
 //  Painting constants for graphical and collision models
