@@ -96,11 +96,13 @@ public class Engine extends WindowAdapter implements KeyListener
 //  Auto moving functions section
 //
     //  final int SCREEN_MOVING_SPEED
-    private final int BASIC_PROJECTILE_MOVING_SPEED = 2;
+    private final int BASIC_PROJECTILE_MOVING_SPEED = 7;
 
     private void moveObjectForward(MovableObject movableObject)
     {
-
+        if (movableObject instanceof BasicProjectile)
+            movableObject.modifyLocation(
+                new int[] { 0, BASIC_PROJECTILE_MOVING_SPEED, 0 });
     }
 
 //
