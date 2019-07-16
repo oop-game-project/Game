@@ -3,6 +3,7 @@ package Game.Engine;
 import Game.Engine.GameObjects.*; // TODO: get rid of '*'
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class LevelsProcessor
@@ -12,16 +13,16 @@ public class LevelsProcessor
         public final int[] gameFieldSize;
 
         public Player player;
-        public List<MortalObject> mobs;
-        public List<MovableObject> projectiles;
-        public List<InterfaceObject> interfaceObjects;
+        public ArrayList<MortalObject> mobs;
+        public ArrayList<MovableObject> projectiles;
+        public ArrayList<InterfaceObject> interfaceObjects;
 
         public SinglePlayerLevel(
             int[] inputGameFieldSize,
             Player inputPlayer,
-            List<MortalObject> inputMobs,
-            List<MovableObject> inputProjectiles,
-            List<InterfaceObject> inputInterfaceObjects)
+            ArrayList<MortalObject> inputMobs,
+            ArrayList<MovableObject> inputProjectiles,
+            ArrayList<InterfaceObject> inputInterfaceObjects)
         {
             this.gameFieldSize = inputGameFieldSize;
             this.player = inputPlayer;
@@ -45,7 +46,7 @@ public class LevelsProcessor
             new int[] { 175, 350, 0 },
             20);
 
-        List<MortalObject> mobs = new ArrayList<>();
+        ArrayList<MortalObject> mobs = new ArrayList<>();
         mobs.add(gameObjects.new SphereMob(
             new int[]{420, 175, 0},
             5));
