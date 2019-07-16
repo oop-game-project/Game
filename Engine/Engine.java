@@ -216,8 +216,8 @@ public class Engine extends WindowAdapter implements KeyListener
 
     private void spawnProjectiles()
     {
-        //  TODO: Spawn player's projectile
-        //  Based on when last projectile was fired.
+        //  Spawn player's projectile
+        //  TODO: Based on when last projectile was fired.
         if (this.keysPressed.contains(KeyEvent.VK_Z))
         {
             //  BasicProjectile have 3x3 size
