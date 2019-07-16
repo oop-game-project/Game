@@ -194,6 +194,26 @@ public class Engine extends WindowAdapter implements KeyListener
         }
     }
 
+
+    private void spawnProjectiles()
+    {
+        //  TODO: Spawn player's projectile
+        //  Based on when last projectile was fired.
+        if (this.keysPressed.contains(KeyEvent.VK_Z))
+        {
+            //  BasicProjectile have 3x3 size
+            int[] BasicProjectileSpawnLocation = new int[]{
+                this.currentLevel.player.currentLocation[0] - 1,
+                this.currentLevel.player.currentLocation[1] - 3,
+                this.currentLevel.player.currentLocation[2]};
+            this.currentLevel.projectiles.add(
+                this.gameObjects.new BasicProjectile(
+                    BasicProjectileSpawnLocation,
+                    this.currentLevel.player));
+        }
+        //  TODO : Spawn mobs' projectiles
+    }
+
     private void updateLevel()
     {
         //  Would Be Better:
