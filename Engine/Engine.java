@@ -30,8 +30,6 @@ public class Engine extends WindowAdapter implements KeyListener
     private boolean closeGame = false;
     private ReentrantLock closeGameLock = new ReentrantLock();
 
-    private boolean renderNeeded = false;
-
     public Engine(SinglePlayerLevel inputLevel, Launcher inputLauncher)
     {
         this.launcher = inputLauncher;
@@ -161,8 +159,6 @@ public class Engine extends WindowAdapter implements KeyListener
                 case OK:
                 {
                     this.currentLevel.player.modifyLocation(inputMoveVector);
-                    this.renderNeeded = true;
-
                     break;
                 }
 
@@ -185,10 +181,8 @@ public class Engine extends WindowAdapter implements KeyListener
                     if (modifiedInputMoveVector[0] != 0
                         || modifiedInputMoveVector[1] != 0
                         || modifiedInputMoveVector[2] != 0)
-                    {
-                        this.currentLevel.player.modifyLocation(modifiedInputMoveVector);
-                        this.renderNeeded = true;
-                    }
+                        this.currentLevel.player.modifyLocation(
+                            modifiedInputMoveVector);
 
                     break;
                 }
@@ -265,7 +259,7 @@ public class Engine extends WindowAdapter implements KeyListener
             this.closeGameLock.lock();
             try
             {
-                if (!this.closeGame && this.renderNeeded)
+                if (!this.closeGame)
                     SwingUtilities.invokeAndWait(
                         () -> gui.render(currentLevel));
             }
@@ -276,7 +270,6 @@ public class Engine extends WindowAdapter implements KeyListener
             finally
             {
                 this.closeGameLock.unlock();
-                this.renderNeeded = false;
             }
 
             // Wait a little for time alignment
