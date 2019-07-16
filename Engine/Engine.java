@@ -196,16 +196,17 @@ public class Engine extends WindowAdapter implements KeyListener
 
     private void updateLevel()
     {
+        //  Would Be Better:
         //  Check if pause is active (Latin 'P' was pressed)
 
         //  Move player
         updatePlayerPosition();
 
-        //  Move all MovableObject elements in the array
+        //  Move all mobs and projectiles
+        updateMobsAndProjectilesPosition();
 
-        //  Spawn player's projectile
-
-        //  Spawn mobs' projectiles
+        //  Spawn all projectiles
+        spawnProjectiles();
     }
 
 //
@@ -217,7 +218,7 @@ public class Engine extends WindowAdapter implements KeyListener
     private final GUI gui = new GUI_2D();
 
     /**
-     *  Как работает выравнивание по времени в этой игре.
+     *      Как работает выравнивание по времени в этой игре.
      *
      *      Игра работает в режиме 60 итераций игрового цикла (обновление
      *  И рендер уровня в одной итерации) в секунду.
@@ -274,7 +275,8 @@ public class Engine extends WindowAdapter implements KeyListener
                 this.closeGameLock.unlock();
             }
 
-            // Wait a little for time alignment
+            //  Wait a little for time alignment. It is needed for CPU power
+            //  saving
             this.timeAlignment();
         }
     }
