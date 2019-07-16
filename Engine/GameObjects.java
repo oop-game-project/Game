@@ -79,6 +79,9 @@ public class GameObjects
         public int getHitPointsMax() { return 5; }
     }
 
+    /**
+     *  It just flies forward. Up if fired by player and down otherwise
+     **/
     public class BasicProjectile extends MovableObject
     {
         public final boolean firedByPlayer;

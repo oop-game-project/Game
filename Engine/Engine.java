@@ -98,10 +98,14 @@ public class Engine extends WindowAdapter implements KeyListener
     //  final int SCREEN_MOVING_SPEED
     private final int BASIC_PROJECTILE_MOVING_SPEED = 7;
 
-    private void moveObjectForward(MovableObject movableObject)
+    private void moveBasicProjectileForward(
+        BasicProjectile basicProjectile)
     {
-        if (movableObject instanceof BasicProjectile)
-            movableObject.modifyLocation(
+        if (basicProjectile.firedByPlayer)
+            basicProjectile.modifyLocation(
+                new int[] { 0, -BASIC_PROJECTILE_MOVING_SPEED, 0 });
+        else
+            basicProjectile.modifyLocation(
                 new int[] { 0, BASIC_PROJECTILE_MOVING_SPEED, 0 });
     }
 
@@ -194,6 +198,21 @@ public class Engine extends WindowAdapter implements KeyListener
         }
     }
 
+
+    //  TODO
+    private void updateMobsAndProjectilesPosition()
+    {
+        //  TODO: Check all collisions here
+
+        //  Move all projectiles
+        for (MovableObject projectile : this.currentLevel.projectiles)
+        {
+            if (projectile instanceof BasicProjectile)
+                this.moveBasicProjectileForward((BasicProjectile)projectile);
+        }
+
+        //  TODO: Move all mobs
+    }
 
     private void spawnProjectiles()
     {
