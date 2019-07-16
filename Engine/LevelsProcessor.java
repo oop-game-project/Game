@@ -13,14 +13,14 @@ public class LevelsProcessor
 
         public Player player;
         public List<MortalObject> mobs;
-        public List<MortalObject> projectiles;
+        public List<MovableObject> projectiles;
         public List<InterfaceObject> interfaceObjects;
 
         public SinglePlayerLevel(
             int[] inputGameFieldSize,
             Player inputPlayer,
             List<MortalObject> inputMobs,
-            List<MortalObject> inputProjectiles,
+            List<MovableObject> inputProjectiles,
             List<InterfaceObject> inputInterfaceObjects)
         {
             this.gameFieldSize = inputGameFieldSize;

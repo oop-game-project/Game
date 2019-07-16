@@ -75,20 +75,17 @@ public class GameObjects
         }
     }
 
-    public class BasicProjectile extends MortalObject
+    public class BasicProjectile extends MovableObject
     {
-        public static final int hitPointsMax = 1;
-
         public final boolean firedByPlayer;
 
         public BasicProjectile(
             int[] inputLocation,
-            boolean inputFiredByPlayer,
-            int inputHitPointsCurrent)
+            MovableObject firedObject)
         {
-            super(inputLocation, inputHitPointsCurrent);
+            super(inputLocation);
 
-            this.firedByPlayer = inputFiredByPlayer;
+            this.firedByPlayer = firedObject instanceof Player;
         }
 
     }

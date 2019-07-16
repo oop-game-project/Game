@@ -112,7 +112,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
                 paintSphereMob(graphics, (SphereMob)mobObject);
         }
 
-        //      Paint projectiles (after mobs for better debugging. It will be
+        //  Paint projectiles (after mobs for better debugging. It will be
         //  easier to see collisions, when projectiles paints above mods)
         for (MovableObject projectile : this.currentLevelState.projectiles)
         {
