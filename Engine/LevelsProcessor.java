@@ -33,7 +33,7 @@ public class LevelsProcessor
     }
 
 //
-//  Manual level init section
+// Manual level init section
 //
 
     public SinglePlayerLevel getLevelOne()

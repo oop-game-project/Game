@@ -40,7 +40,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
     }
 
 //
-//  KeyListener implementations
+// KeyListener implementations
 //
 
     public void keyTyped(KeyEvent e) { }
@@ -56,7 +56,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
     }
 
 //
-//  Paint components section
+// Paint components section
 //
 
 
@@ -89,7 +89,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 
     private void paintSphereMob(Graphics graphics, SphereMob sphereMob)
     {
-        //  TODO : Paint image, not just circle!
+        // TODO : Paint image, not just circle!
     }
 
     private void paintBasicProjectile(
@@ -106,15 +106,15 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 
     private void paintMovableObjects(Graphics graphics)
     {
-        //  Paint mobs
+        // Paint mobs
         for (MovableObject mobObject : this.renderingLevel.mobs)
         {
             if (mobObject instanceof SphereMob)
                 paintSphereMob(graphics, (SphereMob)mobObject);
         }
 
-        //  Paint projectiles (after mobs for better debugging. It will be
-        //  easier to see collisions, when projectiles paints above mods)
+        // Paint projectiles (after mobs for better debugging. It will be
+        // easier to see collisions, when projectiles paints above mods)
         for (MovableObject projectile : this.renderingLevel.projectiles)
         {
             if (projectile instanceof BasicProjectile)
@@ -127,23 +127,23 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
     {
         super.paintComponent(graphics);
 
-        //  Paint movable objects
+        // Paint movable objects
         this.paintMovableObjects(graphics);
 
-        //  Paint player
+        // Paint player
         this.paintPlayer(graphics);
 
-        //      Paint interface objects (Last painting for overall overlapping
-        //  by interface objects)
+        //     Paint interface objects (Last painting for overall overlapping
+        // by interface objects)
     }
 
 //
-//  Main render section
+// Main render section
 //
 
     public void render()
     {
-        //  Just say AWT thread to repaint game GUI
+        // Just say AWT thread to repaint game GUI
         try
         {
             SwingUtilities.invokeAndWait(this::repaint);

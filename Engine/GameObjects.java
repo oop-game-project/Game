@@ -9,12 +9,12 @@ public class GameObjects
     abstract class GameObject implements Cloneable { }
 
 //
-//  Movable objects
+// Movable objects
 //
 
     public abstract class MovableObject extends GameObject implements Cloneable
     {
-        //  Only needed for calculations around screen moving forward
+        // Only needed for calculations around screen moving forward
         public final long spawnTime;
         public final int[] spawnLocation;
 
@@ -111,7 +111,7 @@ public class GameObjects
     }
 
     /**
-     *  It just flies forward. Up if fired by player and down otherwise
+     * It just flies forward. Up if fired by player and down otherwise
      **/
     public class BasicProjectile extends MovableObject implements Cloneable
     {
@@ -134,13 +134,13 @@ public class GameObjects
     }
 
 //
-//  Interface objects
+// Interface objects
 //
 
     public class InterfaceObject extends GameObject { }
 
 //
-//  Painting constants for graphical and collision models
+// Painting constants for graphical and collision models
 //
 
     public class PaintingConst

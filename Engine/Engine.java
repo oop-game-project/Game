@@ -40,7 +40,7 @@ public class Engine extends WindowAdapter implements KeyListener
     }
 
 //
-//  KeyListener implementation
+// KeyListener implementation
 //
 
     public void keyTyped(KeyEvent keyEvent) { }
@@ -72,7 +72,7 @@ public class Engine extends WindowAdapter implements KeyListener
     }
 
 //
-//  WindowAdapter overrides
+// WindowAdapter overrides
 //
 
     private final Launcher launcher;
@@ -94,9 +94,9 @@ public class Engine extends WindowAdapter implements KeyListener
     }
 
 //
-//  Auto moving functions section
+// Auto moving functions section
 //
-    //  final int SCREEN_MOVING_SPEED
+    // final int SCREEN_MOVING_SPEED
     private final int BASIC_PROJECTILE_MOVING_SPEED = 7;
 
     private void moveBasicProjectileForward(
@@ -111,7 +111,7 @@ public class Engine extends WindowAdapter implements KeyListener
     }
 
 //
-//  Level update main section
+// Level update main section
 //
 
     private final int PLAYER_MOVE_SPEED = 5;
@@ -171,10 +171,10 @@ public class Engine extends WindowAdapter implements KeyListener
 
                 case OUT_OF_BOUNDS:
                 {
-                    //  Would Be Better:
-                    //      Teleport player to the right position, whether
-                    //  player deep out of bounds or not. Not just leave
-                    //  player standing still
+                    // [Would Be Better]
+                    // Teleport player to the right position, whether
+                    // player deep out of bounds or not. Not just leave
+                    // player standing still
                     int[] modifiedInputMoveVector = inputMoveVector.clone();
                     if (this.collisionsProcessor.playerOutOfVerticalBorders(
                         inputMoveVector,
@@ -200,25 +200,25 @@ public class Engine extends WindowAdapter implements KeyListener
     }
 
 
-    //  TODO
+    // TODO
     private void updateMobsAndProjectilesPosition()
     {
-        //  TODO: Check all collisions here
+        // TODO: Check all collisions here
 
-        //  Move all projectiles
+        // Move all projectiles
         for (MovableObject projectile : this.currentLevel.projectiles)
         {
             if (projectile instanceof BasicProjectile)
                 this.moveBasicProjectileForward((BasicProjectile)projectile);
         }
 
-        //  TODO: Move all mobs
+        // TODO: Move all mobs
     }
 
     private void spawnProjectiles()
     {
-        //  Spawn player's projectile
-        //  TODO: Based on when last projectile was fired.
+        // Spawn player's projectile
+        // TODO: Based on when last projectile was fired.
         if (this.keysPressed.contains(KeyEvent.VK_Z))
         {
             int[] BasicProjectileSpawnLocation = new int[]{
@@ -230,44 +230,44 @@ public class Engine extends WindowAdapter implements KeyListener
                     BasicProjectileSpawnLocation,
                     this.currentLevel.player));
         }
-        //  TODO : Spawn mobs' projectiles
+        // TODO : Spawn mobs' projectiles
     }
 
     private void updateLevel()
     {
-        //  Would Be Better:
-        //  Check if pause is active (Latin 'P' was pressed)
+        // [Would Be Better]
+        // Check if pause is active (Latin 'P' was pressed)
 
-        //  Move player
+        // Move player
         updatePlayerPosition();
 
-        //  Move all mobs and projectiles
+        // Move all mobs and projectiles
         updateMobsAndProjectilesPosition();
 
-        //  Spawn all projectiles
+        // Spawn all projectiles
         spawnProjectiles();
     }
 
 //
-//  Game loop main section
+// Game loop main section
 //
 
     private final Thread gameLoopThread = new Thread(this::gameLoop);
-    //  Change main GUI here: GUI_2D or GUI_3D
+    // Change main GUI here: GUI_2D or GUI_3D
     private final GUI gui = new GUI_2D();
 
     /**
-     *  Игра работает в режиме 60 итераций игрового цикла (обновление
-     *  И рендер уровня в одной итерации) в секунду.
+     * Игра работает в режиме 60 итераций игрового цикла (обновление
+     * И рендер уровня в одной итерации) в секунду.
      *
-     *  По сути, секунда разбита на 60 частей. Выравнивание происходит
-     *  таким образом, что в начале каждой 1\60 части секунды должна начинаться
-     *  КАЖДАЯ итерация игрового цикла. НЕТ гарантии, что при таком подходе
-     *  не будет потеряна одна из 1\60-ой частей секунды
+     * По сути, секунда разбита на 60 частей. Выравнивание происходит
+     * таким образом, что в начале каждой 1\60 части секунды должна начинаться
+     * КАЖДАЯ итерация игрового цикла. НЕТ гарантии, что при таком подходе
+     * не будет потеряна одна из 1\60-ой частей секунды
      *
-     *  Таким образом, каждое обновление уровня происходит с рассчетом
-     *  ТОЛЬКО на текущую 1/60 часть секунды. Это позволяет избавиться от
-     *  дробных величин при модификации позиции движущихся объектов.
+     * Таким образом, каждое обновление уровня происходит с рассчетом
+     * ТОЛЬКО на текущую 1/60 часть секунды. Это позволяет избавиться от
+     * дробных величин при модификации позиции движущихся объектов.
      **/
     public void timeAlignment()
     {
@@ -285,7 +285,6 @@ public class Engine extends WindowAdapter implements KeyListener
     public void runGameLoop()
     {
         this.gui.init(this, this.currentLevel);
-//        this.gui.render(this.currentLevel);
 
         this.gameLoopThread.start();
     }
@@ -294,10 +293,10 @@ public class Engine extends WindowAdapter implements KeyListener
     {
         while (!this.closeGame)
         {
-            //  Update
+            // Update
             this.updateLevel();
 
-            //  Render
+            // Render
             this.closeGameLock.lock();
             try
             {
@@ -309,8 +308,8 @@ public class Engine extends WindowAdapter implements KeyListener
                 this.closeGameLock.unlock();
             }
 
-            //  Wait a little for time alignment. It is needed for CPU power
-            //  saving
+            // Wait a little for time alignment. It is needed for CPU power
+            // saving
             this.timeAlignment();
         }
     }
