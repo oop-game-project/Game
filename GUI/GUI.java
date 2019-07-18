@@ -6,6 +6,8 @@ import java.awt.event.KeyListener;
 
 public interface GUI
 {
-    public void init(KeyListener engineAsKeyListener);
-    public void render(SinglePlayerLevel renderingLevel);
+    public void init(
+        KeyListener engineAsKeyListener,
+        SinglePlayerLevel renderingLevel);
+    public void render();
 }
