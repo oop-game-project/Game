@@ -3,8 +3,7 @@ package Game.GUI;
 import Game.Engine.GameObjects.*; // TODO: get rid of '*'
 import Game.Engine.LevelsProcessor.SinglePlayerLevel;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import java.awt.*; // TODO: get rid of '*'
 import java.awt.event.KeyEvent;
@@ -12,17 +11,19 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
 
 public class GUI_2D extends JPanel implements GUI, KeyListener
 {
     private final JFrame gameMainFrame = new JFrame();
-    private SinglePlayerLevel currentLevelState;
+    private SinglePlayerLevel renderingLevel;
 
     public GUI_2D() { }
 
-    public void init(KeyListener engine)
+    public void init(KeyListener engine, SinglePlayerLevel inputLevel)
     {
+        this.renderingLevel = inputLevel;
+
         this.gameMainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.gameMainFrame.setSize(700, 700);
         this.gameMainFrame.setResizable(false);
@@ -67,7 +68,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 
     private void paintPlayer(Graphics graphics)
     {
-        int[] playerLocation = this.currentLevelState.player.currentLocation;
+        int[] playerLocation = this.renderingLevel.player.currentLocation;
 
         graphics.setColor(Color.BLUE);
         graphics.fillPolygon(
@@ -106,7 +107,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
     private void paintMovableObjects(Graphics graphics)
     {
         //  Paint mobs
-        for (MovableObject mobObject : this.currentLevelState.mobs)
+        for (MovableObject mobObject : this.renderingLevel.mobs)
         {
             if (mobObject instanceof SphereMob)
                 paintSphereMob(graphics, (SphereMob)mobObject);
@@ -114,7 +115,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 
         //  Paint projectiles (after mobs for better debugging. It will be
         //  easier to see collisions, when projectiles paints above mods)
-        for (MovableObject projectile : this.currentLevelState.projectiles)
+        for (MovableObject projectile : this.renderingLevel.projectiles)
         {
             if (projectile instanceof BasicProjectile)
                 paintBasicProjectile(graphics, (BasicProjectile)projectile);
@@ -140,10 +141,16 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 //  Main render section
 //
 
-    public void render(SinglePlayerLevel renderingLevel)
+    public void render()
     {
-        this.currentLevelState = renderingLevel;
         //  Just say AWT thread to repaint game GUI
-        this.repaint();
+        try
+        {
+            SwingUtilities.invokeAndWait(this::repaint);
+        }
+        catch (InterruptedException | InvocationTargetException exception)
+        {
+            exception.printStackTrace();
+        }
     }
 }

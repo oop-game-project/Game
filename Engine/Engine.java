@@ -35,7 +35,8 @@ public class Engine extends WindowAdapter implements KeyListener
         this.launcher = inputLauncher;
         this.currentLevel = inputLevel;
 
-        this.collisionsProcessor = new CollisionsProcessor(this.currentLevel.gameFieldSize);
+        this.collisionsProcessor =
+            new CollisionsProcessor(this.currentLevel.gameFieldSize);
     }
 
 //
@@ -224,7 +225,6 @@ public class Engine extends WindowAdapter implements KeyListener
                 this.currentLevel.player.currentLocation[0],
                 this.currentLevel.player.currentLocation[1] - 5,
                 this.currentLevel.player.currentLocation[2]};
-            //  TODO: Resolve concurrent array changing
             this.currentLevel.projectiles.add(
                 this.gameObjects.new BasicProjectile(
                     BasicProjectileSpawnLocation,
@@ -284,8 +284,8 @@ public class Engine extends WindowAdapter implements KeyListener
 
     public void runGameLoop()
     {
-        this.gui.init(this);
-        this.gui.render(this.currentLevel);
+        this.gui.init(this, this.currentLevel);
+//        this.gui.render(this.currentLevel);
 
         this.gameLoopThread.start();
     }
@@ -302,13 +302,7 @@ public class Engine extends WindowAdapter implements KeyListener
             try
             {
                 if (!this.closeGame)
-                    SwingUtilities.invokeAndWait(
-                        //  TODO: currentLevel must be cloned here
-                        () -> gui.render(this.currentLevel));
-            }
-            catch (InterruptedException | InvocationTargetException exception)
-            {
-                exception.printStackTrace();
+                    gui.render();
             }
             finally
             {
