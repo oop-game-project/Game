@@ -11,12 +11,12 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class GUI_2D extends JPanel implements GUI, KeyListener
 {
     private final JFrame gameMainFrame = new JFrame();
     private SinglePlayerLevel renderingLevel;
+
+    private boolean levelRenderingIsNeeded = false;
 
     public GUI_2D() { }
 
@@ -56,9 +56,8 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
     }
 
 //
-// Paint components section
+// Paint component section
 //
-
 
     @Override
     public Dimension getPreferredSize()
@@ -127,14 +126,20 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
     {
         super.paintComponent(graphics);
 
-        // Paint movable objects
-        this.paintMovableObjects(graphics);
+        if (levelRenderingIsNeeded)
+        {
+            // Paint movable objects
+            this.paintMovableObjects(graphics);
 
-        // Paint player
-        this.paintPlayer(graphics);
+            // Paint player
+            this.paintPlayer(graphics);
 
-        //     Paint interface objects (Last painting for overall overlapping
-        // by interface objects)
+            // [Would Be Better]
+            // Paint interface objects (Last painting for overall overlapping
+            // by interface objects)
+
+            this.levelRenderingIsNeeded = false;
+        }
     }
 
 //
@@ -143,14 +148,21 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 
     public void render()
     {
+        this.levelRenderingIsNeeded = true;
+
         // Just say AWT thread to repaint game GUI
-        try
-        {
-            SwingUtilities.invokeAndWait(this::repaint);
-        }
-        catch (InterruptedException | InvocationTargetException exception)
-        {
-            exception.printStackTrace();
-        }
+        this.repaint();
+
+        // [Would Be Better]
+        // Solution without thread sleeping
+        while (levelRenderingIsNeeded)
+            try
+            {
+                Thread.sleep(10);
+            }
+            catch(InterruptedException exception)
+            {
+                exception.printStackTrace();
+            }
     }
 }

@@ -7,14 +7,10 @@ import Game.Engine.CollisionsProcessor.*;
 import Game.Launcher;
 import Game.Engine.GameObjects.*;
 
-import javax.swing.*; // TODO: get rid of '*'
-
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
-
-import java.lang.reflect.InvocationTargetException;
 
 import java.util.HashSet;
 import java.util.concurrent.locks.ReentrantLock;
