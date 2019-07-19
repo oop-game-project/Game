@@ -3,92 +3,65 @@ package Game.Engine;
 import Game.Engine.GameObjects.*;
 import Game.Engine.LevelsProcessor.SinglePlayerLevel;
 
-public class CollisionsProcessor
-{
-    private int[] FIELD_SIZE = new int[3];
+public class CollisionsProcessor {
 
-    public CollisionsProcessor(int[] gameFieldSize)
-    {
-        this.FIELD_SIZE[0] = gameFieldSize[0];
-        this.FIELD_SIZE[1] = gameFieldSize[1];
-        this.FIELD_SIZE[2] = gameFieldSize[2];
+    private int sizeX;
+    private int sizeY;
+    private int sizeZ;
+
+    public CollisionsProcessor(int[] gameFieldSize) {
+
+        sizeX = gameFieldSize[0];
+        sizeY = gameFieldSize[1];
+        sizeZ = gameFieldSize[2];
     }
 
-//
-//  Checking section
-//
+    public Collision getCollision(SinglePlayerLevel currentLevel, int[] moveVector, MovableObject movableObject) {
 
-    public boolean playerOutOfHorizontalBorders(int[] moveVector, Player movableObject)
-    {
-        int[] playerLocation = movableObject.currentLocation;
+        int playerX = movableObject.currentLocation[0];
+        int playerY = movableObject.currentLocation[1];
+//        int playerZ = movableObject.currentLocation[2]; ?
+        int vectorX = moveVector[0];
+        int vectorY = moveVector[1];
+//        int vectorZ = moveVector[2]; ?
+        if (movableObject instanceof Player) {
 
-        return playerLocation[0]
-               + moveVector[0]
-               + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2 > this.FIELD_SIZE[0]
-            || playerLocation[0]
-               + moveVector[0]
-               - PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2 < 0;
+            if (playerOutOfHorizontalBorders(vectorX, playerX))
+                    return new Collision(movableObject, GameEvent.OUT_HORIZONTAL, null);
+            if (playerOutOfVerticalBorders(vectorY, playerY))
+                return new Collision(movableObject, GameEvent.OUT_VERTICAL, null);
+        }
+        return new Collision(movableObject, GameEvent.OK, null);
     }
 
-    public boolean playerOutOfVerticalBorders(int[] moveVector, Player movableObject)
-    {
-        int[] playerLocation = movableObject.currentLocation;
+    private boolean playerOutOfHorizontalBorders(int vector, int player) {
 
-        return playerLocation[1]
-               + moveVector[1]
-               + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH > this.FIELD_SIZE[1]
-            || playerLocation[1] + moveVector[1] < 0;
+        return (player + vector + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2 > sizeX)
+                || (player + vector - PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2 < 0);
     }
 
-//
-//  Main section
-//
+    private boolean playerOutOfVerticalBorders(int vector, int player) {
 
-    public enum GameEvent
-    {
-        OUT_OF_BOUNDS,
-        COLLISION,
+        return (player + vector + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH > sizeY)
+                || (player + vector < 0);
+    }
+
+    public enum GameEvent {
+        OUT_VERTICAL,
+        OUT_HORIZONTAL,
         OK
     }
 
-    public class Collision
-    {
+    public class Collision {
         public final MovableObject movingObject;
         public final GameEvent event;
         public final MovableObject collidedObject;
 
-        public Collision(
-            MovableObject inputMovingObject,
-            GameEvent inputEvent,
-            MovableObject inputCollidedObject)
-        {
+        public Collision(MovableObject inputMovingObject, GameEvent inputEvent, MovableObject inputCollidedObject) {
             this.movingObject = inputMovingObject;
             this.event = inputEvent;
             this.collidedObject = inputCollidedObject;
         }
     }
-
-    public Collision[] getCollision(
-        SinglePlayerLevel currentLevel,
-        int[] moveVector,
-        MovableObject movableObject)
-    {
-        if (movableObject instanceof Player)
-        // All player's moves should be checked here
-        {
-            if (this.playerOutOfHorizontalBorders(moveVector, (Player)movableObject)
-                || this.playerOutOfVerticalBorders(moveVector, (Player)movableObject))
-                return new Collision[] {
-                    new Collision(
-                        movableObject,
-                        GameEvent.OUT_OF_BOUNDS,
-                        null) };
-        }
-
-        return new Collision[] {
-            new Collision(movableObject, GameEvent.OK, null) };
-    }
-
-
 
 }
