@@ -153,7 +153,7 @@ public class Engine extends WindowAdapter implements KeyListener
         return inputMoveVector;
     }
 
-    private void updatePlayerPosition()
+    private void updatePlayerState()
     {
         int[] inputMoveVector = this.getInputMoveVector();
 
@@ -161,6 +161,7 @@ public class Engine extends WindowAdapter implements KeyListener
             || inputMoveVector[1] != 0
             || inputMoveVector[2] != 0)
         {
+            // Collisions check
             Collision[] playerCollisions = collisionsProcessor.getCollision(
                 this.currentLevel, inputMoveVector, this.currentLevel.player);
             switch (playerCollisions[0].event)
@@ -196,14 +197,14 @@ public class Engine extends WindowAdapter implements KeyListener
                     break;
                 }
                 default:
-                    throw new IllegalArgumentException("Unknown collision gotten");
+                    throw new IllegalArgumentException(
+                        "Unknown collision is gotten while moving Player");
             }
         }
     }
 
-
     // TODO
-    private void updateMobsAndProjectilesPosition()
+    private void updateMobsAndProjectilesState()
     {
         // TODO: Check all collisions here
 
@@ -223,9 +224,11 @@ public class Engine extends WindowAdapter implements KeyListener
         // TODO: Based on when last projectile was fired.
         if (this.keysPressed.contains(KeyEvent.VK_Z))
         {
+            // BasicProjectile is a circle that should be spawned in front of
+            // player when fired
             int[] BasicProjectileSpawnLocation = new int[]{
-                this.currentLevel.player.currentLocation[0],
-                this.currentLevel.player.currentLocation[1] - 5,
+                this.currentLevel.player.currentLocation[0] - 4,
+                this.currentLevel.player.currentLocation[1] - 7,
                 this.currentLevel.player.currentLocation[2]};
             this.currentLevel.projectiles.add(
                 this.gameObjects.new BasicProjectile(
@@ -241,10 +244,10 @@ public class Engine extends WindowAdapter implements KeyListener
         // Check if pause is active (Latin 'P' was pressed)
 
         // Move player
-        updatePlayerPosition();
+        updatePlayerState();
 
         // Move all mobs and projectiles
-        updateMobsAndProjectilesPosition();
+        updateMobsAndProjectilesState();
 
         // Spawn all projectiles
         spawnProjectiles();
