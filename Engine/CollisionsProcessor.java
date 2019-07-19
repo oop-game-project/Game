@@ -26,6 +26,8 @@ public class CollisionsProcessor {
 //        int vectorZ = moveVector[2]; ?
         if (movableObject instanceof Player) {
 
+            if (playerOutOfHorizontalBorders(vectorX, playerX) && playerOutOfVerticalBorders(vectorY, playerY))
+                return new Collision(movableObject, GameEvent.OUT_DIAGONAL, null);
             if (playerOutOfHorizontalBorders(vectorX, playerX))
                     return new Collision(movableObject, GameEvent.OUT_HORIZONTAL, null);
             if (playerOutOfVerticalBorders(vectorY, playerY))
@@ -49,6 +51,7 @@ public class CollisionsProcessor {
     public enum GameEvent {
         OUT_VERTICAL,
         OUT_HORIZONTAL,
+        OUT_DIAGONAL,
         OK
     }
 
