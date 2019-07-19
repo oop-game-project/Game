@@ -73,6 +73,12 @@ public class Engine extends WindowAdapter implements KeyListener
 
     private final Launcher launcher;
 
+    private void setLauncherVisible()
+    {
+
+        this.launcher.setVisible(true);
+    }
+
     @Override
     public void windowClosing(WindowEvent windowEvent)
     {
@@ -86,7 +92,7 @@ public class Engine extends WindowAdapter implements KeyListener
             this.closeGameLock.unlock();
         }
 
-        this.launcher.setVisible(true);
+        this.setLauncherVisible();
     }
 
 //
