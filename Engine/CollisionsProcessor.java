@@ -18,20 +18,26 @@ public class CollisionsProcessor {
 
     public Collision getCollision(SinglePlayerLevel currentLevel, int[] moveVector, MovableObject movableObject) {
 
-        int playerX = movableObject.currentLocation[0];
-        int playerY = movableObject.currentLocation[1];
-//        int playerZ = movableObject.currentLocation[2]; ?
+        int x = movableObject.currentLocation[0];
+        int y = movableObject.currentLocation[1];
+//        int z = movableObject.currentLocation[2]; ?
         int vectorX = moveVector[0];
         int vectorY = moveVector[1];
 //        int vectorZ = moveVector[2]; ?
         if (movableObject instanceof Player) {
 
-            if (playerOutOfHorizontalBorders(vectorX, playerX) && playerOutOfVerticalBorders(vectorY, playerY))
+            if (playerOutOfHorizontalBorders(vectorX, x) && playerOutOfVerticalBorders(vectorY, y))
                 return new Collision(movableObject, GameEvent.OUT_DIAGONAL, null);
-            if (playerOutOfHorizontalBorders(vectorX, playerX))
+            if (playerOutOfHorizontalBorders(vectorX, x))
                     return new Collision(movableObject, GameEvent.OUT_HORIZONTAL, null);
-            if (playerOutOfVerticalBorders(vectorY, playerY))
+            if (playerOutOfVerticalBorders(vectorY, y))
                 return new Collision(movableObject, GameEvent.OUT_VERTICAL, null);
+        }
+        if (movableObject instanceof BasicProjectile) {
+
+            if ((y + vectorY + PaintingConst.BASIC_PROJECTILE_DIAMETER > sizeY) ||
+                    (y + vectorY - PaintingConst.BASIC_PROJECTILE_DIAMETER) < 0)
+                return new Collision(movableObject, GameEvent.BASIC_PROJECTILE_IS_OUT, null);
         }
         return new Collision(movableObject, GameEvent.OK, null);
     }
@@ -49,10 +55,11 @@ public class CollisionsProcessor {
     }
 
     public enum GameEvent {
+        OK,
         OUT_VERTICAL,
         OUT_HORIZONTAL,
         OUT_DIAGONAL,
-        OK
+        BASIC_PROJECTILE_IS_OUT
     }
 
     public class Collision {
