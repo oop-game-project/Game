@@ -19,13 +19,19 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Engine extends WindowAdapter implements KeyListener
 {
-    private final GameObjects gameObjects = new GameObjects();
     private final SinglePlayerLevel currentLevel;
 
     private HashSet<Integer> keysPressed = new HashSet<>();
+    // (Is this lock really needed?)
     private ReentrantLock keysPressedLock = new ReentrantLock();
 
+    private HashSet<Character> keysTyped = new HashSet<>();
+    // Lock is needed because of "keysTyped" modifications in multiple places
+    private ReentrantLock keysTypedLock = new ReentrantLock();
+
     private boolean closeGame = false;
+    // Lock for rendering safety. If rendering starts when game is closing,
+    // then GUI thread breaks
     private ReentrantLock closeGameLock = new ReentrantLock();
 
     public Engine(SinglePlayerLevel inputLevel, Launcher inputLauncher)
@@ -41,7 +47,18 @@ public class Engine extends WindowAdapter implements KeyListener
 // KeyListener implementation
 //
 
-    public void keyTyped(KeyEvent keyEvent) { }
+    public void keyTyped(KeyEvent keyEvent)
+    {
+        this.keysTypedLock.lock();
+        try
+        {
+            this.keysTyped.add(keyEvent.getKeyChar());
+        }
+        finally
+        {
+            this.keysTypedLock.unlock();
+        }
+    }
 
     public void keyPressed(KeyEvent keyEvent)
     {
