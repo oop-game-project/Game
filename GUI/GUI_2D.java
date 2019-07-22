@@ -89,6 +89,12 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
     private void paintSphereMob(Graphics graphics, SphereMob sphereMob)
     {
         // TODO : Paint image, not just circle!
+        graphics.setColor(Color.GREEN);
+        graphics.fillOval(
+            sphereMob.currentLocation[0],
+            sphereMob.currentLocation[1],
+            PaintingConst.SPHERE_MOB_CIRCLE_DIAMETER,
+            PaintingConst.SPHERE_MOB_CIRCLE_DIAMETER);
     }
 
     private void paintBasicProjectile(
