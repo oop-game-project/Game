@@ -174,44 +174,42 @@ public class Engine extends WindowAdapter implements KeyListener
             || inputMoveVector[2] != 0)
         {
             // Collisions check
-            Collision[] playerCollisions = collisionsProcessor.getCollision(
+            Collision playerCollision = collisionsProcessor.getCollision(
                 this.currentLevel, inputMoveVector, this.currentLevel.player);
-            switch (playerCollisions[0].event)
+            switch (playerCollision.event)
             {
                 case OK:
+                    break;
+
+                // [Would Be Better]
+                // Teleport player to the right position, whether
+                // player deep out of bounds or not. Not just leave
+                // player standing still
+                case OUT_HORIZONTAL:
                 {
-                    this.currentLevel.player.modifyLocation(inputMoveVector);
+                    inputMoveVector[0] = 0;
                     break;
                 }
 
-                case OUT_OF_BOUNDS:
+                case OUT_VERTICAL:
                 {
-                    // [Would Be Better]
-                    // Teleport player to the right position, whether
-                    // player deep out of bounds or not. Not just leave
-                    // player standing still
-                    int[] modifiedInputMoveVector = inputMoveVector.clone();
-                    if (this.collisionsProcessor.playerOutOfVerticalBorders(
-                        inputMoveVector,
-                        this.currentLevel.player))
-                        modifiedInputMoveVector[1] = 0;
-                    if (this.collisionsProcessor.playerOutOfHorizontalBorders(
-                        inputMoveVector,
-                        this.currentLevel.player))
-                        modifiedInputMoveVector[0] = 0;
-
-                    if (modifiedInputMoveVector[0] != 0
-                        || modifiedInputMoveVector[1] != 0
-                        || modifiedInputMoveVector[2] != 0)
-                        this.currentLevel.player.modifyLocation(
-                            modifiedInputMoveVector);
-
+                    inputMoveVector[1] = 0;
                     break;
                 }
+
+                case OUT_DIAGONAL:
+                {
+                    inputMoveVector[0] = 0;
+                    inputMoveVector[1] = 0;
+                    break;
+                }
+
                 default:
                     throw new IllegalArgumentException(
                         "Unknown collision is gotten while moving Player");
             }
+
+            this.currentLevel.player.modifyLocation(inputMoveVector);
         }
     }
 
