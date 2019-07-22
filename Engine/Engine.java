@@ -100,7 +100,7 @@ public class Engine extends WindowAdapter implements KeyListener
 // Auto moving functions section
 //
     // final int SCREEN_MOVING_SPEED
-    private final int BASIC_PROJECTILE_MOVING_SPEED = 7;
+    private final int BASIC_PROJECTILE_MOVING_SPEED = 10;
 
     private int[] getBasicProjectileMoveVector(
         BasicProjectile basicProjectile)
