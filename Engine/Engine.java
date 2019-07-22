@@ -13,6 +13,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -172,6 +173,9 @@ public class Engine extends WindowAdapter implements KeyListener
 
     private void updatePlayerState()
     {
+        // TODO: check hitpoints here (make method for that)
+
+        // TODO: All code below to another method
         int[] inputMoveVector = this.getInputMoveVector();
 
         if (inputMoveVector[0] != 0
@@ -211,26 +215,56 @@ public class Engine extends WindowAdapter implements KeyListener
 
                 default:
                     throw new IllegalArgumentException(
-                        "Unknown collision is gotten while moving Player");
+                        "Unknown collision received while moving Player");
             }
 
             this.currentLevel.player.modifyLocation(inputMoveVector);
         }
     }
 
-    // TODO
-    private void updateMobsAndProjectilesState()
-    {
-        // TODO: Check all collisions here
 
-        // Move all projectiles
+    // TODO: Despawn or move ONLY projectiles here
+    private void updateProjectilesState()
+    {
+        ArrayList<MovableObject> projectilesForDespawning = new ArrayList<>();
         for (MovableObject projectile : this.currentLevel.projectiles)
         {
             if (projectile instanceof BasicProjectile)
-                this.moveBasicProjectileForward((BasicProjectile)projectile);
+            {
+                int[] projectileMoveVector = this.getBasicProjectileMoveVector(
+                    (BasicProjectile)projectile);
+                Collision projectileCollision =
+                    this.collisionsProcessor.getCollision(
+                    this.currentLevel, projectileMoveVector, projectile);
+
+                switch (projectileCollision.event)
+                {
+                    case OK:
+                    {
+                        projectile.modifyLocation(projectileMoveVector);
+                        break;
+                    }
+
+                    case BASIC_PROJECTILE_IS_OUT:
+                    {
+                        projectilesForDespawning.add(projectile);
+                        break;
+                    }
+
+                    default:
+                        throw new IllegalArgumentException(
+                            "Unknown collision received");
+                }
+            }
         }
 
-        // TODO: Move all mobs
+        // Despawning
+        this.currentLevel.projectiles.removeAll(projectilesForDespawning);
+    }
+
+    private void updateMobsState()
+    {
+        // TODO: not implemented
     }
 
     private void spawnProjectiles()
