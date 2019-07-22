@@ -128,7 +128,12 @@ public class Engine extends WindowAdapter implements KeyListener
 // Level update main section
 //
 
+    // Pixels per level update
     private final int PLAYER_MOVE_SPEED = 5;
+
+    // Fire per this amount of milliseconds
+    private final int PLAYER_FIRING_FREQUENCY = 50;
+
     private final CollisionsProcessor collisionsProcessor;
 
     private int[] getInputMoveVector()
@@ -231,8 +236,11 @@ public class Engine extends WindowAdapter implements KeyListener
     private void spawnProjectiles()
     {
         // Spawn player's projectile
-        // TODO: Based on when last projectile was fired.
-        if (this.keysPressed.contains(KeyEvent.VK_Z))
+        // Based on when last projectile was fired.
+        if (this.keysPressed.contains(KeyEvent.VK_Z)
+            && System.currentTimeMillis()
+               - this.currentLevel.player.lastProjectileWasFiredTime
+               > PLAYER_FIRING_FREQUENCY)
         {
             // BasicProjectile is a circle that should be spawned in front of
             // player when fired
@@ -244,6 +252,9 @@ public class Engine extends WindowAdapter implements KeyListener
                 this.gameObjects.new BasicProjectile(
                     BasicProjectileSpawnLocation,
                     this.currentLevel.player));
+
+            this.currentLevel.player.lastProjectileWasFiredTime =
+                System.currentTimeMillis();
         }
         // TODO : Spawn mobs' projectiles
     }
