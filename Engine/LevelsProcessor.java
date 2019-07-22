@@ -1,10 +1,8 @@
 package Game.Engine;
 
-import Game.Engine.GameObjects.*; // TODO: get rid of '*'
+import Game.Engine.GameObjects.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class LevelsProcessor
 {

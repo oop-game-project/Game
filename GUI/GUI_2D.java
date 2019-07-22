@@ -1,20 +1,27 @@
 package Game.GUI;
 
-import Game.Engine.GameObjects.*; // TODO: get rid of '*'
+import Game.Engine.GameObjects.*;
 import Game.Engine.LevelsProcessor.SinglePlayerLevel;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-
-import java.awt.*; // TODO: get rid of '*'
+import java.awt.Image;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.image.BufferedImage;
+
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import javax.swing.JPanel;
+import javax.swing.JFrame;
+
+import javax.imageio.ImageIO;
 
 public class GUI_2D extends JPanel implements GUI, KeyListener
 {
