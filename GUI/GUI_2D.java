@@ -3,6 +3,7 @@ package Game.GUI;
 import Game.Engine.GameObjects.*; // TODO: get rid of '*'
 import Game.Engine.LevelsProcessor.SinglePlayerLevel;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import java.awt.*; // TODO: get rid of '*'
@@ -10,6 +11,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
 
 public class GUI_2D extends JPanel implements GUI, KeyListener
 {
@@ -20,9 +25,43 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 
     public GUI_2D() { }
 
+    private void loadImages()
+    {
+        try
+        {
+            // TODO: Change on release. User dir must have folder "Sprites"
+            Path pathToSprites = Paths.get(
+                System.getProperty("user.dir") + "\\src\\Game\\Sprites\\");
+
+            File sphereMobDefaultImage = new File(
+                pathToSprites.toString() + "\\SphereMob-Default.png");
+            this.SPHERE_MOB_DEFAULT = ImageIO
+                .read(sphereMobDefaultImage)
+                .getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+
+            File sphereMobAboveImage = new File(
+                pathToSprites.toString() + "\\SphereMob-Above.png");
+            this.SPHERE_MOB_ABOVE = ImageIO
+                .read(sphereMobAboveImage)
+                .getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+
+            File sphereMobBelowImage = new File(
+                pathToSprites.toString() + "\\SphereMob-Below.png");
+            this.SPHERE_MOB_BELOW = ImageIO
+                .read(sphereMobBelowImage)
+                .getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        }
+        catch (IOException occurredExc)
+        {
+            occurredExc.printStackTrace();
+        }
+    }
+
     public void init(KeyListener engine, SinglePlayerLevel inputLevel)
     {
         this.renderingLevel = inputLevel;
+
+        this.loadImages();
 
         this.gameMainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.gameMainFrame.setSize(700, 700);
@@ -58,6 +97,9 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 //
 // Paint component section
 //
+    Image SPHERE_MOB_DEFAULT;
+    Image SPHERE_MOB_ABOVE;
+    Image SPHERE_MOB_BELOW;
 
     @Override
     public Dimension getPreferredSize()
