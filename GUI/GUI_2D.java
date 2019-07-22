@@ -130,13 +130,40 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 
     private void paintSphereMob(Graphics graphics, SphereMob sphereMob)
     {
-        // TODO : Paint image, not just circle!
-        graphics.setColor(Color.GREEN);
-        graphics.fillOval(
+        Image drawingImage;
+        switch(sphereMob.currentLocation[2])
+        {
+            case 0:
+            {
+                drawingImage = this.SPHERE_MOB_DEFAULT;
+                break;
+            }
+
+            case 1:
+            {
+                drawingImage = this.SPHERE_MOB_ABOVE;
+                break;
+            }
+
+            case -1:
+            {
+                drawingImage = this.SPHERE_MOB_BELOW;
+                break;
+            }
+
+            default:
+            {
+                throw new IllegalStateException(
+                    "SphereMob have incorrect third coordinate: "
+                    + sphereMob.currentLocation[2]);
+            }
+        }
+
+        graphics.drawImage(
+            drawingImage,
             sphereMob.currentLocation[0],
             sphereMob.currentLocation[1],
-            PaintingConst.SPHERE_MOB_CIRCLE_DIAMETER,
-            PaintingConst.SPHERE_MOB_CIRCLE_DIAMETER);
+            null);
     }
 
     private void paintBasicProjectile(
@@ -153,6 +180,11 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 
     private void paintMovableObjects(Graphics graphics)
     {
+        // TODO: Paint MovableObject elements in order:
+        //  1. MovableObject elements below game field
+        //  2. Projectiles
+        //  3. MovableObject elements above game field
+
         // Paint mobs
         for (MovableObject mobObject : this.renderingLevel.mobs)
         {

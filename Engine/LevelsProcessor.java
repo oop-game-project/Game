@@ -48,13 +48,13 @@ public class LevelsProcessor
 
         ArrayList<MortalObject> mobs = new ArrayList<>();
         mobs.add(gameObjects.new SphereMob(
-            new int[]{420, 175, 0},
+            new int[]{420, 175, 1},
             5));
         mobs.add(gameObjects.new SphereMob(
             new int[]{350, 250, 0},
             5));
         mobs.add(gameObjects.new SphereMob(
-            new int[]{420, 420, 0},
+            new int[]{420, 420, -1},
             5));
 
         return new SinglePlayerLevel(
