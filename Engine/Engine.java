@@ -152,7 +152,10 @@ public class Engine extends WindowAdapter implements KeyListener
     // Fire per this amount of milliseconds
     private final int PLAYER_FIRING_FREQUENCY = 50;
 
+    private boolean playerIsFiring = false;
+
     private final CollisionsProcessor collisionsProcessor;
+    private final GameObjects gameObjects = new GameObjects();
 
     private int[] getInputMoveVector()
     {
@@ -240,7 +243,7 @@ public class Engine extends WindowAdapter implements KeyListener
     }
 
 
-    // TODO: Despawn or move ONLY projectiles here
+    // Despawn or move ONLY projectiles here
     private void updateProjectilesState()
     {
         ArrayList<MovableObject> projectilesForDespawning = new ArrayList<>();
@@ -286,9 +289,24 @@ public class Engine extends WindowAdapter implements KeyListener
 
     private void spawnProjectiles()
     {
-        // Spawn player's projectile
-        // Based on when last projectile was fired.
-        if (this.keysPressed.contains(KeyEvent.VK_Z)
+        this.keysTypedLock.lock();
+        try
+        {
+            // "Absorbing" typed keys
+            if (this.keysTyped.contains('z') || this.keysTyped.contains('Z'))
+            {
+                this.playerIsFiring = !this.playerIsFiring;
+                this.keysTyped.remove('z');
+                this.keysTyped.remove('Z');
+            }
+        }
+        finally
+        {
+            this.keysTypedLock.unlock();
+        }
+
+        // Spawn player's projectile based on when last projectile was fired
+        if (this.playerIsFiring
             && System.currentTimeMillis()
                - this.currentLevel.player.lastProjectileWasFiredTime
                > PLAYER_FIRING_FREQUENCY)
