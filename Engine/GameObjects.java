@@ -74,7 +74,7 @@ public class GameObjects
 
     public class Player extends MortalObject implements Cloneable
     {
-        public int lastProjectileWasFiredTime = 0;
+        public long lastProjectileWasFiredTime = 0;
 
         public Player(
                 @NotNull int[] inputLocation,
