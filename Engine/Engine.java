@@ -267,8 +267,11 @@ public class Engine extends WindowAdapter implements KeyListener
         // Move player
         updatePlayerState();
 
-        // Move all mobs and projectiles
-        updateMobsAndProjectilesState();
+        // Despawn or move projectiles
+        updateProjectilesState();
+
+        // Despawn or move mobs
+        updateMobsState();
 
         // Spawn all projectiles
         spawnProjectiles();
