@@ -6,6 +6,7 @@ import Game.Engine.LevelsProcessor.SinglePlayerLevel;
 import Game.Engine.CollisionsProcessor.*;
 import Game.Launcher;
 import Game.Engine.GameObjects.*;
+import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
@@ -101,15 +102,26 @@ public class Engine extends WindowAdapter implements KeyListener
     // final int SCREEN_MOVING_SPEED
     private final int BASIC_PROJECTILE_MOVING_SPEED = 7;
 
-    private void moveBasicProjectileForward(
+    private int[] getBasicProjectileMoveVector(
         BasicProjectile basicProjectile)
     {
         if (basicProjectile.firedByPlayer)
-            basicProjectile.modifyLocation(
-                new int[] { 0, -BASIC_PROJECTILE_MOVING_SPEED, 0 });
+            return new int[] { 0, -BASIC_PROJECTILE_MOVING_SPEED, 0 };
         else
-            basicProjectile.modifyLocation(
-                new int[] { 0, BASIC_PROJECTILE_MOVING_SPEED, 0 });
+        {
+            try
+            {
+                throw new NotImplementedException("");
+            }
+            catch (NotImplementedException exception)
+            {
+                exception.printStackTrace();
+            }
+
+            return null;
+        }
+
+        // TODO: Fired not by player check
     }
 
 //
