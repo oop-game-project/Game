@@ -12,18 +12,12 @@ public class GameObjects
 
     public abstract class MovableObject extends GameObject implements Cloneable
     {
-        // Only needed for calculations around screen moving forward
-        public final long spawnTime;
-        public final int[] spawnLocation;
-
         public int[] currentLocation;
 
         MovableObject(@NotNull int[] inputLocation)
         {
             assert inputLocation.length == 3;
 
-            this.spawnTime = System.currentTimeMillis();
-            this.spawnLocation = inputLocation.clone();
             this.currentLocation = inputLocation.clone();
         }
 
@@ -92,11 +86,32 @@ public class GameObjects
 
     public class SphereMob extends MortalObject implements Cloneable
     {
+        // It sets moving speed and direction
+        public final int[] autoMovingVector;
+
+        // When a mob spawns outside game field it prevents engine from
+        // despawning this mob immediately
+        //
+        // [Would Be Better] place it in "GameMob" class between mob classes
+        // and MortalObject
+        public boolean wasOnScreen = false;
+
+        // This time should pass from game start for mob to spawn
+        //
+        // [Would Be Better] place it in "GameMob" class between mob classes
+        // and MortalObject
+        public final int spawnTime;
+
         public SphereMob(
             int[] inputLocation,
-            int inputHitPointsCurrent)
+            int[] inputMovingVector,
+            int inputHitPointsCurrent,
+            int inputSpawnTime)
         {
             super(inputLocation, inputHitPointsCurrent);
+
+            this.autoMovingVector = inputMovingVector.clone();
+            this.spawnTime = inputSpawnTime;
         }
 
         public int getHitPointsMax() { return 5; }
@@ -109,7 +124,7 @@ public class GameObjects
     }
 
     /**
-     * It just flies forward. Up if fired by player and down otherwise
+     * It just flies forward. Up if fired by player and down otherwise.
      **/
     public class BasicProjectile extends MovableObject implements Cloneable
     {
