@@ -23,16 +23,26 @@ public class Engine extends WindowAdapter implements KeyListener
     private final SinglePlayerLevel currentLevel;
 
     private HashSet<Integer> keysPressed = new HashSet<>();
-    // (Is this lock really needed?)
+    /**
+     * Is this lock really needed?
+     **/
     private ReentrantLock keysPressedLock = new ReentrantLock();
 
-    private HashSet<Character> keysTyped = new HashSet<>();
-    // Lock is needed because of "keysTyped" modifications in multiple places
-    private ReentrantLock keysTypedLock = new ReentrantLock();
+    /**
+     * Needed for toggling things. Keycodes from this set should be removed
+     * when used
+     **/
+    private HashSet<Integer> keysReleased = new HashSet<>();
+    /**
+     * Lock is needed because of "keysReleased" modifications in multiple places
+     */
+    private ReentrantLock keysReleasedLock = new ReentrantLock();
 
     private boolean closeGame = false;
-    // Lock for rendering safety. If rendering starts when game is closing,
-    // then GUI thread breaks
+    /**
+     * Lock for rendering safety. If rendering starts when game is closing,
+     * then GUI thread breaks
+     */
     private ReentrantLock closeGameLock = new ReentrantLock();
 
     public Engine(
@@ -50,18 +60,7 @@ public class Engine extends WindowAdapter implements KeyListener
 // KeyListener implementation
 //
 
-    public void keyTyped(KeyEvent keyEvent)
-    {
-        this.keysTypedLock.lock();
-        try
-        {
-            this.keysTyped.add(keyEvent.getKeyChar());
-        }
-        finally
-        {
-            this.keysTypedLock.unlock();
-        }
-    }
+    public void keyTyped(KeyEvent keyEvent) { }
 
     public void keyPressed(KeyEvent keyEvent)
     {
@@ -79,13 +78,17 @@ public class Engine extends WindowAdapter implements KeyListener
     public void keyReleased(KeyEvent keyEvent)
     {
         this.keysPressedLock.lock();
+        this.keysReleasedLock.lock();
         try
         {
             this.keysPressed.remove(keyEvent.getKeyCode());
+
+            this.keysReleased.add(keyEvent.getKeyCode());
         }
         finally
         {
             this.keysPressedLock.unlock();
+            this.keysReleasedLock.unlock();
         }
     }
 
@@ -307,20 +310,20 @@ public class Engine extends WindowAdapter implements KeyListener
 
     private void spawnProjectiles()
     {
-        this.keysTypedLock.lock();
+        this.keysReleasedLock.lock();
         try
         {
             // "Absorbing" typed keys
-            if (this.keysTyped.contains('z') || this.keysTyped.contains('Z'))
+            if (this.keysReleased.contains(KeyEvent.VK_Z))
             {
                 this.playerIsFiring = !this.playerIsFiring;
-                this.keysTyped.remove('z');
-                this.keysTyped.remove('Z');
+                this.keysReleased.remove(KeyEvent.VK_Z);
+                this.keysReleased.remove(KeyEvent.VK_Z);
             }
         }
         finally
         {
-            this.keysTypedLock.unlock();
+            this.keysReleasedLock.unlock();
         }
 
         // Spawn player's projectile based on when last projectile was fired
@@ -369,7 +372,9 @@ public class Engine extends WindowAdapter implements KeyListener
 //
 
     private final Thread gameLoopThread = new Thread(this::gameLoop);
-    // Change main GUI here: GUI_2D or GUI_3D
+    /**
+     * Change main GUI here: GUI_2D or GUI_3D
+     **/
     private final GUI gui = new GUI_2D();
 
     /**
