@@ -197,27 +197,77 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
             BASIC_PROJECTILE_DIAMETER);
     }
 
-    private void paintMovableObjects(Graphics graphics)
+    private void paintMovableObjectsBelow(Graphics graphics)
     {
-        // TODO: Paint MovableObject elements in order:
-        //  1. MovableObject elements below game field
-        //  2. Projectiles
-        //  3. MovableObject elements above game field
+        // Paint mobs below
+        this.renderingLevel.mobs.forEach(
+            mobObject ->
+            {
+                if (
+                    mobObject instanceof SphereMob
+                    && mobObject.currentLocation[2] == -1)
+                    paintSphereMob(graphics, (SphereMob)mobObject);
+            });
+    }
 
-        // Paint mobs
-        for (MovableObject mobObject : this.renderingLevel.mobs)
-        {
-            if (mobObject instanceof SphereMob)
-                paintSphereMob(graphics, (SphereMob)mobObject);
-        }
+    /**
+     * Projectiles after mobs for better debugging.
+     *
+     * Mobs' projectiles after Player's projectiles for player convenience.
+     * Mob's projectiles have bigger priority for player than his own
+     * projectiles that are harmless for player himself
+     **/
+    private void paintMovableObjectsOnSurface(Graphics graphics)
+    {
+        // Paint mobs on surface
+        this.renderingLevel.mobs.forEach(
+            mobObject ->
+            {
+                if (
+                    mobObject instanceof SphereMob
+                    && mobObject.currentLocation[2] == 0)
+                    paintSphereMob(graphics, (SphereMob)mobObject);
+            });
 
-        // Paint projectiles (after mobs for better debugging. It will be
-        // easier to see collisions, when projectiles paints above mods)
-        for (MovableObject projectile : this.renderingLevel.projectiles)
-        {
-            if (projectile instanceof BasicProjectile)
-                paintBasicProjectile(graphics, (BasicProjectile)projectile);
-        }
+        // Paint player's projectiles
+        this.renderingLevel.projectiles.forEach(
+            projectileObject ->
+            {
+                if (
+                        projectileObject instanceof BasicProjectile
+                        && ((BasicProjectile)projectileObject).firedByPlayer)
+                    paintBasicProjectile(
+                        graphics,
+                        (BasicProjectile)projectileObject);
+            });
+
+        // Paint mobs' projectile
+        this.renderingLevel.projectiles.forEach(
+            projectileObject ->
+            {
+                if (
+                    projectileObject instanceof BasicProjectile
+                    && !((BasicProjectile)projectileObject).firedByPlayer)
+                    paintBasicProjectile(
+                        graphics,
+                        (BasicProjectile)projectileObject);
+            });
+
+        // Paint Player
+        this.paintPlayer(graphics);
+    }
+
+    private void paintMovableObjectsAbove(Graphics graphics)
+    {
+        // Paint mobs above
+        this.renderingLevel.mobs.forEach(
+            mobObject ->
+            {
+                if (
+                        mobObject instanceof SphereMob
+                        && mobObject.currentLocation[2] == 1)
+                    paintSphereMob(graphics, (SphereMob) mobObject);
+            });
     }
 
     @Override
@@ -227,11 +277,14 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 
         if (levelRenderingIsNeeded)
         {
-            // Paint movable objects
-            this.paintMovableObjects(graphics);
+            // Paint movable objects below
+            this.paintMovableObjectsBelow(graphics);
 
-            // Paint player
-            this.paintPlayer(graphics);
+            // Paint movable objects on game surface
+            this.paintMovableObjectsOnSurface(graphics);
+
+            // Paint movable objects above
+            this.paintMovableObjectsAbove(graphics);
 
             // [Would Be Better]
             // Paint interface objects (Last painting for overall overlapping
@@ -252,8 +305,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         // Just say AWT thread to repaint game GUI
         this.repaint();
 
-        // [Would Be Better]
-        // Solution without thread sleeping
+        // [Would Be Better] solution without thread sleeping
         while (levelRenderingIsNeeded)
             try
             {
