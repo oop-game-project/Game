@@ -18,9 +18,6 @@
 *.zip
 *.tar.gz
 *.rar
-           
-Debug.java
-
+                           
 .idea/*
-Compiled/
-changelogs/
+Compiled/  

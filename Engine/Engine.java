@@ -112,9 +112,13 @@ public class Engine extends WindowAdapter implements KeyListener
     }
 
 //
-// Auto moving functions section
+// Auto moving functions section.
 //
-    // final int SCREEN_MOVING_SPEED
+
+    // Constants here do not participate in process of level making. For
+    // example, this is why "BASIC_PROJECTILE_MOVING_SPEED" is not in
+    // "LevelsProcessor"
+
     private final int BASIC_PROJECTILE_MOVING_SPEED = 10;
 
     private int[] getBasicProjectileMoveVector(
@@ -139,14 +143,29 @@ public class Engine extends WindowAdapter implements KeyListener
         // TODO: Fired not by player check
     }
 
+    /**
+     * Based on when SphereMob was spawned, this method returns if it is needed
+     * for engine to toggle third coordinate of SphereMob
+     **/
+    private int[] getSphereMobZChange()
+    {
+        // TODO: Every N seconds SphereMob instance's third coordinate toggles
+        //  cyclically in order: 0 -> -1 -> 0 -> 1 -> 0
+        return null;
+    }
+
 //
 // Level update main section
 //
 
-    // Pixels per level update
+    /**
+     * Pixels per level update
+     **/
     private final int PLAYER_MOVE_SPEED = 5;
 
-    // Fire per this amount of milliseconds
+    /**
+     * Fire per this amount of milliseconds
+     **/
     private final int PLAYER_FIRING_FREQUENCY = 50;
 
     private boolean playerIsFiring = false;
@@ -240,7 +259,9 @@ public class Engine extends WindowAdapter implements KeyListener
     }
 
 
-    // Despawn or move ONLY projectiles here
+    /**
+     * Despawn or move ONLY projectiles here
+     **/
     private void updateProjectilesState()
     {
         ArrayList<MovableObject> projectilesForDespawning = new ArrayList<>();

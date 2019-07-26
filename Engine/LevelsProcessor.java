@@ -4,6 +4,10 @@ import Game.Engine.GameObjects.*;
 
 import java.util.ArrayList;
 
+
+/**
+ * Class for level production
+ **/
 public class LevelsProcessor
 {
     public class SinglePlayerLevel
@@ -31,6 +35,23 @@ public class LevelsProcessor
     }
 
 //
+// Auto moving constants
+//
+    private int SPHERE_MOB_MOVING_SPEED = 5;
+
+    private final int[] MOVEMENT_TO_THE_RIGHT = new int[] { 1, 0, 0 };
+
+    private static int[] productAutoMovingVector(
+        int[] directionVectorConstant,
+        int movingSpeedConstant)
+    {
+        return new int[] {
+            directionVectorConstant[0] * movingSpeedConstant,
+            directionVectorConstant[1] * movingSpeedConstant,
+            directionVectorConstant[2] * movingSpeedConstant };
+    }
+
+//
 // Manual level init section
 //
 
@@ -46,14 +67,26 @@ public class LevelsProcessor
 
         ArrayList<MortalObject> mobs = new ArrayList<>();
         mobs.add(gameObjects.new SphereMob(
-            new int[]{420, 175, 1},
-            5));
+            new int[]{420, 175, 0},
+            productAutoMovingVector(
+                MOVEMENT_TO_THE_RIGHT,
+                SPHERE_MOB_MOVING_SPEED),
+            5,
+            0));
         mobs.add(gameObjects.new SphereMob(
-            new int[]{350, 250, 0},
-            5));
+            new int[]{420, 100, 1},
+            productAutoMovingVector(
+                MOVEMENT_TO_THE_RIGHT,
+                SPHERE_MOB_MOVING_SPEED),
+            5,
+            0));
         mobs.add(gameObjects.new SphereMob(
             new int[]{420, 420, -1},
-            5));
+            productAutoMovingVector(
+                MOVEMENT_TO_THE_RIGHT,
+                SPHERE_MOB_MOVING_SPEED),
+            5,
+            0));
 
         return new SinglePlayerLevel(
             gameFieldSize,

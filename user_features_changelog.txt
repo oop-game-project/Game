@@ -1,0 +1,2 @@
+----+----Friday, July 26, 2019
+* Now all MovableObject instances are painted in order: below, on surface, above
