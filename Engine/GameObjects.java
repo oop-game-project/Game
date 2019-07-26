@@ -12,6 +12,10 @@ public class GameObjects
 
     public abstract class MovableObject extends GameObject implements Cloneable
     {
+        /**
+         * [Would Be Better] actually have "double" coordinates for moving
+         * speed less than 1 pixel per iteration
+         */
         public int[] currentLocation;
 
         MovableObject(@NotNull int[] inputLocation)
@@ -138,16 +142,18 @@ public class GameObjects
          * [Would Be Better] place it in "GameMob" class between mob classes
          * and MortalObject
          **/
-        public final long spawnTime = System.currentTimeMillis();
+        public final int plannedSpawnTime;
 
         public SphereMob(
             int[] inputLocation,
             int[] inputMovingVector,
-            int inputHitPointsCurrent)
+            int inputHitPointsCurrent,
+            int inputPlannedSpawnTime)
         {
             super(inputLocation, inputHitPointsCurrent);
 
             this.autoMovingVector = inputMovingVector.clone();
+            this.plannedSpawnTime = inputPlannedSpawnTime;
         }
 
         public int getHitPointsMax() { return 5; }

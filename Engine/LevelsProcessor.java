@@ -37,7 +37,7 @@ public class LevelsProcessor
 //
 // Auto moving constants
 //
-    private int SPHERE_MOB_MOVING_SPEED = 5;
+    private int SPHERE_MOB_MOVING_SPEED = 1;
 
     private final int[] MOVEMENT_TO_THE_RIGHT = new int[] { 1, 0, 0 };
 
@@ -71,19 +71,22 @@ public class LevelsProcessor
             productAutoMovingVector(
                 MOVEMENT_TO_THE_RIGHT,
                 SPHERE_MOB_MOVING_SPEED),
-            5));
+            5,
+            0));
         mobs.add(gameObjects.new SphereMob(
             new int[]{420, 100, 1},
             productAutoMovingVector(
                 MOVEMENT_TO_THE_RIGHT,
                 SPHERE_MOB_MOVING_SPEED),
-            5));
+            5,
+            0));
         mobs.add(gameObjects.new SphereMob(
             new int[]{420, 420, -1},
             productAutoMovingVector(
                 MOVEMENT_TO_THE_RIGHT,
                 SPHERE_MOB_MOVING_SPEED),
-            5));
+            5,
+            0));
 
         return new SinglePlayerLevel(
             gameFieldSize,
