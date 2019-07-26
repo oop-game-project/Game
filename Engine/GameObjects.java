@@ -39,6 +39,34 @@ public class GameObjects
         }
     }
 
+    /**
+     * It just flies forward. Up if fired by player and down otherwise.
+     **/
+    public class BasicProjectile extends MovableObject implements Cloneable
+    {
+        public final boolean firedByPlayer;
+
+        public BasicProjectile(
+            int[] inputLocation,
+            MovableObject firedObject)
+        {
+            super(inputLocation);
+
+            this.firedByPlayer = firedObject instanceof Player;
+        }
+
+        @Override
+        public Object clone() throws CloneNotSupportedException
+        {
+            return super.clone();
+        }
+    }
+
+
+//
+// Mortal objects
+//
+
     public abstract class MortalObject extends MovableObject
         implements Cloneable
     {
@@ -86,20 +114,26 @@ public class GameObjects
 
     public class SphereMob extends MortalObject implements Cloneable
     {
-        // It sets moving speed and direction
+        /**
+         * It sets moving speed and direction
+         **/
         public final int[] autoMovingVector;
 
-        // When a mob spawns outside game field it prevents engine from
-        // despawning this mob immediately
-        //
-        // [Would Be Better] place it in "GameMob" class between mob classes
-        // and MortalObject
+        /**
+         * When a mob spawns outside game field it prevents engine from
+         * despawning this mob immediately
+         *
+         * [Would Be Better] place it in "GameMob" class between mob classes
+         * and MortalObject
+         **/
         public boolean wasOnScreen = false;
 
-        // This time should pass from game start for mob to spawn
-        //
-        // [Would Be Better] place it in "GameMob" class between mob classes
-        // and MortalObject
+        /**
+         * This time should pass from game start for mob to spawn
+         *
+         * [Would Be Better] place it in "GameMob" class between mob classes
+         * and MortalObject
+         **/
         public final int spawnTime;
 
         public SphereMob(
@@ -123,28 +157,6 @@ public class GameObjects
         }
     }
 
-    /**
-     * It just flies forward. Up if fired by player and down otherwise.
-     **/
-    public class BasicProjectile extends MovableObject implements Cloneable
-    {
-        public final boolean firedByPlayer;
-
-        public BasicProjectile(
-            int[] inputLocation,
-            MovableObject firedObject)
-        {
-            super(inputLocation);
-
-            this.firedByPlayer = firedObject instanceof Player;
-        }
-
-        @Override
-        public Object clone() throws CloneNotSupportedException
-        {
-            return super.clone();
-        }
-    }
 
 //
 // Interface objects
@@ -158,8 +170,19 @@ public class GameObjects
 
     public class PaintingConst
     {
-        public static final int PLAYER_TRIANGLE_SIDE_LENGTH = 30;
-        public static final int SPHERE_MOB_CIRCLE_DIAMETER = 30;
+        /**
+         * Player is a triangular
+         */
+        public static final int PLAYER_SIDE_LENGTH = 30;
+
+        /**
+         * Sphere mob is a circle (because of pseudo 3d)
+         */
+        public static final int SPHERE_MOB_DIAMETER = 30;
+
+        /**
+         * Projectile is a flat circle
+         */
         public static final int BASIC_PROJECTILE_DIAMETER = 7;
     }
 

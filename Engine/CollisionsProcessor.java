@@ -44,13 +44,13 @@ public class CollisionsProcessor {
 
     private boolean playerOutOfHorizontalBorders(int vector, int player) {
 
-        return (player + vector + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2 > sizeX)
-                || (player + vector - PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2 < 0);
+        return (player + vector + PaintingConst.PLAYER_SIDE_LENGTH / 2 > sizeX)
+                || (player + vector - PaintingConst.PLAYER_SIDE_LENGTH / 2 < 0);
     }
 
     private boolean playerOutOfVerticalBorders(int vector, int player) {
 
-        return (player + vector + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH > sizeY)
+        return (player + vector + PaintingConst.PLAYER_SIDE_LENGTH > sizeY)
                 || (player + vector < 0);
     }
 

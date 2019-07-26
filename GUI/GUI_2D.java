@@ -2,6 +2,7 @@ package Game.GUI;
 
 import Game.Engine.GameObjects.*;
 import Game.Engine.LevelsProcessor.SinglePlayerLevel;
+import static Game.Engine.GameObjects.PaintingConst.*;
 
 import java.awt.Image;
 import java.awt.Color;
@@ -23,6 +24,7 @@ import javax.swing.JFrame;
 
 import javax.imageio.ImageIO;
 
+
 public class GUI_2D extends JPanel implements GUI, KeyListener
 {
     private final JFrame gameMainFrame = new JFrame();
@@ -36,7 +38,8 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
     {
         try
         {
-            // TODO: Change on release. User dir must have folder "Sprites"
+            // TODO: Change on release. Execution dir must be "Game", not
+            //  "game-project"
             Path pathToSprites = Paths.get(
                 System.getProperty("user.dir") + "\\src\\Game\\Sprites\\");
 
@@ -44,19 +47,28 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
                 pathToSprites.toString() + "\\SphereMob-Default.png");
             this.SPHERE_MOB_DEFAULT = ImageIO
                 .read(sphereMobDefaultImage)
-                .getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+                .getScaledInstance(
+                    SPHERE_MOB_DIAMETER,
+                    SPHERE_MOB_DIAMETER,
+                    Image.SCALE_SMOOTH);
 
             File sphereMobAboveImage = new File(
                 pathToSprites.toString() + "\\SphereMob-Above.png");
             this.SPHERE_MOB_ABOVE = ImageIO
                 .read(sphereMobAboveImage)
-                .getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+                .getScaledInstance(
+                    SPHERE_MOB_DIAMETER,
+                    SPHERE_MOB_DIAMETER,
+                    Image.SCALE_SMOOTH);
 
             File sphereMobBelowImage = new File(
                 pathToSprites.toString() + "\\SphereMob-Below.png");
             this.SPHERE_MOB_BELOW = ImageIO
                 .read(sphereMobBelowImage)
-                .getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+                .getScaledInstance(
+                    SPHERE_MOB_DIAMETER,
+                    SPHERE_MOB_DIAMETER,
+                    Image.SCALE_SMOOTH);
         }
         catch (IOException occurredExc)
         {
@@ -123,15 +135,15 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
                 new int[] {
                     playerLocation[0],
                     playerLocation[0]
-                    + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2,
+                    + PLAYER_SIDE_LENGTH / 2,
                     playerLocation[0]
-                    - PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH / 2 },
+                    - PLAYER_SIDE_LENGTH / 2 },
                 new int[] {
                     playerLocation[1],
                     playerLocation[1]
-                    + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH,
+                    + PLAYER_SIDE_LENGTH,
                     playerLocation[1]
-                    + PaintingConst.PLAYER_TRIANGLE_SIDE_LENGTH },
+                    + PLAYER_SIDE_LENGTH},
                 3);
     }
 
@@ -181,8 +193,8 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         graphics.fillOval(
             projectile.currentLocation[0],
             projectile.currentLocation[1],
-            PaintingConst.BASIC_PROJECTILE_DIAMETER,
-            PaintingConst.BASIC_PROJECTILE_DIAMETER);
+            BASIC_PROJECTILE_DIAMETER,
+            BASIC_PROJECTILE_DIAMETER);
     }
 
     private void paintMovableObjects(Graphics graphics)
