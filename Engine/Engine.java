@@ -268,27 +268,27 @@ public class Engine extends WindowAdapter implements KeyListener
     private void updateProjectilesState()
     {
         ArrayList<MovableObject> projectilesForDespawning = new ArrayList<>();
-        for (MovableObject projectile : this.currentLevel.projectiles)
+        for (MovableObject projectileObject : this.currentLevel.projectiles)
         {
-            if (projectile instanceof BasicProjectile)
+            if (projectileObject instanceof BasicProjectile)
             {
                 int[] projectileMoveVector = this.getBasicProjectileMoveVector(
-                    (BasicProjectile)projectile);
+                    (BasicProjectile)projectileObject);
                 Collision projectileCollision =
                     this.collisionsProcessor.getCollision(
-                    this.currentLevel, projectileMoveVector, projectile);
+                    this.currentLevel, projectileMoveVector, projectileObject);
 
                 switch (projectileCollision.event)
                 {
                     case OK:
                     {
-                        projectile.modifyLocation(projectileMoveVector);
+                        projectileObject.modifyLocation(projectileMoveVector);
                         break;
                     }
 
                     case BASIC_PROJECTILE_IS_OUT:
                     {
-                        projectilesForDespawning.add(projectile);
+                        projectilesForDespawning.add(projectileObject);
                         break;
                     }
 
@@ -305,7 +305,16 @@ public class Engine extends WindowAdapter implements KeyListener
 
     private void updateMobsState()
     {
-        // TODO: not implemented
+        for (MovableObject mobObject : this.currentLevel.mobs)
+        {
+            if (mobObject instanceof SphereMob)
+                mobObject.modifyLocation(
+                    ((SphereMob) mobObject).autoMovingVector);
+
+            // TODO: Collisions check
+        }
+
+        // TODO: Despawning
     }
 
     private void spawnProjectiles()
