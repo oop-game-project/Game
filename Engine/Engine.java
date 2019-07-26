@@ -313,11 +313,10 @@ public class Engine extends WindowAdapter implements KeyListener
         this.keysReleasedLock.lock();
         try
         {
-            // "Absorbing" typed keys
+            // Key is removing from "keysReleased" when used
             if (this.keysReleased.contains(KeyEvent.VK_Z))
             {
                 this.playerIsFiring = !this.playerIsFiring;
-                this.keysReleased.remove(KeyEvent.VK_Z);
                 this.keysReleased.remove(KeyEvent.VK_Z);
             }
         }

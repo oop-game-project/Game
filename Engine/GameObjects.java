@@ -112,6 +112,10 @@ public class GameObjects
         }
     }
 
+    /**
+     * This mob moves in one direction with fixed speed and fires
+     * BasicProjectile every N seconds
+     */
     public class SphereMob extends MortalObject implements Cloneable
     {
         /**
@@ -134,18 +138,16 @@ public class GameObjects
          * [Would Be Better] place it in "GameMob" class between mob classes
          * and MortalObject
          **/
-        public final int spawnTime;
+        public final long spawnTime = System.currentTimeMillis();
 
         public SphereMob(
             int[] inputLocation,
             int[] inputMovingVector,
-            int inputHitPointsCurrent,
-            int inputSpawnTime)
+            int inputHitPointsCurrent)
         {
             super(inputLocation, inputHitPointsCurrent);
 
             this.autoMovingVector = inputMovingVector.clone();
-            this.spawnTime = inputSpawnTime;
         }
 
         public int getHitPointsMax() { return 5; }

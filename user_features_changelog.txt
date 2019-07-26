@@ -1,8 +1,9 @@
 ----+----Before
 * Player can move via arrows
 * Player cannot move across game field borders
-* Player can fire BasicProjectiles. Firing can be toggled via key "Z" on keyboard
+* Player can fire BasicProjectiles via key "Z" 
 * SphereMob can be on game field
 
 ----+----Friday, July 26, 2019
 * Now all MovableObject instances are painted in order: below, on surface, above
+* Firing can be toggled via (releasing) key "Z" on keyboard
