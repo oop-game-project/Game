@@ -35,9 +35,11 @@ public class Engine extends WindowAdapter implements KeyListener
     // then GUI thread breaks
     private ReentrantLock closeGameLock = new ReentrantLock();
 
-    public Engine(SinglePlayerLevel inputLevel, Launcher inputLauncher)
+    public Engine(
+        SinglePlayerLevel inputLevel,
+        Runnable setLauncherVisibleInput)
     {
-        this.launcher = inputLauncher;
+        this.setLauncherVisible = setLauncherVisibleInput;
         this.currentLevel = inputLevel;
 
         this.collisionsProcessor =
@@ -91,13 +93,7 @@ public class Engine extends WindowAdapter implements KeyListener
 // WindowAdapter overrides
 //
 
-    private final Launcher launcher;
-
-    private void setLauncherVisible()
-    {
-
-        this.launcher.setVisible(true);
-    }
+    private final Runnable setLauncherVisible;
 
     @Override
     public void windowClosing(WindowEvent windowEvent)
@@ -112,7 +108,7 @@ public class Engine extends WindowAdapter implements KeyListener
             this.closeGameLock.unlock();
         }
 
-        this.setLauncherVisible();
+        this.setLauncherVisible.run();
     }
 
 //

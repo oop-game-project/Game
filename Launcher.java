@@ -100,7 +100,8 @@ public class Launcher extends JFrame
     {
         LevelsProcessor levelsProcessor = new LevelsProcessor();
         LevelsProcessor.SinglePlayerLevel singlePlayerLevel = levelsProcessor.getLevelOne();
-        Engine engine = new Engine(singlePlayerLevel, this);  // TODO: change 'this' to lambda with "setVisible"
+        Runnable setLauncherVisible = () -> this.setVisible(true);
+        Engine engine = new Engine(singlePlayerLevel, setLauncherVisible);
 
         this.setVisible(false);
 
