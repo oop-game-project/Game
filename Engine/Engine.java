@@ -123,20 +123,7 @@ public class Engine extends WindowAdapter implements KeyListener
         if (basicProjectile.firedByPlayer)
             return new int[] { 0, -BASIC_PROJECTILE_MOVING_SPEED, 0 };
         else
-        {
-            try
-            {
-                throw new NotImplementedException("");
-            }
-            catch (NotImplementedException exception)
-            {
-                exception.printStackTrace();
-            }
-
-            return null;
-        }
-
-        // TODO: Fired not by player check
+            return new int[] { 0, BASIC_PROJECTILE_MOVING_SPEED, 0 };
     }
 
     /**
