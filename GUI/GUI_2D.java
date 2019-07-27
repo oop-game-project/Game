@@ -189,7 +189,10 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         Graphics graphics,
         BasicProjectile projectile)
     {
-        graphics.setColor(Color.YELLOW);
+        if (projectile.firedByPlayer)
+            graphics.setColor(Color.YELLOW);
+        else
+            graphics.setColor(Color.RED);
         graphics.fillOval(
             projectile.currentLocation[0],
             projectile.currentLocation[1],
