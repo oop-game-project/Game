@@ -17,14 +17,14 @@ public class LevelsProcessor
 
         public Player player;
         public ArrayList<MortalObject> mobs;
-        public HashMap<Integer, ArrayList<MortalObject>> nonSpawnedMobs;
+        public HashMap<Long, ArrayList<MortalObject>> nonSpawnedMobs;
         public ArrayList<MovableObject> projectiles = new ArrayList<>();
 
         public SinglePlayerLevel(
             int[] inputGameFieldSize,
             Player inputPlayer,
             ArrayList<MortalObject> inputMobs,
-            HashMap<Integer, ArrayList<MortalObject>> inputNonSpawnedMobs)
+            HashMap<Long, ArrayList<MortalObject>> inputNonSpawnedMobs)
         {
             this.gameFieldSize = inputGameFieldSize;
             this.player = inputPlayer;

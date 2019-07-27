@@ -363,9 +363,9 @@ public class Engine extends WindowAdapter implements KeyListener
 
     private void spawnMobs()
     {
-        HashSet<Integer> nonSpawnedMobsKeySet =
+        HashSet<Long> nonSpawnedMobsKeySet =
             new HashSet<>(this.currentLevel.nonSpawnedMobs.keySet());
-        for (int spawnTime : nonSpawnedMobsKeySet)
+        for (long spawnTime : nonSpawnedMobsKeySet)
             if (System.currentTimeMillis() - this.gameStartTime > spawnTime)
                 this.currentLevel.mobs.addAll(
                     this.currentLevel.nonSpawnedMobs.remove(spawnTime));
