@@ -38,7 +38,8 @@ public class LevelsProcessor
 //
     private int SPHERE_MOB_MOVING_SPEED = 1;  // TODO
 
-    private final int[] MOVEMENT_TO_THE_RIGHT = new int[] { 1, 0, 0 };
+    private final int[] MOVEMENT_RIGHT = new int[] { 1, 0, 0 };
+    private final int[] MOVEMENT_DOWN = new int[] { 0, 1, 0 };
 
     private static int[] productAutoMovingVector(
         int[] directionVectorConstant,
@@ -54,33 +55,28 @@ public class LevelsProcessor
 // Manual level init section
 //
 
-    public SinglePlayerLevel getLevelOne()
+    GameObjects gameObjects = new GameObjects();
+
+    private ArrayList<MortalObject> getLevelOneMobs()
     {
-        GameObjects gameObjects = new GameObjects();
-
-        int[] gameFieldSize = new int[] { 700, 700, 0 };
-
-        Player player = gameObjects.new Player(
-            new int[] { 175, 350, 0 },
-            20);
-
         ArrayList<MortalObject> mobs = new ArrayList<>();
 
         SphereMob firstWaveSphereMob =
-            gameObjects.new SphereMob(
-            new int[]{ -400, 300, 0 },
-            productAutoMovingVector(
-                MOVEMENT_TO_THE_RIGHT,
-                SPHERE_MOB_MOVING_SPEED),
-            5);
+            this.gameObjects.new SphereMob(
+                new int[]{ -400, 300, 0 },
+                productAutoMovingVector(
+                    MOVEMENT_RIGHT,
+                    SPHERE_MOB_MOVING_SPEED),
+                5);
 
         mobs.add(firstWaveSphereMob);
         for (int i = 0; i < 10; i++)
+        {
             try
             {
                 firstWaveSphereMob =
                     (SphereMob) firstWaveSphereMob.clone();
-                firstWaveSphereMob.modifyLocation(new int[]{ 30, -25, 0 });
+                firstWaveSphereMob.modifyLocation(new int[]{30, -25, 0});
 
                 mobs.add(firstWaveSphereMob);
             }
@@ -88,11 +84,58 @@ public class LevelsProcessor
             {
                 occurredExc.printStackTrace();
             }
+        }
+
+        return mobs;
+    }
+
+    private HashMap<Long, ArrayList<MortalObject>>
+        getLevelOneNonSpawnedMobs()
+    {
+        HashMap<Long, ArrayList<MortalObject>> nonSpawnedMobs = new HashMap<>();
+
+        ArrayList<MortalObject> secondWaveMobs = new ArrayList<>();
+
+        SphereMob secondWaveSphereMob =
+            this.gameObjects.new SphereMob(
+                new int[]{ 20, -30, 0 },
+                productAutoMovingVector(
+                    MOVEMENT_DOWN,
+                    SPHERE_MOB_MOVING_SPEED),
+                5);
+
+        secondWaveMobs.add(secondWaveSphereMob);
+        for (int i = 0; i < 14; i++)
+        {
+            try
+            {
+                secondWaveSphereMob =
+                    (SphereMob) secondWaveSphereMob.clone();
+                secondWaveSphereMob.modifyLocation(new int[]{ 45, 0, 0 });
+
+                secondWaveMobs.add(secondWaveSphereMob);
+            }
+            catch (CloneNotSupportedException occurredExc)
+            {
+                occurredExc.printStackTrace();
+            }
+        }
+
+        nonSpawnedMobs.put(20000L, secondWaveMobs);
+
+        return nonSpawnedMobs;
+    }
+
+    public SinglePlayerLevel getLevelOne()
+    {
+        Player levelOnePlayer = this.gameObjects.new Player(
+            new int[] { 175, 350, 0 },
+            20);
 
         return new SinglePlayerLevel(
-            gameFieldSize,
-            player,
-            mobs,
-            new HashMap<>());
+            new int[] { 700, 700, 0 },
+            levelOnePlayer,
+            this.getLevelOneMobs(),
+            this.getLevelOneNonSpawnedMobs());
     }
 }
