@@ -66,27 +66,30 @@ public class LevelsProcessor
             20);
 
         ArrayList<MortalObject> mobs = new ArrayList<>();
-        mobs.add(gameObjects.new SphereMob(
-            new int[]{420, 175, 0},
+
+        SphereMob firstWaveSphereMob =
+            gameObjects.new SphereMob(
+            new int[]{ -400, 300, 0 },
             productAutoMovingVector(
                 MOVEMENT_TO_THE_RIGHT,
                 SPHERE_MOB_MOVING_SPEED),
             5,
-            0));
-        mobs.add(gameObjects.new SphereMob(
-            new int[]{420, 100, 1},
-            productAutoMovingVector(
-                MOVEMENT_TO_THE_RIGHT,
-                SPHERE_MOB_MOVING_SPEED),
-            5,
-            0));
-        mobs.add(gameObjects.new SphereMob(
-            new int[]{420, 420, -1},
-            productAutoMovingVector(
-                MOVEMENT_TO_THE_RIGHT,
-                SPHERE_MOB_MOVING_SPEED),
-            5,
-            0));
+            0);
+
+        mobs.add(firstWaveSphereMob);
+        for (int i = 0; i < 10; i++)
+            try
+            {
+                firstWaveSphereMob =
+                    (SphereMob) firstWaveSphereMob.clone();
+                firstWaveSphereMob.modifyLocation(new int[]{ 30, -25, 0 });
+
+                mobs.add(firstWaveSphereMob);
+            }
+            catch (CloneNotSupportedException occurredExc)
+            {
+                occurredExc.printStackTrace();
+            }
 
         return new SinglePlayerLevel(
             gameFieldSize,
