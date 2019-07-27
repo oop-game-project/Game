@@ -4,10 +4,7 @@ import Game.GUI.GUI;
 import Game.GUI.GUI_2D;
 import Game.Engine.LevelsProcessor.SinglePlayerLevel;
 import Game.Engine.CollisionsProcessor.*;
-import Game.Launcher;
 import Game.Engine.GameObjects.*;
-
-import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
@@ -16,6 +13,7 @@ import java.awt.event.WindowAdapter;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Engine extends WindowAdapter implements KeyListener
@@ -161,6 +159,8 @@ public class Engine extends WindowAdapter implements KeyListener
     private final CollisionsProcessor collisionsProcessor;
     private final GameObjects gameObjects = new GameObjects();
 
+    private final long gameStartTime = System.currentTimeMillis();
+
     private int[] getInputMoveVector()
     {
         int[] inputMoveVector = new int[] { 0, 0, 0 };
@@ -293,8 +293,12 @@ public class Engine extends WindowAdapter implements KeyListener
         for (MovableObject mobObject : this.currentLevel.mobs)
         {
             if (mobObject instanceof SphereMob)
+            {
+                // TODO: getSphereMobZChange
+
                 mobObject.modifyLocation(
                     ((SphereMob) mobObject).autoMovingVector);
+            }
 
             // TODO: Collisions check
         }
@@ -357,22 +361,35 @@ public class Engine extends WindowAdapter implements KeyListener
         // TODO : Spawn mobs' projectiles
     }
 
+    private void spawnMobs()
+    {
+        HashSet<Integer> nonSpawnedMobsKeySet =
+            new HashSet<>(this.currentLevel.nonSpawnedMobs.keySet());
+        for (int spawnTime : nonSpawnedMobsKeySet)
+            if (System.currentTimeMillis() - this.gameStartTime > spawnTime)
+                this.currentLevel.mobs.addAll(
+                    this.currentLevel.nonSpawnedMobs.remove(spawnTime));
+    }
+
     private void updateLevel()
     {
         // [Would Be Better]
         // Check if pause is active (Latin 'P' was pressed)
 
         // Move player
-        updatePlayerState();
+        this.updatePlayerState();
 
         // Despawn or move projectiles
-        updateProjectilesState();
+        this.updateProjectilesState();
 
         // Despawn or move mobs
-        updateMobsState();
+        this.updateMobsState();
 
         // Spawn all projectiles
-        spawnProjectiles();
+        this.spawnProjectiles();
+
+        // Spawn all mobs
+        this.spawnMobs();
     }
 
 //
