@@ -28,14 +28,7 @@ public class Engine extends WindowAdapter implements KeyListener
      **/
     private ReentrantLock keysPressedLock = new ReentrantLock();
 
-    /**
-     * Needed for toggling things. Keycodes from this set should be removed
-     * when used
-     **/
     private HashSet<Integer> keysReleased = new HashSet<>();
-    /**
-     * Lock is needed because of "keysReleased" modifications in multiple places
-     */
     private ReentrantLock keysReleasedLock = new ReentrantLock();
 
     private boolean closeGame = false;
@@ -172,6 +165,11 @@ public class Engine extends WindowAdapter implements KeyListener
     private final int PLAYER_FIRING_FREQUENCY = 50;
 
     private boolean playerIsFiring = false;
+    /**
+     * "Player firing was switched" by currently pressed 'Z' and this key wasn't
+     * released yet
+     **/
+    private boolean playerFiringWasSwitched = false;
 
     private final CollisionsProcessor collisionsProcessor;
     private final GameObjects gameObjects = new GameObjects();
@@ -317,24 +315,33 @@ public class Engine extends WindowAdapter implements KeyListener
         // TODO: Despawning
     }
 
-    private void spawnProjectiles()
+    private void spawnPlayerProjectiles()
     {
-        this.keysReleasedLock.lock();
-        try
+        if (this.keysReleased.contains(KeyEvent.VK_Z))
         {
-            // Key is removing from "keysReleased" when used
-            if (this.keysReleased.contains(KeyEvent.VK_Z))
+            this.keysReleasedLock.lock();
+            try
             {
-                this.playerIsFiring = !this.playerIsFiring;
                 this.keysReleased.remove(KeyEvent.VK_Z);
             }
-        }
-        finally
-        {
-            this.keysReleasedLock.unlock();
+            finally
+            {
+                this.keysReleasedLock.unlock();
+            }
+
+            this.playerFiringWasSwitched = false;
         }
 
-        // Spawn player's projectile based on when last projectile was fired
+        if (this.keysPressed.contains(KeyEvent.VK_Z)
+            && !this.playerFiringWasSwitched)
+        {
+            this.playerIsFiring = !this.playerIsFiring;
+            this.playerFiringWasSwitched = true;
+        }
+
+        // Spawn player's projectile based on:
+        // 1. If player's firing was toggled
+        // 2. When last projectile was fired
         if (this.playerIsFiring
             && System.currentTimeMillis()
                - this.currentLevel.player.lastProjectileWasFiredTime
@@ -354,6 +361,12 @@ public class Engine extends WindowAdapter implements KeyListener
             this.currentLevel.player.lastProjectileWasFiredTime =
                 System.currentTimeMillis();
         }
+    }
+
+    private void spawnProjectiles()
+    {
+        this.spawnPlayerProjectiles();
+
         // TODO : Spawn mobs' projectiles
     }
 
