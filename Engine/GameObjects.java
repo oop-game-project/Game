@@ -136,24 +136,14 @@ public class GameObjects
          **/
         public boolean wasOnScreen = false;
 
-        /**
-         * This time should pass from game start for mob to spawn
-         *
-         * [Would Be Better] place it in "GameMob" class between mob classes
-         * and MortalObject
-         **/
-        public final int plannedSpawnTime;
-
         public SphereMob(
             int[] inputLocation,
             int[] inputMovingVector,
-            int inputHitPointsCurrent,
-            int inputPlannedSpawnTime)
+            int inputHitPointsCurrent)
         {
             super(inputLocation, inputHitPointsCurrent);
 
             this.autoMovingVector = inputMovingVector.clone();
-            this.plannedSpawnTime = inputPlannedSpawnTime;
         }
 
         public int getHitPointsMax() { return 5; }
