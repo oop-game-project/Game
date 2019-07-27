@@ -3,6 +3,7 @@ package Game.Engine;
 import Game.Engine.GameObjects.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -16,28 +17,26 @@ public class LevelsProcessor
 
         public Player player;
         public ArrayList<MortalObject> mobs;
-        public ArrayList<MovableObject> projectiles;
-        public ArrayList<InterfaceObject> interfaceObjects;
+        public HashMap<Integer, ArrayList<MortalObject>> nonSpawnedMobs;
+        public ArrayList<MovableObject> projectiles = new ArrayList<>();
 
         public SinglePlayerLevel(
             int[] inputGameFieldSize,
             Player inputPlayer,
             ArrayList<MortalObject> inputMobs,
-            ArrayList<MovableObject> inputProjectiles,
-            ArrayList<InterfaceObject> inputInterfaceObjects)
+            HashMap<Integer, ArrayList<MortalObject>> inputNonSpawnedMobs)
         {
             this.gameFieldSize = inputGameFieldSize;
             this.player = inputPlayer;
             this.mobs = inputMobs;
-            this.projectiles = inputProjectiles;
-            this.interfaceObjects = inputInterfaceObjects;
+            this.nonSpawnedMobs = inputNonSpawnedMobs;
         }
     }
 
 //
 // Auto moving constants
 //
-    private int SPHERE_MOB_MOVING_SPEED = 1;
+    private int SPHERE_MOB_MOVING_SPEED = 1;  // TODO
 
     private final int[] MOVEMENT_TO_THE_RIGHT = new int[] { 1, 0, 0 };
 
@@ -73,8 +72,7 @@ public class LevelsProcessor
             productAutoMovingVector(
                 MOVEMENT_TO_THE_RIGHT,
                 SPHERE_MOB_MOVING_SPEED),
-            5,
-            0);
+            5);
 
         mobs.add(firstWaveSphereMob);
         for (int i = 0; i < 10; i++)
@@ -95,7 +93,6 @@ public class LevelsProcessor
             gameFieldSize,
             player,
             mobs,
-            new ArrayList<>(),
-            new ArrayList<>());
+            new HashMap<>());
     }
 }
