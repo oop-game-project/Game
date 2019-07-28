@@ -17,8 +17,12 @@ public class LevelsProcessor
 
         public Player player;
         public ArrayList<MortalObject> mobs;
-        public HashMap<Long, ArrayList<MortalObject>> nonSpawnedMobs;
         public ArrayList<MovableObject> projectiles = new ArrayList<>();
+
+        /**
+         * Long -> game loop iterations count passed from game start.
+         **/
+        public HashMap<Long, ArrayList<MortalObject>> nonSpawnedMobs;
 
         public SinglePlayerLevel(
             int[] inputGameFieldSize,
@@ -95,13 +99,6 @@ public class LevelsProcessor
             new int[]{30, -25, 0},
             11));
 
-        mobs.add(this.gameObjects.new SphereBoss(
-            new int[]{ 250, -200, 0 },
-            productAutoMovingVector(
-                MOVEMENT_RIGHT,
-                SPHERE_BOSS_MOVING_SPEED),
-            false));
-
         return mobs;
     }
 
@@ -119,11 +116,22 @@ public class LevelsProcessor
                 false);
 
         nonSpawnedMobs.put(
-            20000L,
+            1200L,
             this.createWaveOfSphereMobs(
                 secondWaveSphereMob,
                 new int[]{ 45, 0, 0 },
                 14));
+
+        ArrayList<MortalObject> sphereBoss = new ArrayList<>();
+        sphereBoss.add(this.gameObjects.new SphereBoss(
+            new int[]{ 250, 0, 0 },  // TODO: Change Y coordinate later
+            productAutoMovingVector(
+                MOVEMENT_RIGHT,
+                SPHERE_BOSS_MOVING_SPEED),
+            false));
+        nonSpawnedMobs.put(
+            2000L,
+            sphereBoss);
 
         return nonSpawnedMobs;
     }
