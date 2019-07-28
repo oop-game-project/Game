@@ -74,15 +74,12 @@ public class GameObjects
     public abstract class MortalObject extends MovableObject
         implements Cloneable
     {
-        public int hitPointsCurrent;
+        public int hitPointsCurrent = this.getHitPointsMax();
 
         public MortalObject(
-            int[] inputLocation,
-            int inputHitPointsCurrent)
+            int[] inputLocation)
         {
             super(inputLocation);
-
-            this.hitPointsCurrent = inputHitPointsCurrent;
         }
 
         public abstract int getHitPointsMax();
@@ -99,10 +96,9 @@ public class GameObjects
         public long lastProjectileWasFiredTime = 0;
 
         public Player(
-                @NotNull int[] inputLocation,
-                int inputHitPointsCurrent)
+                @NotNull int[] inputLocation)
         {
-            super(inputLocation, inputHitPointsCurrent);
+            super(inputLocation);
         }
 
         public int getHitPointsMax() { return 30; }  // TODO: Debug hp amount
@@ -137,10 +133,9 @@ public class GameObjects
         public SphereMob(
             int[] inputLocation,
             int[] inputMovingVector,
-            int inputHitPointsCurrent,
             long inputTimeForBorderCrossing)
         {
-            super(inputLocation, inputHitPointsCurrent);
+            super(inputLocation);
 
             this.autoMovingVector = inputMovingVector.clone();
             this.timeForBorderCrossing = inputTimeForBorderCrossing;
@@ -174,10 +169,9 @@ public class GameObjects
         public SphereBoss(
             int[] inputLocation,
             int[] inputMovingVector,
-            int inputHitPointsCurrent,
             long inputTimeForBorderCrossing)
         {
-            super(inputLocation, inputHitPointsCurrent);
+            super(inputLocation);
 
             this.autoMovingVector = inputMovingVector.clone();
             this.timeForBorderCrossing = inputTimeForBorderCrossing;
