@@ -151,7 +151,15 @@ public class GameObjects
         }
     }
 
-    public class SphereBoss extends MortalObject
+    public abstract class BossObject extends MortalObject
+    {
+        public BossObject(int[] inputLocation)
+        {
+            super(inputLocation);
+        }
+    }
+
+    public class SphereBoss extends BossObject
     {
         /**
          * It sets moving speed and direction
@@ -191,7 +199,7 @@ public class GameObjects
 // Painting constants for graphical and collision models
 //
 
-    public class PaintingConst
+    public static class PaintingConst
     {
         /**
          * Player is a triangular
