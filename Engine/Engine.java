@@ -13,7 +13,6 @@ import java.awt.event.WindowAdapter;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Engine extends WindowAdapter implements KeyListener
@@ -246,10 +245,6 @@ public class Engine extends WindowAdapter implements KeyListener
         }
     }
 
-
-    /**
-     * Despawn or move ONLY projectiles here
-     **/
     private void updateProjectilesState()
     {
         ArrayList<MovableObject> projectilesForDespawning = new ArrayList<>();
@@ -294,10 +289,10 @@ public class Engine extends WindowAdapter implements KeyListener
         {
             if (mobObject instanceof SphereMob)
             {
-                // TODO: getSphereMobZChange
-
                 mobObject.modifyLocation(
                     ((SphereMob) mobObject).autoMovingVector);
+
+                mobObject.currentLocation[2] = this.getCyclicZChange();
             }
 
             // TODO: Collisions check
@@ -365,10 +360,10 @@ public class Engine extends WindowAdapter implements KeyListener
     {
         HashSet<Long> nonSpawnedMobsKeySet =
             new HashSet<>(this.currentLevel.nonSpawnedMobs.keySet());
-        for (long spawnTime : nonSpawnedMobsKeySet)
-            if (System.currentTimeMillis() - this.gameStartTime > spawnTime)
+        for (long spawnIteration : nonSpawnedMobsKeySet)
+            if (this.gameLoopIterationsCounter > spawnIteration)
                 this.currentLevel.mobs.addAll(
-                    this.currentLevel.nonSpawnedMobs.remove(spawnTime));
+                    this.currentLevel.nonSpawnedMobs.remove(spawnIteration));
     }
 
     private void updateLevel()
@@ -439,6 +434,8 @@ public class Engine extends WindowAdapter implements KeyListener
     {
         while (!this.closeGame)
         {
+            System.out.println(this.gameLoopIterationsCounter);
+
             // Update
             this.updateLevel();
 
@@ -457,6 +454,8 @@ public class Engine extends WindowAdapter implements KeyListener
             // Wait a little for time alignment. It is needed for CPU power
             // saving
             this.timeAlignment();
+
+            this.gameLoopIterationsCounter += 1;
         }
     }
 }
