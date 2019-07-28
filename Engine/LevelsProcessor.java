@@ -36,7 +36,8 @@ public class LevelsProcessor
 //
 // Auto moving constants
 //
-    private int SPHERE_MOB_MOVING_SPEED = 1;  // TODO
+    private int SPHERE_MOB_MOVING_SPEED = 1;
+    private int SPHERE_BOSS_MOVING_SPEED = 2;
 
     private final int[] MOVEMENT_RIGHT = new int[] { 1, 0, 0 };
     private final int[] MOVEMENT_DOWN = new int[] { 0, 1, 0 };
@@ -69,7 +70,6 @@ public class LevelsProcessor
                 this.gameObjects.new SphereMob(
                     waveMob.currentLocation,
                     waveMob.autoMovingVector,
-                    waveMob.hitPointsCurrent,
                     waveMob.timeForBorderCrossing);
             waveMob.modifyLocation(locationModifier);
 
@@ -81,19 +81,28 @@ public class LevelsProcessor
 
     private ArrayList<MortalObject> getLevelOneMobs()
     {
+        ArrayList<MortalObject> mobs;
+
         SphereMob firstWaveSphereMob =
             this.gameObjects.new SphereMob(
                 new int[]{ -400, 300, 0 },
                 productAutoMovingVector(
                     MOVEMENT_RIGHT,
                     SPHERE_MOB_MOVING_SPEED),
-                5,
                 0);  // TODO: Debug delay with collisions
-
-        return this.createWaveOfSphereMobs(
+        mobs = new ArrayList<>(this.createWaveOfSphereMobs(
             firstWaveSphereMob,
             new int[]{30, -25, 0},
-            11);
+            11));
+
+        mobs.add(this.gameObjects.new SphereBoss(
+            new int[]{ 100, 100, 0 },
+            productAutoMovingVector(
+                MOVEMENT_RIGHT,
+                SPHERE_BOSS_MOVING_SPEED),
+            0));
+
+        return mobs;
     }
 
     private HashMap<Long, ArrayList<MortalObject>>
@@ -107,7 +116,6 @@ public class LevelsProcessor
                 productAutoMovingVector(
                     MOVEMENT_DOWN,
                     SPHERE_MOB_MOVING_SPEED),
-                5,
                 0);  // TODO: Debug delay with collisions
 
         nonSpawnedMobs.put(
@@ -123,8 +131,7 @@ public class LevelsProcessor
     public SinglePlayerLevel getLevelOne()
     {
         Player levelOnePlayer = this.gameObjects.new Player(
-            new int[] { 175, 350, 0 },
-            20);
+            new int[] { 175, 350, 0 });
 
         return new SinglePlayerLevel(
             new int[] { 700, 700, 0 },
