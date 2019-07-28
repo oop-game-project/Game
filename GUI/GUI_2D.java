@@ -263,6 +263,44 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
             BASIC_PROJECTILE_DIAMETER);
     }
 
+    private void paintSphereBoss(Graphics graphics, SphereBoss sphereBoss)
+    {
+        Image drawingImage;
+        switch(sphereBoss.currentLocation[2])
+        {
+            case 0:
+            {
+                drawingImage = this.SPHERE_BOSS_DEFAULT;
+                break;
+            }
+
+            case 1:
+            {
+                drawingImage = this.SPHERE_BOSS_ABOVE;
+                break;
+            }
+
+            case -1:
+            {
+                drawingImage = this.SPHERE_BOSS_BELOW;
+                break;
+            }
+
+            default:
+            {
+                throw new IllegalStateException(
+                    "SphereBoss have incorrect third coordinate: "
+                    + sphereBoss.currentLocation[2]);
+            }
+        }
+
+        graphics.drawImage(
+            drawingImage,
+            sphereBoss.currentLocation[0],
+            sphereBoss.currentLocation[1],
+            null);
+    }
+
 //
 // JPanel overrides
 //
@@ -275,19 +313,31 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         {
             case "Player":
             {
-                paintPlayer(graphics);
+                this.paintPlayer(graphics);
                 break;
             }
+
+            // Mobs
 
             case "SphereMob":
             {
-                paintSphereMob(graphics, (SphereMob) movableObject);
+                this.paintSphereMob(graphics, (SphereMob) movableObject);
                 break;
             }
 
+            case "SphereBoss":
+            {
+                this.paintSphereBoss(graphics, (SphereBoss) movableObject);
+                break;
+            }
+
+            // Projectiles
+
             case "BasicProjectile":
             {
-                paintBasicProjectile(graphics, (BasicProjectile) movableObject);
+                this.paintBasicProjectile(
+                    graphics,
+                    (BasicProjectile) movableObject);
                 break;
             }
 
