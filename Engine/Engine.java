@@ -115,6 +115,8 @@ public class Engine extends WindowAdapter implements KeyListener
 
     private final int BASIC_PROJECTILE_MOVING_SPEED = 10;
 
+    private final int[] CYCLIC_Z_CHANGE = new int[]{ 0, -1, 0, 1 };
+
     private int[] getBasicProjectileMoveVector(
         BasicProjectile basicProjectile)
     {
@@ -125,14 +127,12 @@ public class Engine extends WindowAdapter implements KeyListener
     }
 
     /**
-     * Based on when SphereMob was spawned, this method returns if it is needed
-     * for engine to toggle third coordinate of SphereMob
+     * This method every second change output Z position based on order in an
+     * array "CYCLIC_Z_CHANGE"
      **/
-    private int[] getSphereMobZChange()
+    private int getCyclicZChange()
     {
-        // TODO: Every N seconds SphereMob instance's third coordinate toggles
-        //  cyclically in order: 0 -> -1 -> 0 -> 1 -> 0
-        return null;
+        return CYCLIC_Z_CHANGE[(int)this.gameLoopIterationsCounter / 100 % 4];
     }
 
 //
@@ -159,7 +159,7 @@ public class Engine extends WindowAdapter implements KeyListener
     private final CollisionsProcessor collisionsProcessor;
     private final GameObjects gameObjects = new GameObjects();
 
-    private final long gameStartTime = System.currentTimeMillis();
+    private long gameLoopIterationsCounter = 0;
 
     private int[] getInputMoveVector()
     {
