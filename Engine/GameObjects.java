@@ -82,8 +82,6 @@ public class GameObjects
         {
             super(inputLocation);
 
-            assert inputHitPointsCurrent > 0;
-
             this.hitPointsCurrent = inputHitPointsCurrent;
         }
 
@@ -107,7 +105,7 @@ public class GameObjects
             super(inputLocation, inputHitPointsCurrent);
         }
 
-        public int getHitPointsMax() { return 30; }
+        public int getHitPointsMax() { return 30; }  // TODO: Debug hp amount
 
         @Override
         public Object clone() throws CloneNotSupportedException
@@ -134,19 +132,21 @@ public class GameObjects
          * [Would Be Better] place it in "GameMob" class between mob classes
          * and MortalObject
          **/
-        public boolean wasOnScreen = false;
+        public final long timeForBorderCrossing;
 
         public SphereMob(
             int[] inputLocation,
             int[] inputMovingVector,
-            int inputHitPointsCurrent)
+            int inputHitPointsCurrent,
+            long inputTimeForBorderCrossing)
         {
             super(inputLocation, inputHitPointsCurrent);
 
             this.autoMovingVector = inputMovingVector.clone();
+            this.timeForBorderCrossing = inputTimeForBorderCrossing;
         }
 
-        public int getHitPointsMax() { return 5; }
+        public int getHitPointsMax() { return 5; }  // TODO: Debug hp amount
 
         @Override
         public Object clone() throws CloneNotSupportedException
@@ -155,6 +155,36 @@ public class GameObjects
         }
     }
 
+    public class SphereBoss extends MortalObject
+    {
+        /**
+         * It sets moving speed and direction
+         **/
+        public int[] autoMovingVector;
+
+        /**
+         * When a mob spawns outside game field it prevents engine from
+         * despawning this mob immediately
+         *
+         * [Would Be Better] place it in "GameMob" class between mob classes
+         * and MortalObject
+         **/
+        public final long timeForBorderCrossing;
+
+        public SphereBoss(
+            int[] inputLocation,
+            int[] inputMovingVector,
+            int inputHitPointsCurrent,
+            long inputTimeForBorderCrossing)
+        {
+            super(inputLocation, inputHitPointsCurrent);
+
+            this.autoMovingVector = inputMovingVector.clone();
+            this.timeForBorderCrossing = inputTimeForBorderCrossing;
+        }
+
+        public int getHitPointsMax() { return 100; }  // TODO: Debug hp amount
+    }
 //
 // Interface objects
 //
@@ -181,6 +211,11 @@ public class GameObjects
          * Projectile is a flat circle
          */
         public static final int BASIC_PROJECTILE_DIAMETER = 7;
+
+        /**
+         * Same as SphereMob but bigger
+         **/
+        public static final int SPHERE_BOSS_DIAMETER = 100;
     }
 
 }
