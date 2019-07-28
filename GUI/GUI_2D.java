@@ -1,5 +1,6 @@
 package Game.GUI;
 
+// Inner imports
 import Game.Engine.GameObjects.*;
 import Game.Engine.LevelsProcessor.SinglePlayerLevel;
 import static Game.Engine.GameObjects.PaintingConst.*;
@@ -13,17 +14,16 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import java.io.File;
-import java.io.IOException;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 
+// IO classes
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import javax.imageio.ImageIO;
 
+import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 
 public class GUI_2D extends JPanel implements GUI, KeyListener
 {
@@ -179,7 +179,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
     }
 
 //
-// Paint component section
+// Specific objects painting
 //
     Image SPHERE_MOB_DEFAULT;
     Image SPHERE_MOB_ABOVE;
@@ -188,12 +188,6 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
     Image SPHERE_BOSS_DEFAULT;
     Image SPHERE_BOSS_ABOVE;
     Image SPHERE_BOSS_BELOW;
-
-    @Override
-    public Dimension getPreferredSize()
-    {
-        return new Dimension(700,700);
-    }
 
     private void paintPlayer(Graphics graphics)
     {
@@ -269,25 +263,64 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
             BASIC_PROJECTILE_DIAMETER);
     }
 
+//
+// JPanel overrides
+//
+
+    private void paintMovableObject(
+        Graphics graphics,
+        MovableObject movableObject)
+    {
+        switch (movableObject.getClass().getSimpleName())
+        {
+            case "Player":
+            {
+                paintPlayer(graphics);
+                break;
+            }
+
+            case "SphereMob":
+            {
+                paintSphereMob(graphics, (SphereMob) movableObject);
+                break;
+            }
+
+            case "BasicProjectile":
+            {
+                paintBasicProjectile(graphics, (BasicProjectile) movableObject);
+                break;
+            }
+
+            default:
+                 try
+                 {
+                     throw new NotImplementedException(
+                         "\""
+                         + movableObject.getClass().getName()
+                         + "\""
+                         + ": painting of this class is not implemented");
+                 }
+                 catch (NotImplementedException occurredExc)
+                 {
+                     occurredExc.printStackTrace();
+                 }
+        }
+
+    }
+
     private void paintMovableObjectsBelow(Graphics graphics)
     {
         // Paint mobs below
         this.renderingLevel.mobs.forEach(
             mobObject ->
             {
-                if (
-                    mobObject instanceof SphereMob
-                    && mobObject.currentLocation[2] == -1)
-                    paintSphereMob(graphics, (SphereMob)mobObject);
+                if (mobObject.currentLocation[2] == -1)
+                    paintMovableObject(graphics, mobObject);
             });
     }
 
     /**
      * Projectiles after mobs for better debugging.
-     *
-     * Mobs' projectiles after Player's projectiles for player convenience.
-     * Mob's projectiles have bigger priority for player than his own
-     * projectiles that are harmless for player himself
      **/
     private void paintMovableObjectsOnSurface(Graphics graphics)
     {
@@ -295,38 +328,16 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         this.renderingLevel.mobs.forEach(
             mobObject ->
             {
-                if (
-                    mobObject instanceof SphereMob
-                    && mobObject.currentLocation[2] == 0)
-                    paintSphereMob(graphics, (SphereMob)mobObject);
+                if (mobObject.currentLocation[2] == 0)
+                    paintMovableObject(graphics, mobObject);
             });
 
-        // Paint player's projectiles
+        // Paint projectiles
         this.renderingLevel.projectiles.forEach(
-            projectileObject ->
-            {
-                if (
-                        projectileObject instanceof BasicProjectile
-                        && ((BasicProjectile)projectileObject).firedByPlayer)
-                    paintBasicProjectile(
-                        graphics,
-                        (BasicProjectile)projectileObject);
-            });
-
-        // Paint mobs' projectile
-        this.renderingLevel.projectiles.forEach(
-            projectileObject ->
-            {
-                if (
-                    projectileObject instanceof BasicProjectile
-                    && !((BasicProjectile)projectileObject).firedByPlayer)
-                    paintBasicProjectile(
-                        graphics,
-                        (BasicProjectile)projectileObject);
-            });
+            projectile -> paintMovableObject(graphics, projectile));
 
         // Paint Player
-        this.paintPlayer(graphics);
+        this.paintMovableObject(graphics, this.renderingLevel.player);
     }
 
     private void paintMovableObjectsAbove(Graphics graphics)
@@ -335,11 +346,15 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         this.renderingLevel.mobs.forEach(
             mobObject ->
             {
-                if (
-                        mobObject instanceof SphereMob
-                        && mobObject.currentLocation[2] == 1)
-                    paintSphereMob(graphics, (SphereMob) mobObject);
+                if (mobObject.currentLocation[2] == 1)
+                    paintMovableObject(graphics, mobObject);
             });
+    }
+
+    @Override
+    public Dimension getPreferredSize()
+    {
+        return new Dimension(700,700);
     }
 
     @Override
@@ -349,13 +364,10 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 
         if (levelRenderingIsNeeded)
         {
-            // Paint movable objects below
             this.paintMovableObjectsBelow(graphics);
 
-            // Paint movable objects on game surface
             this.paintMovableObjectsOnSurface(graphics);
 
-            // Paint movable objects above
             this.paintMovableObjectsAbove(graphics);
 
             // [Would Be Better]
