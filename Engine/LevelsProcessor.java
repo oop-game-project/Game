@@ -57,36 +57,43 @@ public class LevelsProcessor
 
     GameObjects gameObjects = new GameObjects();
 
-    private ArrayList<MortalObject> getLevelOneMobs()
+    private ArrayList<MortalObject> createWaveOfSphereMobs(
+        SphereMob waveMob, int[] locationModifier, int mobsCount)
     {
         ArrayList<MortalObject> mobs = new ArrayList<>();
 
+        mobs.add(waveMob);
+        for (int i = 0; i < mobsCount; i++)
+        {
+            waveMob =
+                this.gameObjects.new SphereMob(
+                    waveMob.currentLocation,
+                    waveMob.autoMovingVector,
+                    waveMob.hitPointsCurrent,
+                    waveMob.timeForBorderCrossing);
+            waveMob.modifyLocation(locationModifier);
+
+            mobs.add(waveMob);
+        }
+
+        return mobs;
+    }
+
+    private ArrayList<MortalObject> getLevelOneMobs()
+    {
         SphereMob firstWaveSphereMob =
             this.gameObjects.new SphereMob(
                 new int[]{ -400, 300, 0 },
                 productAutoMovingVector(
                     MOVEMENT_RIGHT,
                     SPHERE_MOB_MOVING_SPEED),
-                5);
+                5,
+                0);  // TODO: Debug delay with collisions
 
-        mobs.add(firstWaveSphereMob);
-        for (int i = 0; i < 10; i++)
-        {
-            try
-            {
-                firstWaveSphereMob =
-                    (SphereMob) firstWaveSphereMob.clone();
-                firstWaveSphereMob.modifyLocation(new int[]{30, -25, 0});
-
-                mobs.add(firstWaveSphereMob);
-            }
-            catch (CloneNotSupportedException occurredExc)
-            {
-                occurredExc.printStackTrace();
-            }
-        }
-
-        return mobs;
+        return this.createWaveOfSphereMobs(
+            firstWaveSphereMob,
+            new int[]{30, -25, 0},
+            11);
     }
 
     private HashMap<Long, ArrayList<MortalObject>>
@@ -94,34 +101,21 @@ public class LevelsProcessor
     {
         HashMap<Long, ArrayList<MortalObject>> nonSpawnedMobs = new HashMap<>();
 
-        ArrayList<MortalObject> secondWaveMobs = new ArrayList<>();
-
         SphereMob secondWaveSphereMob =
             this.gameObjects.new SphereMob(
                 new int[]{ 20, -30, 0 },
                 productAutoMovingVector(
                     MOVEMENT_DOWN,
                     SPHERE_MOB_MOVING_SPEED),
-                5);
+                5,
+                0);  // TODO: Debug delay with collisions
 
-        secondWaveMobs.add(secondWaveSphereMob);
-        for (int i = 0; i < 14; i++)
-        {
-            try
-            {
-                secondWaveSphereMob =
-                    (SphereMob) secondWaveSphereMob.clone();
-                secondWaveSphereMob.modifyLocation(new int[]{ 45, 0, 0 });
-
-                secondWaveMobs.add(secondWaveSphereMob);
-            }
-            catch (CloneNotSupportedException occurredExc)
-            {
-                occurredExc.printStackTrace();
-            }
-        }
-
-        nonSpawnedMobs.put(20000L, secondWaveMobs);
+        nonSpawnedMobs.put(
+            20000L,
+            this.createWaveOfSphereMobs(
+                secondWaveSphereMob,
+                new int[]{ 45, 0, 0 },
+                14));
 
         return nonSpawnedMobs;
     }
