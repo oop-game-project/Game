@@ -34,6 +34,31 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 
     public GUI_2D() { }
 
+    public void init(KeyListener engine, SinglePlayerLevel inputLevel)
+    {
+        this.renderingLevel = inputLevel;
+
+        this.loadImages();
+
+        this.gameMainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.gameMainFrame.setSize(700, 700);
+        this.gameMainFrame.setResizable(false);
+
+        this.gameMainFrame.addKeyListener(engine);
+        this.gameMainFrame.addKeyListener(this);
+        this.gameMainFrame.addWindowListener((WindowListener)engine);
+        this.gameMainFrame.add(this);
+
+        this.gameMainFrame.pack();
+        this.gameMainFrame.setVisible(true);
+
+        this.setBackground(Color.GRAY);
+    }
+
+//
+// Images loading
+//
+
     private Image loadSphereMobImage(String spritesPath, String imageName)
     {
         File sphereMobImageFile = new File(
@@ -60,6 +85,62 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         return sphereMobImage;
     }
 
+    private Image loadSphereBossImage(String spritesPath, String imageName)
+    {
+        File sphereBossImageFile = new File(
+            Paths
+                .get(spritesPath, imageName)
+                .toString());
+
+        Image sphereBossImage = null;
+        try
+        {
+            sphereBossImage =
+                ImageIO
+                    .read(sphereBossImageFile)
+                    .getScaledInstance(
+                        SPHERE_BOSS_DIAMETER,
+                        SPHERE_BOSS_DIAMETER,
+                        Image.SCALE_SMOOTH);
+        }
+        catch (IOException occurredExc)
+        {
+            occurredExc.printStackTrace();
+        }
+
+        return sphereBossImage;
+    }
+
+    private void loadSphereMobImages(String spritesPath)
+    {
+        this.SPHERE_MOB_DEFAULT = loadSphereMobImage(
+            spritesPath,
+            "SphereMob-Default.png");
+
+        this.SPHERE_MOB_ABOVE = loadSphereMobImage(
+            spritesPath,
+            "SphereMob-Above.png");
+
+        this.SPHERE_MOB_BELOW = loadSphereMobImage(
+            spritesPath,
+            "SphereMob-Below.png");
+    }
+
+    private void loadSphereBossImages(String spritesPath)
+    {
+        this.SPHERE_BOSS_DEFAULT = loadSphereBossImage(
+            spritesPath,
+            "SphereMob-Default.png");
+
+        this.SPHERE_BOSS_ABOVE = loadSphereBossImage(
+            spritesPath,
+            "SphereMob-Above.png");
+
+        this.SPHERE_BOSS_BELOW = loadSphereBossImage(
+            spritesPath,
+            "SphereMob-Below.png");
+    }
+
     private void loadImages()
     {
         String executionFolderPath =
@@ -76,38 +157,9 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
                 .get(executionFolderPath, "Game", "Sprites")
                 .toString();
 
-        this.SPHERE_MOB_DEFAULT = loadSphereMobImage(
-            spritesPath,
-            "SphereMob-Default.png");
+        loadSphereMobImages(spritesPath);
 
-        this.SPHERE_MOB_ABOVE = loadSphereMobImage(
-            spritesPath,
-            "SphereMob-Above.png");
-
-        this.SPHERE_MOB_BELOW = loadSphereMobImage(
-            spritesPath,
-            "SphereMob-Below.png");
-    }
-
-    public void init(KeyListener engine, SinglePlayerLevel inputLevel)
-    {
-        this.renderingLevel = inputLevel;
-
-        this.loadImages();
-
-        this.gameMainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.gameMainFrame.setSize(700, 700);
-        this.gameMainFrame.setResizable(false);
-
-        this.gameMainFrame.addKeyListener(engine);
-        this.gameMainFrame.addKeyListener(this);
-        this.gameMainFrame.addWindowListener((WindowListener)engine);
-        this.gameMainFrame.add(this);
-
-        this.gameMainFrame.pack();
-        this.gameMainFrame.setVisible(true);
-
-        this.setBackground(Color.GRAY);
+        loadSphereBossImages(spritesPath);
     }
 
 //
@@ -132,6 +184,10 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
     Image SPHERE_MOB_DEFAULT;
     Image SPHERE_MOB_ABOVE;
     Image SPHERE_MOB_BELOW;
+
+    Image SPHERE_BOSS_DEFAULT;
+    Image SPHERE_BOSS_ABOVE;
+    Image SPHERE_BOSS_BELOW;
 
     @Override
     public Dimension getPreferredSize()
