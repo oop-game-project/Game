@@ -34,46 +34,59 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 
     public GUI_2D() { }
 
-    private void loadImages()
+    private Image loadSphereMobImage(String spritesPath, String imageName)
     {
+        File sphereMobImageFile = new File(
+            Paths
+                .get(spritesPath, imageName)
+                .toString());
+
+        Image sphereMobImage = null;
         try
         {
-            // TODO: Change on release. Execution dir must be "Game", not
-            //  "game-project"
-            Path pathToSprites = Paths.get(
-                System.getProperty("user.dir") + "\\src\\Game\\Sprites\\");
-
-            File sphereMobDefaultImage = new File(
-                pathToSprites.toString() + "\\SphereMob-Default.png");
-            this.SPHERE_MOB_DEFAULT = ImageIO
-                .read(sphereMobDefaultImage)
-                .getScaledInstance(
-                    SPHERE_MOB_DIAMETER,
-                    SPHERE_MOB_DIAMETER,
-                    Image.SCALE_SMOOTH);
-
-            File sphereMobAboveImage = new File(
-                pathToSprites.toString() + "\\SphereMob-Above.png");
-            this.SPHERE_MOB_ABOVE = ImageIO
-                .read(sphereMobAboveImage)
-                .getScaledInstance(
-                    SPHERE_MOB_DIAMETER,
-                    SPHERE_MOB_DIAMETER,
-                    Image.SCALE_SMOOTH);
-
-            File sphereMobBelowImage = new File(
-                pathToSprites.toString() + "\\SphereMob-Below.png");
-            this.SPHERE_MOB_BELOW = ImageIO
-                .read(sphereMobBelowImage)
-                .getScaledInstance(
-                    SPHERE_MOB_DIAMETER,
-                    SPHERE_MOB_DIAMETER,
-                    Image.SCALE_SMOOTH);
+            sphereMobImage =
+                ImageIO
+                    .read(sphereMobImageFile)
+                    .getScaledInstance(
+                        SPHERE_MOB_DIAMETER,
+                        SPHERE_MOB_DIAMETER,
+                        Image.SCALE_SMOOTH);
         }
         catch (IOException occurredExc)
         {
             occurredExc.printStackTrace();
         }
+
+        return sphereMobImage;
+    }
+
+    private void loadImages()
+    {
+        String executionFolderPath =
+            new File(
+                this
+                    .getClass()
+                    .getProtectionDomain()
+                    .getCodeSource()
+                    .getLocation()
+                    .getPath()
+            ).getPath();
+        String spritesPath =
+            Paths
+                .get(executionFolderPath, "Game", "Sprites")
+                .toString();
+
+        this.SPHERE_MOB_DEFAULT = loadSphereMobImage(
+            spritesPath,
+            "SphereMob-Default.png");
+
+        this.SPHERE_MOB_ABOVE = loadSphereMobImage(
+            spritesPath,
+            "SphereMob-Above.png");
+
+        this.SPHERE_MOB_BELOW = loadSphereMobImage(
+            spritesPath,
+            "SphereMob-Below.png");
     }
 
     public void init(KeyListener engine, SinglePlayerLevel inputLevel)
