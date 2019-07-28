@@ -70,7 +70,7 @@ public class LevelsProcessor
                 this.gameObjects.new SphereMob(
                     waveMob.currentLocation,
                     waveMob.autoMovingVector,
-                    waveMob.timeForBorderCrossing);
+                    waveMob.borderWasCrossed);
             waveMob.modifyLocation(locationModifier);
 
             mobs.add(waveMob);
@@ -89,18 +89,18 @@ public class LevelsProcessor
                 productAutoMovingVector(
                     MOVEMENT_RIGHT,
                     SPHERE_MOB_MOVING_SPEED),
-                0);  // TODO: Debug delay with collisions
+                false);
         mobs = new ArrayList<>(this.createWaveOfSphereMobs(
             firstWaveSphereMob,
             new int[]{30, -25, 0},
             11));
 
         mobs.add(this.gameObjects.new SphereBoss(
-            new int[]{ 100, 100, 0 },
+            new int[]{ 250, -200, 0 },
             productAutoMovingVector(
                 MOVEMENT_RIGHT,
                 SPHERE_BOSS_MOVING_SPEED),
-            0));
+            false));
 
         return mobs;
     }
@@ -116,7 +116,7 @@ public class LevelsProcessor
                 productAutoMovingVector(
                     MOVEMENT_DOWN,
                     SPHERE_MOB_MOVING_SPEED),
-                0);  // TODO: Debug delay with collisions
+                false);
 
         nonSpawnedMobs.put(
             20000L,

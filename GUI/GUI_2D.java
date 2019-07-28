@@ -289,7 +289,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
             default:
             {
                 throw new IllegalStateException(
-                    "SphereBoss have incorrect third coordinate: "
+                    "SphereBoss instance has incorrect third coordinate: "
                     + sphereBoss.currentLocation[2]);
             }
         }

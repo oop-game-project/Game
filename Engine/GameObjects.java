@@ -123,22 +123,23 @@ public class GameObjects
 
         /**
          * When a mob spawns outside game field it prevents engine from
-         * despawning this mob immediately
+         * despawning this mob immediately. I.e., every GameObject in the game
+         * should eventually be fully on the game field
          *
          * [Would Be Better] place it in "GameMob" class between mob classes
          * and MortalObject
          **/
-        public final long timeForBorderCrossing;
+        public boolean borderWasCrossed;
 
         public SphereMob(
             int[] inputLocation,
             int[] inputMovingVector,
-            long inputTimeForBorderCrossing)
+            boolean inputBorderWasCrossed)
         {
             super(inputLocation);
 
             this.autoMovingVector = inputMovingVector.clone();
-            this.timeForBorderCrossing = inputTimeForBorderCrossing;
+            this.borderWasCrossed = inputBorderWasCrossed;
         }
 
         public int getHitPointsMax() { return 5; }  // TODO: Debug hp amount
@@ -159,22 +160,23 @@ public class GameObjects
 
         /**
          * When a mob spawns outside game field it prevents engine from
-         * despawning this mob immediately
+         * despawning this mob immediately. I.e., every GameObject in the game
+         * should eventually be fully on the game field
          *
          * [Would Be Better] place it in "GameMob" class between mob classes
          * and MortalObject
          **/
-        public final long timeForBorderCrossing;
+        public boolean borderWasCrossed;
 
         public SphereBoss(
             int[] inputLocation,
             int[] inputMovingVector,
-            long inputTimeForBorderCrossing)
+            boolean inputBorderWasCrossed)
         {
             super(inputLocation);
 
             this.autoMovingVector = inputMovingVector.clone();
-            this.timeForBorderCrossing = inputTimeForBorderCrossing;
+            this.borderWasCrossed = inputBorderWasCrossed;
         }
 
         public int getHitPointsMax() { return 100; }  // TODO: Debug hp amount
@@ -209,7 +211,7 @@ public class GameObjects
         /**
          * Same as SphereMob but bigger
          **/
-        public static final int SPHERE_BOSS_DIAMETER = 100;
+        public static final int SPHERE_BOSS_DIAMETER = 200;
     }
 
 }
