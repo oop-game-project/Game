@@ -18,6 +18,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Engine extends WindowAdapter implements KeyListener
 {
     private final SinglePlayerLevel currentLevel;
+    private final GameObjects gameObjects = new GameObjects();
+    private final CollisionsProcessor collisionsProcessor;
 
     private HashSet<Integer> keysPressed = new HashSet<>();
     /**
@@ -34,6 +36,8 @@ public class Engine extends WindowAdapter implements KeyListener
      * then GUI thread breaks
      */
     private ReentrantLock closeGameLock = new ReentrantLock();
+
+    private long gameLoopIterationsCounter = 0;
 
     public Engine(
         SinglePlayerLevel inputLevel,
@@ -112,7 +116,7 @@ public class Engine extends WindowAdapter implements KeyListener
     // example, this is why "BASIC_PROJECTILE_MOVING_SPEED" is not in
     // "LevelsProcessor"
 
-    private final int BASIC_PROJECTILE_MOVING_SPEED = 10;
+    private final int BASIC_PROJECTILE_MOVE_SPEED = 10;
 
     private final int[] CYCLIC_Z_CHANGE = new int[]{ 0, -1, 0, 1 };
 
@@ -120,9 +124,9 @@ public class Engine extends WindowAdapter implements KeyListener
         BasicProjectile basicProjectile)
     {
         if (basicProjectile.firedByPlayer)
-            return new int[] { 0, -BASIC_PROJECTILE_MOVING_SPEED, 0 };
+            return new int[] { 0, -BASIC_PROJECTILE_MOVE_SPEED, 0 };
         else
-            return new int[] { 0, BASIC_PROJECTILE_MOVING_SPEED, 0 };
+            return new int[] { 0, BASIC_PROJECTILE_MOVE_SPEED, 0 };
     }
 
     /**
@@ -135,18 +139,18 @@ public class Engine extends WindowAdapter implements KeyListener
     }
 
 //
-// Level update main section
+// Game objects spawning
 //
-
-    /**
-     * Pixels per level update
-     **/
-    private final int PLAYER_MOVE_SPEED = 5;
 
     /**
      * Fire per this amount of milliseconds
      **/
     private final int PLAYER_FIRING_FREQUENCY = 50;
+
+    /**
+     * Volley per amount of game loop iterations
+     */
+    private final long SPHERE_BOSS_VOLLEY_FREQUENCY = 10;
 
     private boolean playerIsFiring = false;
     /**
@@ -155,10 +159,90 @@ public class Engine extends WindowAdapter implements KeyListener
      **/
     private boolean playerFiringWasSwitched = false;
 
-    private final CollisionsProcessor collisionsProcessor;
-    private final GameObjects gameObjects = new GameObjects();
+    private void spawnPlayerProjectiles()
+    {
+        if (this.keysReleased.contains(KeyEvent.VK_Z))
+        {
+            this.keysReleasedLock.lock();
+            try
+            {
+                this.keysReleased.remove(KeyEvent.VK_Z);
+            }
+            finally
+            {
+                this.keysReleasedLock.unlock();
+            }
 
-    private long gameLoopIterationsCounter = 0;
+            this.playerFiringWasSwitched = false;
+        }
+
+        if (this.keysPressed.contains(KeyEvent.VK_Z)
+            && !this.playerFiringWasSwitched)
+        {
+            this.playerIsFiring = !this.playerIsFiring;
+            this.playerFiringWasSwitched = true;
+        }
+
+        // Spawn player's projectile based on:
+        // 1. If player's firing was toggled
+        // 2. When last projectile was fired
+        if (this.playerIsFiring
+            && System.currentTimeMillis()
+               - this.currentLevel.player.lastProjectileWasFiredTime
+               > PLAYER_FIRING_FREQUENCY)
+        {
+            // BasicProjectile is a circle that should be spawned in front of
+            // player when fired
+            int[] BasicProjectileSpawnLocation = new int[]{
+                this.currentLevel.player.currentLocation[0] - 4,
+                this.currentLevel.player.currentLocation[1] - 7,
+                this.currentLevel.player.currentLocation[2]};
+            this.currentLevel.projectiles.add(
+                this.gameObjects.new BasicProjectile(
+                    BasicProjectileSpawnLocation,
+                    this.currentLevel.player));
+
+            this.currentLevel.player.lastProjectileWasFiredTime =
+                System.currentTimeMillis();
+        }
+    }
+
+    private void spawnMobsProjectiles()
+    {
+        for (MortalObject mobObject : this.currentLevel.mobs)
+        {
+            if (mobObject instanceof SphereBoss)
+            {
+                // TODO
+            }
+        }
+    }
+
+    private void spawnProjectiles()
+    {
+        this.spawnPlayerProjectiles();
+
+        this.spawnMobsProjectiles();
+    }
+
+    private void spawnMobs()
+    {
+        HashSet<Long> nonSpawnedMobsKeySet =
+            new HashSet<>(this.currentLevel.nonSpawnedMobs.keySet());
+        for (long spawnIteration : nonSpawnedMobsKeySet)
+            if (this.gameLoopIterationsCounter > spawnIteration)
+                this.currentLevel.mobs.addAll(
+                    this.currentLevel.nonSpawnedMobs.remove(spawnIteration));
+    }
+
+//
+// Level update main section
+//
+
+    /**
+     * Pixels per level update
+     **/
+    private final int PLAYER_MOVE_SPEED = 5;
 
     private int[] getInputMoveVector()
     {
@@ -301,71 +385,6 @@ public class Engine extends WindowAdapter implements KeyListener
         // TODO: Despawning
     }
 
-    private void spawnPlayerProjectiles()
-    {
-        if (this.keysReleased.contains(KeyEvent.VK_Z))
-        {
-            this.keysReleasedLock.lock();
-            try
-            {
-                this.keysReleased.remove(KeyEvent.VK_Z);
-            }
-            finally
-            {
-                this.keysReleasedLock.unlock();
-            }
-
-            this.playerFiringWasSwitched = false;
-        }
-
-        if (this.keysPressed.contains(KeyEvent.VK_Z)
-            && !this.playerFiringWasSwitched)
-        {
-            this.playerIsFiring = !this.playerIsFiring;
-            this.playerFiringWasSwitched = true;
-        }
-
-        // Spawn player's projectile based on:
-        // 1. If player's firing was toggled
-        // 2. When last projectile was fired
-        if (this.playerIsFiring
-            && System.currentTimeMillis()
-               - this.currentLevel.player.lastProjectileWasFiredTime
-               > PLAYER_FIRING_FREQUENCY)
-        {
-            // BasicProjectile is a circle that should be spawned in front of
-            // player when fired
-            int[] BasicProjectileSpawnLocation = new int[]{
-                this.currentLevel.player.currentLocation[0] - 4,
-                this.currentLevel.player.currentLocation[1] - 7,
-                this.currentLevel.player.currentLocation[2]};
-            this.currentLevel.projectiles.add(
-                this.gameObjects.new BasicProjectile(
-                    BasicProjectileSpawnLocation,
-                    this.currentLevel.player));
-
-            this.currentLevel.player.lastProjectileWasFiredTime =
-                System.currentTimeMillis();
-        }
-    }
-
-    private void spawnProjectiles()
-    {
-        this.spawnPlayerProjectiles();
-
-        // TODO : Spawn mobs' projectiles
-    }
-
-    private void spawnMobs()
-    {
-        HashSet<Long> nonSpawnedMobsKeySet =
-            new HashSet<>(this.currentLevel.nonSpawnedMobs.keySet());
-        for (long spawnIteration : nonSpawnedMobsKeySet)
-            if (this.gameLoopIterationsCounter > spawnIteration)
-                this.currentLevel.mobs.addAll(
-                    this.currentLevel.nonSpawnedMobs.remove(spawnIteration));
-    }
-
     private void updateLevel()
     {
         // [Would Be Better]
@@ -434,8 +453,6 @@ public class Engine extends WindowAdapter implements KeyListener
     {
         while (!this.closeGame)
         {
-            System.out.println(this.gameLoopIterationsCounter);
-
             // Update
             this.updateLevel();
 
