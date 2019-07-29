@@ -1,6 +1,7 @@
 package Game.Engine;
 
 import Game.Engine.GameObjects.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,11 +41,11 @@ public class LevelsProcessor
 //
 // Auto moving constants
 //
-    private int SPHERE_MOB_MOVING_SPEED = 1;
-    private int SPHERE_BOSS_MOVING_SPEED = 2;
+    private static final int SPHERE_MOB_MOVING_SPEED = 1;
+    private static final int SPHERE_BOSS_MOVING_SPEED = 2;
 
-    private final int[] MOVEMENT_RIGHT = new int[] { 1, 0, 0 };
-    private final int[] MOVEMENT_DOWN = new int[] { 0, 1, 0 };
+    private static final int[] MOVEMENT_RIGHT = new int[] { 1, 0, 0 };
+    private static final int[] MOVEMENT_DOWN = new int[] { 0, 1, 0 };
 
     private static int[] productAutoMovingVector(
         int[] directionVectorConstant,
@@ -62,6 +63,7 @@ public class LevelsProcessor
 
     GameObjects gameObjects = new GameObjects();
 
+    @NotNull
     private ArrayList<MortalObject> createWaveOfSphereMobs(
         SphereMob waveMob, int[] locationModifier, int mobsCount)
     {
@@ -83,6 +85,7 @@ public class LevelsProcessor
         return mobs;
     }
 
+    @NotNull
     private ArrayList<MortalObject> getLevelOneMobs()
     {
         ArrayList<MortalObject> mobs;
@@ -102,6 +105,7 @@ public class LevelsProcessor
         return mobs;
     }
 
+    @NotNull
     private HashMap<Long, ArrayList<MortalObject>>
         getLevelOneNonSpawnedMobs()
     {
@@ -130,8 +134,7 @@ public class LevelsProcessor
             productAutoMovingVector(
                 MOVEMENT_RIGHT,
                 SPHERE_BOSS_MOVING_SPEED),
-            true));  /*
-                    Debug: Temp while no collisions. Change to 'false' later */
+            false));
         nonSpawnedMobs.put(
             0L,  // Optimize: 2000L
             sphereBoss);

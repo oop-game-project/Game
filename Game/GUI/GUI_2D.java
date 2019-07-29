@@ -29,10 +29,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class GUI_2D extends JPanel implements GUI, KeyListener
 {
-    public GUI_2D() { }
-
-    private final JFrame gameMainFrame = new JFrame();
-    
     private class GameObjectsPainter
     {
         ImagesContainer gameImages = new ImagesContainer();
@@ -372,6 +368,8 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
                 });
         }
     }
+
+    private final JFrame gameMainFrame = new JFrame();
 
     @Override
     public void init(KeyListener engine, SinglePlayerLevel inputLevel)
