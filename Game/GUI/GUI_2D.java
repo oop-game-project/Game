@@ -28,17 +28,20 @@ import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 public class GUI_2D extends JPanel implements GUI, KeyListener
 {
     private final JFrame gameMainFrame = new JFrame();
-    private SinglePlayerLevel renderingLevel;
+    private final SinglePlayerLevel renderingLevel;
+    private final ImagesContainer gameImages = new ImagesContainer();
 
     private boolean levelRenderingIsNeeded = false;
 
-    public GUI_2D() { }
 
-    public void init(KeyListener engine, SinglePlayerLevel inputLevel)
+    public GUI_2D(SinglePlayerLevel inputLevel)
     {
         this.renderingLevel = inputLevel;
+    }
 
-        this.loadImages();
+    public void init(KeyListener engine)
+    {
+        this.gameImages.loadImages();
 
         this.gameMainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.gameMainFrame.setSize(700, 700);
@@ -55,111 +58,118 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         this.setBackground(Color.GRAY);
     }
 
-//
-// Images loading
-//
-
-    private Image loadSphereMobImage(String spritesPath, String imageName)
+    private class ImagesContainer
     {
-        File sphereMobImageFile = new File(
-            Paths
-                .get(spritesPath, imageName)
-                .toString());
+        Image SPHERE_MOB_DEFAULT;
+        Image SPHERE_MOB_ABOVE;
+        Image SPHERE_MOB_BELOW;
 
-        Image sphereMobImage = null;
-        try
-        {
-            sphereMobImage =
-                ImageIO
-                    .read(sphereMobImageFile)
-                    .getScaledInstance(
-                        SPHERE_MOB_DIAMETER,
-                        SPHERE_MOB_DIAMETER,
-                        Image.SCALE_SMOOTH);
-        }
-        catch (IOException occurredExc)
-        {
-            occurredExc.printStackTrace();
-        }
+        Image SPHERE_BOSS_DEFAULT;
+        Image SPHERE_BOSS_ABOVE;
+        Image SPHERE_BOSS_BELOW;
 
-        return sphereMobImage;
-    }
-
-    private Image loadSphereBossImage(String spritesPath, String imageName)
-    {
-        File sphereBossImageFile = new File(
-            Paths
-                .get(spritesPath, imageName)
-                .toString());
-
-        Image sphereBossImage = null;
-        try
+        private Image loadSphereMobImage(String spritesPath, String imageName)
         {
-            sphereBossImage =
-                ImageIO
-                    .read(sphereBossImageFile)
-                    .getScaledInstance(
-                        SPHERE_BOSS_DIAMETER,
-                        SPHERE_BOSS_DIAMETER,
-                        Image.SCALE_SMOOTH);
-        }
-        catch (IOException occurredExc)
-        {
-            occurredExc.printStackTrace();
+            File sphereMobImageFile = new File(
+                Paths
+                    .get(spritesPath, imageName)
+                    .toString());
+
+            Image sphereMobImage = null;
+            try
+            {
+                sphereMobImage =
+                    ImageIO
+                        .read(sphereMobImageFile)
+                        .getScaledInstance(
+                            SPHERE_MOB_DIAMETER,
+                            SPHERE_MOB_DIAMETER,
+                            Image.SCALE_SMOOTH);
+            }
+            catch (IOException occurredExc)
+            {
+                occurredExc.printStackTrace();
+            }
+
+            return sphereMobImage;
         }
 
-        return sphereBossImage;
-    }
+        private Image loadSphereBossImage(String spritesPath, String imageName)
+        {
+            File sphereBossImageFile = new File(
+                Paths
+                    .get(spritesPath, imageName)
+                    .toString());
 
-    private void loadSphereMobImages(String spritesPath)
-    {
-        this.SPHERE_MOB_DEFAULT = loadSphereMobImage(
-            spritesPath,
-            "SphereMob-Default.png");
+            Image sphereBossImage = null;
+            try
+            {
+                sphereBossImage =
+                    ImageIO
+                        .read(sphereBossImageFile)
+                        .getScaledInstance(
+                            SPHERE_BOSS_DIAMETER,
+                            SPHERE_BOSS_DIAMETER,
+                            Image.SCALE_SMOOTH);
+            }
+            catch (IOException occurredExc)
+            {
+                occurredExc.printStackTrace();
+            }
 
-        this.SPHERE_MOB_ABOVE = loadSphereMobImage(
-            spritesPath,
-            "SphereMob-Above.png");
+            return sphereBossImage;
+        }
 
-        this.SPHERE_MOB_BELOW = loadSphereMobImage(
-            spritesPath,
-            "SphereMob-Below.png");
-    }
+        private void loadSphereMobImages(String spritesPath)
+        {
+            this.SPHERE_MOB_DEFAULT = loadSphereMobImage(
+                spritesPath,
+                "SphereMob-Default.png");
 
-    private void loadSphereBossImages(String spritesPath)
-    {
-        this.SPHERE_BOSS_DEFAULT = loadSphereBossImage(
-            spritesPath,
-            "SphereMob-Default.png");
+            this.SPHERE_MOB_ABOVE = loadSphereMobImage(
+                spritesPath,
+                "SphereMob-Above.png");
 
-        this.SPHERE_BOSS_ABOVE = loadSphereBossImage(
-            spritesPath,
-            "SphereMob-Above.png");
+            this.SPHERE_MOB_BELOW = loadSphereMobImage(
+                spritesPath,
+                "SphereMob-Below.png");
+        }
 
-        this.SPHERE_BOSS_BELOW = loadSphereBossImage(
-            spritesPath,
-            "SphereMob-Below.png");
-    }
+        private void loadSphereBossImages(String spritesPath)
+        {
+            this.SPHERE_BOSS_DEFAULT = loadSphereBossImage(
+                spritesPath,
+                "SphereMob-Default.png");
 
-    private void loadImages()
-    {
-        String executionFolderPath =
-            new File(
-                this
-                    .getClass()
-                    .getProtectionDomain()
-                    .getCodeSource()
-                    .getLocation()
-                    .getPath()
-            ).getPath();
-        String spritesPath =
-            Paths
-                .get(executionFolderPath, "Game", "Sprites")
-                .toString();
+            this.SPHERE_BOSS_ABOVE = loadSphereBossImage(
+                spritesPath,
+                "SphereMob-Above.png");
 
-        loadSphereMobImages(spritesPath);
+            this.SPHERE_BOSS_BELOW = loadSphereBossImage(
+                spritesPath,
+                "SphereMob-Below.png");
+        }
 
-        loadSphereBossImages(spritesPath);
+        public void loadImages()
+        {
+            String executionFolderPath =
+                new File(
+                    this
+                        .getClass()
+                        .getProtectionDomain()
+                        .getCodeSource()
+                        .getLocation()
+                        .getPath()
+                ).getPath();
+            String spritesPath =
+                Paths
+                    .get(executionFolderPath, "Game", "Sprites")
+                    .toString();
+
+            loadSphereMobImages(spritesPath);
+
+            loadSphereBossImages(spritesPath);
+        }
     }
 
 //
@@ -181,13 +191,6 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 //
 // Specific objects painting
 //
-    Image SPHERE_MOB_DEFAULT;
-    Image SPHERE_MOB_ABOVE;
-    Image SPHERE_MOB_BELOW;
-
-    Image SPHERE_BOSS_DEFAULT;
-    Image SPHERE_BOSS_ABOVE;
-    Image SPHERE_BOSS_BELOW;
 
     private void paintPlayer(Graphics graphics)
     {
@@ -217,19 +220,19 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         {
             case 0:
             {
-                drawingImage = this.SPHERE_MOB_DEFAULT;
+                drawingImage = this.gameImages.SPHERE_MOB_DEFAULT;
                 break;
             }
 
             case 1:
             {
-                drawingImage = this.SPHERE_MOB_ABOVE;
+                drawingImage = this.gameImages.SPHERE_MOB_ABOVE;
                 break;
             }
 
             case -1:
             {
-                drawingImage = this.SPHERE_MOB_BELOW;
+                drawingImage = this.gameImages.SPHERE_MOB_BELOW;
                 break;
             }
 
@@ -270,19 +273,19 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         {
             case 0:
             {
-                drawingImage = this.SPHERE_BOSS_DEFAULT;
+                drawingImage = this.gameImages.SPHERE_BOSS_DEFAULT;
                 break;
             }
 
             case 1:
             {
-                drawingImage = this.SPHERE_BOSS_ABOVE;
+                drawingImage = this.gameImages.SPHERE_BOSS_ABOVE;
                 break;
             }
 
             case -1:
             {
-                drawingImage = this.SPHERE_BOSS_BELOW;
+                drawingImage = this.gameImages.SPHERE_BOSS_BELOW;
                 break;
             }
 

@@ -22,6 +22,10 @@ public class Engine extends WindowAdapter implements KeyListener
     private final SinglePlayerLevel currentLevel;
     private final GameObjects gameObjects = new GameObjects();
     private final CollisionsProcessor collisionsProcessor;
+    /**
+    * Change main GUI here: GUI_2D or GUI_3D
+    **/
+    private final GUI gui;
 
     private HashSet<Integer> keysPressed = new HashSet<>();
     /**
@@ -47,6 +51,7 @@ public class Engine extends WindowAdapter implements KeyListener
     {
         this.setLauncherVisible = setLauncherVisibleInput;
         this.currentLevel = inputLevel;
+        this.gui = new GUI_2D(inputLevel);
 
         this.collisionsProcessor =
             new CollisionsProcessor(this.currentLevel.gameFieldSize);
@@ -455,6 +460,9 @@ public class Engine extends WindowAdapter implements KeyListener
         // TODO: Despawning
     }
 
+    /**
+     * WouldBeBetter actually think about order of doing things here
+     **/
     private void updateLevel()
     {
         // WouldBeBetter check if pause is active (Latin 'P' was pressed)
@@ -480,10 +488,6 @@ public class Engine extends WindowAdapter implements KeyListener
 //
 
     private final Thread gameLoopThread = new Thread(this::gameLoop);
-    /**
-     * Change main GUI here: GUI_2D or GUI_3D
-     **/
-    private final GUI gui = new GUI_2D();
 
     /**
      * Игра работает в режиме 60 итераций игрового цикла (обновление
@@ -513,7 +517,7 @@ public class Engine extends WindowAdapter implements KeyListener
 
     public void runGameLoop()
     {
-        this.gui.init(this, this.currentLevel);
+        this.gui.init(this);
 
         this.gameLoopThread.start();
     }
