@@ -152,15 +152,7 @@ public class GameObjects
         }
     }
 
-    public abstract class BossObject extends MortalObject
-    {
-        public BossObject(int[] inputLocation)
-        {
-            super(inputLocation);
-        }
-    }
-
-    public class SphereBoss extends BossObject
+    public class SphereBoss extends MortalObject
     {
         /**
          * It sets moving speed and direction
@@ -180,7 +172,7 @@ public class GameObjects
         /**
          * Time in game loop iterations
          **/
-        public long lastVolleyTime = 0;
+        public long lastVolleyIteration = 0;
 
         public SphereBoss(
             int[] inputLocation,
@@ -199,7 +191,7 @@ public class GameObjects
 // Interface objects
 //
 
-    public class InterfaceObject extends GameObject { }
+//    public class InterfaceObject extends GameObject { }
 
 //
 // Painting constants for graphical and collision models
