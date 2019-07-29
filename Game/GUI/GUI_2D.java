@@ -301,10 +301,6 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
             null);
     }
 
-//
-// JPanel overrides
-//
-
     private void paintMovableObject(
         Graphics graphics,
         MovableObject movableObject)
@@ -342,21 +338,25 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
             }
 
             default:
-                 try
-                 {
-                     throw new NotImplementedException(
-                         "\""
-                         + movableObject.getClass().getName()
-                         + "\""
-                         + ": painting of this class is not implemented");
-                 }
-                 catch (NotImplementedException occurredExc)
-                 {
-                     occurredExc.printStackTrace();
-                 }
+                try
+                {
+                    throw new NotImplementedException(
+                        "\""
+                        + movableObject.getClass().getName()
+                        + "\""
+                        + ": painting of this class is not implemented");
+                }
+                catch (NotImplementedException occurredExc)
+                {
+                    occurredExc.printStackTrace();
+                }
         }
 
     }
+
+//
+// JPanel overrides
+//
 
     private void paintMovableObjectsBelow(Graphics graphics)
     {
