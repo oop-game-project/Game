@@ -21,6 +21,7 @@ import javax.swing.JFrame;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.function.BiConsumer;
 import javax.imageio.ImageIO;
 
 import jdk.jshell.spi.ExecutionControl.NotImplementedException;
@@ -233,23 +234,27 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         private void paintSphereBoss(Graphics graphics, @NotNull SphereBoss sphereBoss)
         {
             Image drawingImage;
+            Image auxiliaryDrawingImage;
             switch (sphereBoss.currentLocation[2])
             {
                 case 0:
                 {
                     drawingImage = this.gameImages.SPHERE_BOSS_DEFAULT;
+                    auxiliaryDrawingImage = this.gameImages.SPHERE_MOB_DEFAULT;
                     break;
                 }
 
                 case 1:
                 {
                     drawingImage = this.gameImages.SPHERE_BOSS_ABOVE;
+                    auxiliaryDrawingImage = this.gameImages.SPHERE_MOB_ABOVE;
                     break;
                 }
 
                 case -1:
                 {
                     drawingImage = this.gameImages.SPHERE_BOSS_BELOW;
+                    auxiliaryDrawingImage = this.gameImages.SPHERE_MOB_BELOW;
                     break;
                 }
 
@@ -266,6 +271,29 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
                 sphereBoss.currentLocation[0],
                 sphereBoss.currentLocation[1],
                 null);
+
+            BiConsumer<Integer, Integer> drawBossTower =
+                (Integer xModifier, Integer yModifier) ->
+                    graphics.drawImage(
+                        auxiliaryDrawingImage,
+                        sphereBoss.currentLocation[0] + xModifier,
+                        sphereBoss.currentLocation[1] + yModifier,
+                        null);
+
+            // Left tower
+            drawBossTower.accept(0, 100 - 15);
+
+            // Top tower
+            drawBossTower.accept(100 - 15, 0);
+
+            // Right tower
+            drawBossTower.accept(200 - 30, 100 - 15);
+
+            // Bottom tower
+            drawBossTower.accept(100 - 15, 200 - 30);
+
+            // Center tower
+            drawBossTower.accept(100 - 15, 100 - 15);
         }
 
         /**
