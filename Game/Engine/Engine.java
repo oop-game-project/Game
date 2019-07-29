@@ -111,7 +111,7 @@ public class Engine extends WindowAdapter implements KeyListener
     }
 
 //
-// Auto moving functions section.
+// Auto moving
 //
 
     // Constants here do not participate in process of level making. For
@@ -238,7 +238,77 @@ public class Engine extends WindowAdapter implements KeyListener
     }
 
 //
-// Level update main section
+// Projectiles state update
+//
+
+    private void updateBasicProjectileState(
+        BasicProjectile projectileObject,
+        ArrayList<MovableObject> projectilesForDespawning)
+    {
+        int[] projectileMoveVector = this.getBasicProjectileMoveVector(projectileObject);
+        Collision projectileCollision =
+            this.collisionsProcessor.getCollision(
+                this.currentLevel, projectileMoveVector, projectileObject);
+
+        switch (projectileCollision.event)
+        {
+            case OK:
+            {
+                projectileObject.modifyLocation(projectileMoveVector);
+                break;
+            }
+
+            case BASIC_PROJECTILE_IS_OUT:
+            {
+                projectilesForDespawning.add(projectileObject);
+                break;
+            }
+
+            default:
+                throw new IllegalArgumentException(
+                    "Unknown collision received");
+        }
+    }
+
+    private void updateProjectilesState()
+    {
+        ArrayList<MovableObject> projectilesForDespawning = new ArrayList<>();
+        for (MovableObject projectileObject : this.currentLevel.projectiles)
+        {
+            switch (projectileObject.getClass().getSimpleName())
+            {
+                case "BasicProjectile":
+                {
+                    this.updateBasicProjectileState(
+                        (BasicProjectile) projectileObject,
+                        projectilesForDespawning);
+                    break;
+                }
+
+                default:
+                {
+                    try
+                    {
+                        throw new NotImplementedException(
+                            "\""
+                            + projectileObject.getClass().getSimpleName()
+                            + "\": cannot update state of this object");
+                    }
+                    catch (NotImplementedException occurredExc)
+                    {
+                        occurredExc.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        // Despawning
+        this.currentLevel.projectiles.removeAll(projectilesForDespawning);
+    }
+
+
+//
+// Main level update
 //
 
     /**
@@ -328,48 +398,40 @@ public class Engine extends WindowAdapter implements KeyListener
         }
     }
 
-    private void updateBasicProjectileState(
-        BasicProjectile projectileObject,
-        ArrayList<MovableObject> projectilesForDespawning)
+    private void updateSphereMobState(
+        SphereMob mob,
+        ArrayList<MortalObject> mobsForDespawning)
     {
-        int[] projectileMoveVector = this.getBasicProjectileMoveVector(
-            (BasicProjectile)projectileObject);
-        Collision projectileCollision =
-            this.collisionsProcessor.getCollision(
-                this.currentLevel, projectileMoveVector, projectileObject);
+        // TODO: Check collisions here
 
-        switch (projectileCollision.event)
-        {
-            case OK:
-            {
-                projectileObject.modifyLocation(projectileMoveVector);
-                break;
-            }
-
-            case BASIC_PROJECTILE_IS_OUT:
-            {
-                projectilesForDespawning.add(projectileObject);
-                break;
-            }
-
-            default:
-                throw new IllegalArgumentException(
-                    "Unknown collision received");
-        }
+        mob.modifyLocation(mob.autoMovingVector);
+        mob.currentLocation[2] = this.getCyclicZChange();
     }
 
-    private void updateProjectilesState()
+    private void updateSphereBossState(
+        SphereBoss mob,
+        ArrayList<MortalObject> mobsForDespawning)
     {
-        ArrayList<MovableObject> projectilesForDespawning = new ArrayList<>();
-        for (MovableObject projectileObject : this.currentLevel.projectiles)
+        // TODO: Check collisions. Boss moves horizontally to the right and to the left.
+        //  Do "autoMovingVector" direction swapping if boss hit vertical border
+    }
+
+    private void updateMobsState()
+    {
+        ArrayList<MortalObject> mobsForDespawning = new ArrayList<>();
+        for (MovableObject mob : this.currentLevel.mobs)
         {
-            switch (projectileObject.getClass().getSimpleName())
+            switch (mob.getClass().getSimpleName())
             {
-                case "BasicProjectile":
+                case "SphereMob":
                 {
-                    this.updateBasicProjectileState(
-                        (BasicProjectile) projectileObject,
-                        projectilesForDespawning);
+                    this.updateSphereMobState((SphereMob) mob, mobsForDespawning);
+                    break;
+                }
+
+                case "SphereBoss":
+                {
+                    this.updateSphereBossState((SphereBoss) mob, mobsForDespawning);
                     break;
                 }
 
@@ -379,7 +441,7 @@ public class Engine extends WindowAdapter implements KeyListener
                     {
                         throw new NotImplementedException(
                             "\""
-                            + projectileObject.getClass().getSimpleName()
+                            + mob.getClass().getSimpleName()
                             + "\": cannot update state of this object");
                     }
                     catch (NotImplementedException occurredExc)
@@ -388,25 +450,6 @@ public class Engine extends WindowAdapter implements KeyListener
                     }
                 }
             }
-        }
-
-        // Despawning
-        this.currentLevel.projectiles.removeAll(projectilesForDespawning);
-    }
-
-    private void updateMobsState()
-    {
-        for (MovableObject mobObject : this.currentLevel.mobs)
-        {
-            if (mobObject instanceof SphereMob)
-            {
-                mobObject.modifyLocation(
-                    ((SphereMob) mobObject).autoMovingVector);
-
-                mobObject.currentLocation[2] = this.getCyclicZChange();
-            }
-
-            // TODO: Collisions check
         }
 
         // TODO: Despawning
