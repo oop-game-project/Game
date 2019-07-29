@@ -51,7 +51,7 @@ public class Engine extends WindowAdapter implements KeyListener
     {
         this.setLauncherVisible = setLauncherVisibleInput;
         this.currentLevel = inputLevel;
-        this.gui = new GUI_2D(inputLevel);
+        this.gui = new GUI_2D();
 
         this.collisionsProcessor =
             new CollisionsProcessor(this.currentLevel.gameFieldSize);
@@ -517,7 +517,7 @@ public class Engine extends WindowAdapter implements KeyListener
 
     public void runGameLoop()
     {
-        this.gui.init(this);
+        this.gui.init(this, this.currentLevel);
 
         this.gameLoopThread.start();
     }
