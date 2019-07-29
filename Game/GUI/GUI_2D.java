@@ -420,9 +420,8 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 
             this.paintMovableObjectsAbove(graphics);
 
-            // [Would Be Better]
-            // Paint interface objects (Last painting for overall overlapping
-            // by interface objects)
+            // WouldBeBetter paint interface objects (Last painting for overall
+            //  overlapping by interface objects)
 
             this.levelRenderingIsNeeded = false;
         }
@@ -439,7 +438,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         // Just say AWT thread to repaint game GUI
         this.repaint();
 
-        // [Would Be Better] solution without thread sleeping
+        // WouldBeBetter solution without thread sleeping
         while (levelRenderingIsNeeded)
             try
             {

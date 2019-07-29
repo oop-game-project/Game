@@ -124,13 +124,16 @@ public class LevelsProcessor
 
         ArrayList<MortalObject> sphereBoss = new ArrayList<>();
         sphereBoss.add(this.gameObjects.new SphereBoss(
-            new int[]{ 250, 0, 0 },  // TODO: Change Y coordinate later
+            new int[]{ 250, 50, 0 },  /*
+                Optimize Y coordinate with collisions. "50" - final position after boss
+                 entrance */
             productAutoMovingVector(
                 MOVEMENT_RIGHT,
                 SPHERE_BOSS_MOVING_SPEED),
-            false));
+            true));  /*
+                    Debug: Temp while no collisions. Change to 'false' later */
         nonSpawnedMobs.put(
-            2000L,
+            0L,  // Optimize: 2000L
             sphereBoss);
 
         return nonSpawnedMobs;

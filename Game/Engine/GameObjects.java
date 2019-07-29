@@ -13,8 +13,8 @@ public class GameObjects
     public abstract class MovableObject extends GameObject implements Cloneable
     {
         /**
-         * [Would Be Better] actually have "double" coordinates for moving
-         * speed less than 1 pixel per iteration
+         * WouldBeBetter actually have "double" coordinates for moving
+         *  speed less than 1 pixel per iteration
          */
         public int[] currentLocation;
 
@@ -93,7 +93,7 @@ public class GameObjects
 
     public class Player extends MortalObject implements Cloneable
     {
-        // [Would Be Better] check iterations count, not amount of time
+        // WouldBeBetter check iterations count, not amount of time
         public long lastProjectileWasFiredTime = 0;
 
         public Player(
@@ -102,7 +102,7 @@ public class GameObjects
             super(inputLocation);
         }
 
-        public int getHitPointsMax() { return 30; }  // TODO: Debug hp amount
+        public int getHitPointsMax() { return 30; }  // Optimize
 
         @Override
         public Object clone() throws CloneNotSupportedException
@@ -127,8 +127,8 @@ public class GameObjects
          * despawning this mob immediately. I.e., every GameObject in the game
          * should eventually be fully on the game field
          *
-         * [Would Be Better] place it in "GameMob" class between mob classes
-         * and MortalObject
+         * WouldBeBetter place it in "GameMob" class between mob classes
+         *  and MortalObject
          **/
         public boolean borderWasCrossed;
 
@@ -143,7 +143,7 @@ public class GameObjects
             this.borderWasCrossed = inputBorderWasCrossed;
         }
 
-        public int getHitPointsMax() { return 5; }  // TODO: Debug hp amount
+        public int getHitPointsMax() { return 5; }  // Optimize
 
         @Override
         public Object clone() throws CloneNotSupportedException
@@ -164,8 +164,8 @@ public class GameObjects
          * despawning this mob immediately. I.e., every GameObject in the game
          * should eventually be fully on the game field
          *
-         * [Would Be Better] place it in "GameMob" class between mob classes
-         * and MortalObject
+         * WouldBeBetter place it in "GameMob" class between mob classes
+         *  and MortalObject
          **/
         public boolean borderWasCrossed;
 
@@ -185,7 +185,7 @@ public class GameObjects
             this.borderWasCrossed = inputBorderWasCrossed;
         }
 
-        public int getHitPointsMax() { return 100; }  // TODO: Debug hp amount
+        public int getHitPointsMax() { return 100; }  // Optimize
     }
 //
 // Interface objects

@@ -282,9 +282,8 @@ public class Engine extends WindowAdapter implements KeyListener
 
     private void updatePlayerState()
     {
-        // TODO: check hitpoints here (make method for that)
-
-        // TODO: All code below to another method
+        // TODO: check hitpoints here (make method for that). All code below
+        //  to another method
         int[] inputMoveVector = this.getInputMoveVector();
 
         if (inputMoveVector[0] != 0
@@ -299,10 +298,8 @@ public class Engine extends WindowAdapter implements KeyListener
                 case OK:
                     break;
 
-                // [Would Be Better]
-                // Teleport player to the right position, whether
-                // player deep out of bounds or not. Not just leave
-                // player standing still
+                // WouldBeBetter teleport player to the right position, whether player
+                //  deep out of bounds or not. Not just leave player standing still
                 case OUT_HORIZONTAL:
                 {
                     inputMoveVector[0] = 0;
@@ -417,8 +414,7 @@ public class Engine extends WindowAdapter implements KeyListener
 
     private void updateLevel()
     {
-        // [Would Be Better]
-        // Check if pause is active (Latin 'P' was pressed)
+        // WouldBeBetter check if pause is active (Latin 'P' was pressed)
 
         // Move player
         this.updatePlayerState();
