@@ -93,6 +93,7 @@ public class GameObjects
 
     public class Player extends MortalObject implements Cloneable
     {
+        // [Would Be Better] check iterations count, not amount of time
         public long lastProjectileWasFiredTime = 0;
 
         public Player(
@@ -175,6 +176,11 @@ public class GameObjects
          * and MortalObject
          **/
         public boolean borderWasCrossed;
+
+        /**
+         * Time in game loop iterations
+         **/
+        public long lastVolleyTime = 0;
 
         public SphereBoss(
             int[] inputLocation,
