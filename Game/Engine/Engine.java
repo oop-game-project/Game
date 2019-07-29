@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.locks.ReentrantLock;
 
+import jdk.jshell.spi.ExecutionControl.NotImplementedException;
+
 public class Engine extends WindowAdapter implements KeyListener
 {
     private final SinglePlayerLevel currentLevel;
@@ -329,36 +331,64 @@ public class Engine extends WindowAdapter implements KeyListener
         }
     }
 
+    private void updateBasicProjectileState(
+        BasicProjectile projectileObject,
+        ArrayList<MovableObject> projectilesForDespawning)
+    {
+        int[] projectileMoveVector = this.getBasicProjectileMoveVector(
+            (BasicProjectile)projectileObject);
+        Collision projectileCollision =
+            this.collisionsProcessor.getCollision(
+                this.currentLevel, projectileMoveVector, projectileObject);
+
+        switch (projectileCollision.event)
+        {
+            case OK:
+            {
+                projectileObject.modifyLocation(projectileMoveVector);
+                break;
+            }
+
+            case BASIC_PROJECTILE_IS_OUT:
+            {
+                projectilesForDespawning.add(projectileObject);
+                break;
+            }
+
+            default:
+                throw new IllegalArgumentException(
+                    "Unknown collision received");
+        }
+    }
+
     private void updateProjectilesState()
     {
         ArrayList<MovableObject> projectilesForDespawning = new ArrayList<>();
         for (MovableObject projectileObject : this.currentLevel.projectiles)
         {
-            if (projectileObject instanceof BasicProjectile)
+            switch (projectileObject.getClass().getSimpleName())
             {
-                int[] projectileMoveVector = this.getBasicProjectileMoveVector(
-                    (BasicProjectile)projectileObject);
-                Collision projectileCollision =
-                    this.collisionsProcessor.getCollision(
-                    this.currentLevel, projectileMoveVector, projectileObject);
-
-                switch (projectileCollision.event)
+                case "BasicProjectile":
                 {
-                    case OK:
-                    {
-                        projectileObject.modifyLocation(projectileMoveVector);
-                        break;
-                    }
+                    this.updateBasicProjectileState(
+                        (BasicProjectile) projectileObject,
+                        projectilesForDespawning);
+                    break;
+                }
 
-                    case BASIC_PROJECTILE_IS_OUT:
+                default:
+                {
+                    try
                     {
-                        projectilesForDespawning.add(projectileObject);
-                        break;
+                        throw new NotImplementedException(
+                            "\""
+                            + projectileObject.getClass().getSimpleName()
+                            + "\": cannot update state of this object");
                     }
-
-                    default:
-                        throw new IllegalArgumentException(
-                            "Unknown collision received");
+                    catch (NotImplementedException occurredExc)
+                    {
+                        occurredExc.printStackTrace();
+                    }
                 }
             }
         }
