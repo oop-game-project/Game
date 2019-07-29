@@ -219,5 +219,4 @@ public class GameObjects
          **/
         public static final int SPHERE_BOSS_DIAMETER = 200;
     }
-
 }

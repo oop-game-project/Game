@@ -132,6 +132,8 @@ public class Engine extends WindowAdapter implements KeyListener
 
             /**
              * Fire per this amount of milliseconds
+             *
+             * WouldBeBetter change to "per this amount of game loop iterations"
              **/
             private static final int PLAYER_FIRING_FREQUENCY = 50;
             /**
@@ -194,16 +196,21 @@ public class Engine extends WindowAdapter implements KeyListener
                 }
             }
 
+            private void spawnSphereBossProjectiles(@NotNull SphereBoss sphereBoss)
+            {
+                if (Engine.this.gameLoopIterationsCounter
+                    - sphereBoss.lastVolleyIteration
+                        > SPHERE_BOSS_VOLLEY_FREQUENCY)
+                {
+
+                }
+            }
+
             private void spawnMobsProjectiles()
             {
-                // TODO
-//                for (MortalObject mobObject : this.currentLevel.mobs)
-//                {
-//                    if (mobObject instanceof SphereBoss)
-//                    {
-//
-//                    }
-//                }
+                for (MortalObject mob : this.currentLevel.mobs)
+                    if (mob instanceof SphereBoss)
+                        spawnSphereBossProjectiles((SphereBoss) mob);
             }
 
             private void spawnProjectiles()
