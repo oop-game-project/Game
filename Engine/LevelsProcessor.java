@@ -1,6 +1,6 @@
-package Game.Engine;
+package Engine;
 
-import Game.Engine.GameObjects.*;
+import Engine.GameObjects.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

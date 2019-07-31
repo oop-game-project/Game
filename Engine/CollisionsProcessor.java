@@ -1,7 +1,7 @@
-package Game.Engine;
+package Engine;
 
-import Game.Engine.GameObjects.*;
-import Game.Engine.LevelsProcessor.SinglePlayerLevel;
+import Engine.GameObjects.*;
+import Engine.LevelsProcessor.SinglePlayerLevel;
 
 public class CollisionsProcessor {
 

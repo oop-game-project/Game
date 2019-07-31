@@ -1,4 +1,4 @@
-package Game.Engine;
+package Engine;
 
 import org.jetbrains.annotations.NotNull;
 

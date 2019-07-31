@@ -1,5 +1,4 @@
-package Game.GUI;
-
+package GUI;
 
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
