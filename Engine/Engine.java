@@ -321,8 +321,9 @@ public class Engine extends WindowAdapter implements KeyListener
                         case OK:
                             break;
 
-                        // WouldBeBetter teleport player to the right position, whether player
-                        //  deep out of bounds or not. Not just leave player standing still
+                        // WouldBeBetter teleport player to the right position, whether
+                        //  player deep out of bounds or not. Not just leave player
+                        //  standing still
                         case OUT_HORIZONTAL:
                         {
                             inputMoveVector[0] = 0;
@@ -398,8 +399,7 @@ public class Engine extends WindowAdapter implements KeyListener
                     }
 
                     default:
-                        throw new IllegalArgumentException(
-                            "Unknown collision received");
+                        throw new IllegalArgumentException("Unknown collision received");
                 }
             }
 

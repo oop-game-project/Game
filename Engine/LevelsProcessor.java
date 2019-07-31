@@ -1,6 +1,7 @@
 package Engine;
 
 import Engine.GameObjects.*;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -47,8 +48,10 @@ public class LevelsProcessor
     private static final int[] MOVEMENT_RIGHT = new int[] { 1, 0, 0 };
     private static final int[] MOVEMENT_DOWN = new int[] { 0, 1, 0 };
 
+    @NotNull
+    @Contract(value = "_, _ -> new", pure = true)
     private static int[] productAutoMovingVector(
-        int[] directionVectorConstant,
+        @NotNull int[] directionVectorConstant,
         int movingSpeedConstant)
     {
         return new int[] {
