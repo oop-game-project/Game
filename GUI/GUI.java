@@ -1,6 +1,6 @@
-package Game.GUI;
+package GUI;
 
-import Game.Engine.LevelsProcessor.SinglePlayerLevel;
+import Engine.LevelsProcessor.SinglePlayerLevel;
 
 import java.awt.event.KeyListener;
 

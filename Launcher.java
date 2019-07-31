@@ -1,13 +1,11 @@
-package Game;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import Game.Engine.Engine;
-import Game.Engine.LevelsProcessor;
+import Engine.Engine;
+import Engine.LevelsProcessor;
 
 public class Launcher extends JFrame
 {

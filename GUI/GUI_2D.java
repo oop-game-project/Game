@@ -1,9 +1,9 @@
-package Game.GUI;
+package GUI;
 
 // Inner imports
-import Game.Engine.GameObjects.*;
-import Game.Engine.LevelsProcessor.SinglePlayerLevel;
-import static Game.Engine.GameObjects.PaintingConst.*;
+import Engine.GameObjects.*;
+import Engine.LevelsProcessor.SinglePlayerLevel;
+import static Engine.GameObjects.PaintingConst.*;
 
 import java.awt.Image;
 import java.awt.Color;
@@ -33,7 +33,6 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
     private class GameObjectsPainter
     {
         ImagesContainer gameImages = new ImagesContainer();
-
         private final SinglePlayerLevel renderingLevel;
 
         private GameObjectsPainter(SinglePlayerLevel inputLevel)
@@ -148,7 +147,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
                     ).getPath();
                 String spritesPath =
                     Paths
-                        .get(executionFolderPath, "Game", "Sprites")
+                        .get(executionFolderPath, "Sprites")
                         .toString();
 
                 loadSphereMobImages(spritesPath);
@@ -445,7 +444,6 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
      * For rendering ONLY when method "render" invokes
      **/
     private boolean levelRenderingIsNeeded = false;
-
     private GameObjectsPainter gameObjectsPainter;
 
     @Override
