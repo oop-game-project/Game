@@ -212,7 +212,7 @@ public class GameObjects
         /**
          * Projectile is a flat circle
          */
-        public static final int BASIC_PROJECTILE_DIAMETER = 7;
+        public static final int BASIC_PROJECTILE_DIAMETER = 10;
 
         /**
          * Same as SphereMob but bigger

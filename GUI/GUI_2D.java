@@ -280,19 +280,19 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
                         null);
 
             // Left tower
-            drawBossTower.accept(0, 100 - 15);
+            drawBossTower.accept(0,         100 - 15);
 
             // Top tower
-            drawBossTower.accept(100 - 15, 0);
+            drawBossTower.accept(100 - 15,  0);
 
             // Right tower
-            drawBossTower.accept(200 - 30, 100 - 15);
+            drawBossTower.accept(200 - 30,  100 - 15);
 
             // Bottom tower
-            drawBossTower.accept(100 - 15, 200 - 30);
+            drawBossTower.accept(100 - 15,  200 - 30);
 
             // Center tower
-            drawBossTower.accept(100 - 15, 100 - 15);
+            drawBossTower.accept(100 - 15,  100 - 15);
         }
 
         /**

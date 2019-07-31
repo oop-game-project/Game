@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.concurrent.locks.ReentrantLock;
 
 import jdk.jshell.spi.ExecutionControl.NotImplementedException;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -139,7 +140,7 @@ public class Engine extends WindowAdapter implements KeyListener
             /**
              * Volley per amount of game loop iterations
              */
-            private static final long SPHERE_BOSS_VOLLEY_FREQUENCY = 10;
+            private static final long SPHERE_BOSS_VOLLEY_FREQUENCY = 15;
 
             private boolean playerIsFiring = false;
             /**
@@ -183,8 +184,8 @@ public class Engine extends WindowAdapter implements KeyListener
                     // BasicProjectile is a circle that should be spawned in front of
                     // player when fired
                     int[] BasicProjectileSpawnLocation = new int[]{
-                        this.currentLevel.player.currentLocation[0] - 4,
-                        this.currentLevel.player.currentLocation[1] - 7,
+                        this.currentLevel.player.currentLocation[0] - 5,
+                        this.currentLevel.player.currentLocation[1] - 10,
                         this.currentLevel.player.currentLocation[2]};
                     this.currentLevel.projectiles.add(
                         this.gameObjects.new BasicProjectile(
@@ -198,11 +199,35 @@ public class Engine extends WindowAdapter implements KeyListener
 
             private void spawnSphereBossProjectiles(@NotNull SphereBoss sphereBoss)
             {
-                if (Engine.this.gameLoopIterationsCounter
-                    - sphereBoss.lastVolleyIteration
-                        > SPHERE_BOSS_VOLLEY_FREQUENCY)
+                // Spawn SphereBoss' projectiles based on:
+                // 1. If SphereBoss is currently on surface
+                // 2. When last projectile was fired
+                if (sphereBoss.currentLocation[2] == 0
+                    && Engine.this.gameLoopIterationsCounter
+                       - sphereBoss.lastVolleyIteration > SPHERE_BOSS_VOLLEY_FREQUENCY)
                 {
-                    // TODO
+                    int[] spawnLocationsModifiers = new int[]{
+                        15 - 5,         100 + 15,   // Left tower
+                        100 - 5,        30,         // Top tower
+                        200 - 15 - 5,   100 + 15,   // Right tower
+                        100 - 5,        200,        // Bottom tower
+                        100 - 5,        100 + 15    // Center tower
+                    };
+
+                    for (int i = 0; i < 5; i++)
+                        this.currentLevel.projectiles.add(
+                            this.gameObjects.new BasicProjectile(
+                                new int[] {
+                                    sphereBoss.currentLocation[0]
+                                    + spawnLocationsModifiers[i * 2],
+                                    sphereBoss.currentLocation[1]
+                                    + spawnLocationsModifiers[i * 2 + 1],
+                                    sphereBoss.currentLocation[2]
+                                },
+                                sphereBoss));
+
+                    sphereBoss.lastVolleyIteration =
+                        Engine.this.gameLoopIterationsCounter;
                 }
             }
 
@@ -425,11 +450,13 @@ public class Engine extends WindowAdapter implements KeyListener
             }
 
             private void updateSphereBossState(
-                SphereBoss mob,
+                @NotNull SphereBoss mob,
                 ArrayList<MortalObject> mobsForDespawning)
             {
                 // TODO: Check collisions. Boss moves horizontally to the right and to the left.
                 //  Do "autoMovingVector" direction swapping if boss hit vertical border
+
+                mob.currentLocation[2] = this.getCyclicZChange();
             }
 
             private void updateMobsState()
