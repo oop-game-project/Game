@@ -502,9 +502,11 @@ public class Engine extends WindowAdapter implements KeyListener
         }
 
         /**
+         * 'public' for tests
+         *
          * WouldBeBetter actually think about order of doing things here
          **/
-        private void updateLevel()
+        public void updateLevel()
         {
             // WouldBeBetter check if pause is active (Latin 'P' was pressed)
 
