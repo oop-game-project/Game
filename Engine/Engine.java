@@ -453,8 +453,9 @@ public class Engine extends WindowAdapter implements KeyListener
                 @NotNull SphereBoss mob,
                 ArrayList<MortalObject> mobsForDespawning)
             {
-                // TODO: Check collisions. Boss moves horizontally to the right and to the left.
-                //  Do "autoMovingVector" direction swapping if boss hit vertical border
+                // TODO: Check collisions. Boss moves horizontally to the right and to the
+                //  left. Do "autoMovingVector" direction swapping if boss hit vertical
+                //  border
 
                 mob.currentLocation[2] = this.getCyclicZChange();
             }
@@ -501,12 +502,7 @@ public class Engine extends WindowAdapter implements KeyListener
             }
         }
 
-        /**
-         * 'public' for tests
-         *
-         * WouldBeBetter actually think about order of doing things here
-         **/
-        public void updateLevel()
+        private void updateLevel()
         {
             // WouldBeBetter check if pause is active (Latin 'P' was pressed)
 
