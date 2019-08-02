@@ -3,6 +3,8 @@ package Engine;
 import Engine.GameObjects.*;
 import Engine.LevelsProcessor.SinglePlayerLevel;
 
+import java.util.ArrayList;
+
 public class CollisionsProcessor {
 
     private int sizeX;
@@ -10,6 +12,7 @@ public class CollisionsProcessor {
     private int sizeZ;
     private int playerX;
     private int playerY;
+    private ArrayList<MovableObject> mobs;
 
     public CollisionsProcessor(int[] gameFieldSize) {
 
@@ -18,6 +21,7 @@ public class CollisionsProcessor {
         sizeZ = gameFieldSize[2];
         playerX = 175;
         playerY = 350;
+        mobs = new ArrayList<>();
     }
 
     public Collision getCollision(SinglePlayerLevel currentLevel, int[] moveVector, MovableObject movableObject) {
@@ -61,16 +65,14 @@ public class CollisionsProcessor {
     }
 
     private Collision getBasicProjectileCollision(int x, int y, int vectorX, int vectorY, BasicProjectile movableObject) {
-        int projectileX = x + vectorX + PaintingConst.BASIC_PROJECTILE_DIAMETER;
-        int projectileY = y + vectorY + PaintingConst.BASIC_PROJECTILE_DIAMETER;
 
-        if (projectileY > sizeY || projectileY < 0)
+        if (y + vectorY > sizeY || y + vectorY < 0)
             return new Collision(movableObject, GameEvent.BASIC_PROJECTILE_IS_OUT, null);
         if (!movableObject.firedByPlayer &&
-                (projectileX <= playerX + PaintingConst.PLAYER_SIDE_LENGTH &&
-                        projectileX >= playerX - PaintingConst.PLAYER_SIDE_LENGTH) &&
-                (projectileY <= playerY + PaintingConst.PLAYER_SIDE_LENGTH &&
-                        projectileY >= playerY - PaintingConst.PLAYER_SIDE_LENGTH))
+                x <= playerX + PaintingConst.BASIC_PROJECTILE_DIAMETER &&
+                x >= playerX - PaintingConst.BASIC_PROJECTILE_DIAMETER &&
+                y <= playerY + PaintingConst.BASIC_PROJECTILE_DIAMETER &&
+                y >= playerY - PaintingConst.BASIC_PROJECTILE_DIAMETER)
             return new Collision(movableObject, GameEvent.BASIC_PROJECTILE_TOUCHED_PLAYER, null);
 
         return new Collision(movableObject, GameEvent.OK, null);
