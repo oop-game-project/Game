@@ -4,7 +4,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class GameObjects
 {
-    abstract class GameObject implements Cloneable { }
+    abstract class GameObject implements Cloneable
+    {
+        public boolean shouldBeDespawned = false;
+    }
 
 //
 // Movable objects
@@ -25,7 +28,7 @@ public class GameObjects
             this.currentLocation = inputLocation.clone();
         }
 
-        public void modifyLocation(int[] locationModifier)
+        public void modifyLocation(@NotNull int[] locationModifier)
         {
             this.currentLocation[0] += locationModifier[0];
             this.currentLocation[1] += locationModifier[1];
