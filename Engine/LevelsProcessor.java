@@ -20,6 +20,8 @@ public class LevelsProcessor
         public Player player;
         public ArrayList<MortalObject> mobs;
         public ArrayList<MovableObject> projectiles = new ArrayList<>();
+        public ArrayList<InterfaceObject> interfaceObjects = new ArrayList<>();
+
 
         /**
          * Long -> game loop iterations count passed from game start.
