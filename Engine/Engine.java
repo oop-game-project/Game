@@ -340,7 +340,8 @@ public class Engine extends WindowAdapter implements KeyListener
 
                         default:
                             throw new IllegalArgumentException(
-                                "Unknown collision received while moving Player");
+                                "Unknown collision received while moving Player: "
+                                + playerCollision.event.toString());
                     }
 
                     this.currentLevel.player.modifyLocation(inputMoveVector);
@@ -369,38 +370,71 @@ public class Engine extends WindowAdapter implements KeyListener
                     [(int) (Engine.this.gameLoopIterationsCounter / 100 % 4)];
             }
 
-            private void updateBasicProjectileState(
-                BasicProjectile projectileObject,
-                ArrayList<MovableObject> projectilesForDespawning)
+            private void updateBasicProjectileState(BasicProjectile basicProjectile)
             {
                 int[] projectileMoveVector = this.getBasicProjectileAutoMoveVector(
-                    projectileObject);
-                Collision projectileCollision =
+                    basicProjectile);
+                Collision basicProjectileCollision =
                     this.collisionsProcessor.getCollision(
-                        this.currentLevel, projectileMoveVector, projectileObject);
+                        this.currentLevel, projectileMoveVector, basicProjectile);
 
-                switch (projectileCollision.event)
+                switch (basicProjectileCollision.event)
                 {
                     case OK:
                     {
-                        projectileObject.modifyLocation(projectileMoveVector);
+                        basicProjectile.modifyLocation(projectileMoveVector);
                         break;
                     }
 
                     case BASIC_PROJECTILE_IS_OUT:
                     {
-                        projectilesForDespawning.add(projectileObject);
+                        basicProjectile.shouldBeDespawned = true;
+                        break;
+                    }
+
+                    case BASIC_PROJECTILE_COLLIDED_PLAYER:
+                    {
+                        if (basicProjectile.firedByPlayer)
+                            basicProjectile.modifyLocation(projectileMoveVector);
+                        else
+                        {
+                            this.currentLevel.player.receiveDamageFromBasicProjectile();
+                            basicProjectile.shouldBeDespawned = true;
+                        }
+
+                        break;
+                    }
+
+                    case BASIC_PROJECTILE_COLLIDED_SPHERE_MOB:
+                    case BASIC_PROJECTILE_COLLIDED_SPHERE_BOSS:
+                    {
+                        if (!basicProjectile.firedByPlayer)
+                            basicProjectile.modifyLocation(projectileMoveVector);
+                        else
+                        {
+                            ((MortalObject) basicProjectileCollision.collidedObject)
+                                .receiveDamageFromBasicProjectile();
+                            basicProjectile.shouldBeDespawned = true;
+                        }
+
                         break;
                     }
 
                     default:
-                        throw new IllegalArgumentException("Unknown collision received");
+                        throw new IllegalArgumentException(
+                            "Unknown collision received while updating state of "
+                            + "BasicProjectile: "
+                            + basicProjectileCollision.event.toString());
                 }
             }
 
             private void updateProjectilesState()
             {
-                ArrayList<MovableObject> projectilesForDespawning = new ArrayList<>();
+                // Despawning
+                this.currentLevel.projectiles.removeIf(
+                    projectile -> projectile.shouldBeDespawned);
+
+                // State updating
                 for (MovableObject projectileObject : this.currentLevel.projectiles)
                 {
                     switch (projectileObject.getClass().getSimpleName())
@@ -408,8 +442,7 @@ public class Engine extends WindowAdapter implements KeyListener
                         case "BasicProjectile":
                         {
                             this.updateBasicProjectileState(
-                                (BasicProjectile) projectileObject,
-                                projectilesForDespawning);
+                                (BasicProjectile) projectileObject);
                             break;
                         }
 
@@ -429,14 +462,9 @@ public class Engine extends WindowAdapter implements KeyListener
                         }
                     }
                 }
-
-                // Despawning
-                this.currentLevel.projectiles.removeAll(projectilesForDespawning);
             }
 
-            private void updateSphereMobState(
-                @NotNull SphereMob mob,
-                ArrayList<MortalObject> mobsForDespawning)
+            private void updateSphereMobState(@NotNull SphereMob mob)
             {
                 // TODO: Check collisions here
 
@@ -444,9 +472,7 @@ public class Engine extends WindowAdapter implements KeyListener
                 mob.currentLocation[2] = this.getCyclicZChange();
             }
 
-            private void updateSphereBossState(
-                @NotNull SphereBoss mob,
-                ArrayList<MortalObject> mobsForDespawning)
+            private void updateSphereBossState(@NotNull SphereBoss mob)
             {
                 // TODO: Check collisions. Boss moves horizontally to the right and to the
                 //  left. Do "autoMovingVector" direction swapping if boss hit vertical
@@ -457,22 +483,21 @@ public class Engine extends WindowAdapter implements KeyListener
 
             private void updateMobsState()
             {
-                ArrayList<MortalObject> mobsForDespawning = new ArrayList<>();
+                this.currentLevel.mobs.removeIf(mob -> mob.shouldBeDespawned);
+
                 for (MovableObject mob : this.currentLevel.mobs)
                 {
                     switch (mob.getClass().getSimpleName())
                     {
                         case "SphereMob":
                         {
-                            this.updateSphereMobState((SphereMob) mob, mobsForDespawning);
+                            this.updateSphereMobState((SphereMob) mob);
                             break;
                         }
 
                         case "SphereBoss":
                         {
-                            this.updateSphereBossState(
-                                (SphereBoss) mob,
-                                mobsForDespawning);
+                            this.updateSphereBossState((SphereBoss) mob);
                             break;
                         }
 
@@ -492,8 +517,6 @@ public class Engine extends WindowAdapter implements KeyListener
                         }
                     }
                 }
-
-                // TODO: Despawning
             }
         }
 
@@ -579,8 +602,7 @@ public class Engine extends WindowAdapter implements KeyListener
                 this.closeGameLock.unlock();
             }
 
-            // Wait a little for time alignment. It is needed for CPU power
-            // saving
+            // Wait a little for time alignment. It is needed for CPU power saving
             this.timeAlignment();
 
             this.gameLoopIterationsCounter += 1;
