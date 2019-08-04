@@ -30,6 +30,50 @@ import org.jetbrains.annotations.NotNull;
 
 public class GUI_2D extends JPanel implements GUI, KeyListener
 {
+    private final JFrame gameMainFrame = new JFrame();
+
+    @Override
+    public void init(KeyListener engine, SinglePlayerLevel inputLevel)
+    {
+        this.gameObjectsPainter = new GameObjectsPainter(inputLevel);
+
+        this.gameMainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.gameMainFrame.setSize(700, 700);
+        this.gameMainFrame.setResizable(false);
+
+        this.gameMainFrame.addKeyListener(engine);
+        this.gameMainFrame.addKeyListener(this);
+        this.gameMainFrame.addWindowListener((WindowListener)engine);
+        this.gameMainFrame.add(this);
+
+        this.gameMainFrame.pack();
+        this.gameMainFrame.setVisible(true);
+
+        this.setBackground(Color.GRAY);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) { }
+
+    @Override
+    public void keyReleased(KeyEvent e) { }
+
+    @Override
+    public void keyPressed(@NotNull KeyEvent keyEvent)
+    {
+        if (keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE)
+            this.gameMainFrame.dispatchEvent(
+                new WindowEvent(
+                    this.gameMainFrame,
+                    WindowEvent.WINDOW_CLOSING));
+    }
+
+    @Override
+    public Dimension getPreferredSize()
+    {
+        return new Dimension(700,700);
+    }
+
     private class GameObjectsPainter
     {
         ImagesContainer gameImages = new ImagesContainer();
@@ -396,50 +440,6 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         }
     }
 
-    private final JFrame gameMainFrame = new JFrame();
-
-    @Override
-    public void init(KeyListener engine, SinglePlayerLevel inputLevel)
-    {
-        this.gameObjectsPainter = new GameObjectsPainter(inputLevel);
-
-        this.gameMainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.gameMainFrame.setSize(700, 700);
-        this.gameMainFrame.setResizable(false);
-
-        this.gameMainFrame.addKeyListener(engine);
-        this.gameMainFrame.addKeyListener(this);
-        this.gameMainFrame.addWindowListener((WindowListener)engine);
-        this.gameMainFrame.add(this);
-
-        this.gameMainFrame.pack();
-        this.gameMainFrame.setVisible(true);
-
-        this.setBackground(Color.GRAY);
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) { }
-
-    @Override
-    public void keyReleased(KeyEvent e) { }
-
-    @Override
-    public void keyPressed(@NotNull KeyEvent keyEvent)
-    {
-        if (keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE)
-            this.gameMainFrame.dispatchEvent(
-                new WindowEvent(
-                    this.gameMainFrame,
-                    WindowEvent.WINDOW_CLOSING));
-    }
-
-    @Override
-    public Dimension getPreferredSize()
-    {
-        return new Dimension(700,700);
-    }
-
     /**
      * For rendering ONLY when method "render" invokes
      **/
@@ -474,7 +474,11 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         // Just say AWT thread to repaint game GUI
         this.repaint();
 
-        // WouldBeBetter solution without thread sleeping
+        // In this loop gameLoop thread awaits while GUI is rendering. Needed because
+        // in GUI and gameLoop threads level is shared. When level is updating and
+        // rendering at the same time, concurrent level modification occurs
+        //
+        // WouldBeBetter implement solution without thread sleeping. Level cloning maybe?
         while (levelRenderingIsNeeded)
             try
             {

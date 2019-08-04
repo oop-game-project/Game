@@ -33,8 +33,6 @@ public class Engine extends WindowAdapter implements KeyListener
 // KeyListener implementations
 //
 
-    private final KeysInfo keysInfo = new KeysInfo();
-
     private static class KeysInfo
     {
         private HashSet<Integer> keysPressed = new HashSet<>();
@@ -46,6 +44,8 @@ public class Engine extends WindowAdapter implements KeyListener
         private HashSet<Integer> keysReleased = new HashSet<>();
         private ReentrantLock keysReleasedLock = new ReentrantLock();
     }
+
+    private final KeysInfo keysInfo = new KeysInfo();
 
     @Override
     public void keyTyped(KeyEvent keyEvent) { }
@@ -114,11 +114,6 @@ public class Engine extends WindowAdapter implements KeyListener
 //
 // Main game loop section
 //
-
-    private final SinglePlayerLevel currentLevel;
-    private final LevelUpdater levelUpdater;
-
-    private long gameLoopIterationsCounter = 0L;
 
     private class LevelUpdater
     {
@@ -523,10 +518,14 @@ public class Engine extends WindowAdapter implements KeyListener
         }
     }
 
+    private final SinglePlayerLevel currentLevel;
+    private final LevelUpdater levelUpdater;
     /**
      * Change main GUI here: GUI_2D or GUI_3D
      **/
     private final GUI gui = new GUI_2D();
+
+    private long gameLoopIterationsCounter = 0L;
 
     public void runGameLoop()
     {
