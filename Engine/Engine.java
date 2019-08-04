@@ -588,7 +588,8 @@ public class Engine extends WindowAdapter implements KeyListener
         while (!this.closeGame)
         {
             // Update
-            this.levelUpdater.updateLevel();
+            if (this.currentLevel.player.isNotDead())
+                this.levelUpdater.updateLevel();
 
             // Render
             this.closeGameLock.lock();
