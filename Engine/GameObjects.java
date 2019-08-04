@@ -18,6 +18,8 @@ public class GameObjects
         /**
          * WouldBeBetter actually have "double" coordinates for moving
          *  speed less than 1 pixel per iteration
+         * WouldBeBetter if this coordinates were in GameObject because all game
+         *  objects have coordinates actually
          */
         public int[] currentLocation;
 
@@ -91,14 +93,14 @@ public class GameObjects
         }
 
 //
-// Projectiles' damage methods
+// Damage receiving methods
 //
 
         private int hitPoints = this.getHitPointsMax();
 
-        public boolean isNotDead()
+        public boolean isDead()
         {
-            return hitPoints != 0;
+            return hitPoints == 0;
         }
 
         private void addToHitPoints(int addendum)
@@ -110,6 +112,11 @@ public class GameObjects
         }
 
         public void receiveDamageFromBasicProjectile()
+        {
+            this.addToHitPoints(-1);
+        }
+
+        public void receiveDamageFromCollisionWithMob()
         {
             this.addToHitPoints(-1);
         }
@@ -210,11 +217,29 @@ public class GameObjects
 
         public int getHitPointsMax() { return 100; }  // Optimize
     }
-//
-// Interface objects
+/
 //
 
-//    public class InterfaceObject extends GameObject { }
+
+    public class InterfaceObject extends GameObject
+    {
+        public int[] location;
+
+        public InterfaceObject(@NotNull int[] inputLocation)
+        {
+            assert inputLocation.length == 3;
+
+            this.location = inputLocation.clone();
+        }
+    }
+
+    public class GameOverInscription extends InterfaceObject
+    {
+        public GameOverInscription(@NotNull int[] inputLocation)
+        {
+            super(inputLocation);
+        }
+    }
 
 //
 // Painting constants for graphical and collision models
