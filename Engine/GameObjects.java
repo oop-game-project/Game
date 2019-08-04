@@ -74,10 +74,7 @@ public class GameObjects
     public abstract class MortalObject extends MovableObject
         implements Cloneable
     {
-        public int hitPointsCurrent = this.getHitPointsMax();
-
-        public MortalObject(
-            int[] inputLocation)
+        public MortalObject(int[] inputLocation)
         {
             super(inputLocation);
         }
@@ -89,6 +86,25 @@ public class GameObjects
         {
             return super.clone();
         }
+
+//
+// Projectiles' damage methods
+//
+
+        private int hitPoints = this.getHitPointsMax();
+
+        private void addToHitPoints(int addendum)
+        {
+            this.hitPoints += addendum;
+
+            if (this.hitPoints < 0)
+                this.hitPoints = 0;
+        }
+
+        public void receiveDamageFromBasicProjectile()
+        {
+            this.addToHitPoints(-1);
+        }
     }
 
     public class Player extends MortalObject implements Cloneable
@@ -96,13 +112,12 @@ public class GameObjects
         // WouldBeBetter check iterations count, not amount of time
         public long lastProjectileWasFiredTime = 0;
 
-        public Player(
-                @NotNull int[] inputLocation)
+        public Player(@NotNull int[] inputLocation)
         {
             super(inputLocation);
         }
 
-        public int getHitPointsMax() { return 30; }  // Optimize
+        public int getHitPointsMax() { return 10; }  // Optimize
 
         @Override
         public Object clone() throws CloneNotSupportedException
