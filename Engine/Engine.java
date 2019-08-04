@@ -11,7 +11,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -300,8 +299,6 @@ public class Engine extends WindowAdapter implements KeyListener
 
             private void updatePlayerState()
             {
-                // TODO: check hitpoints here (make method for that). All code below
-                //  to another method
                 int[] inputMoveVector = this.getInputMoveVector();
 
                 if (inputMoveVector[0] != 0
@@ -333,9 +330,28 @@ public class Engine extends WindowAdapter implements KeyListener
 
                         case OUT_DIAGONAL:
                         {
-                            inputMoveVector[0] = 0;
-                            inputMoveVector[1] = 0;
+                            inputMoveVector[0] = inputMoveVector[1] = 0;
                             break;
+                        }
+
+                        case PLAYER_COLLIDED_BASIC_PROJECTILE:
+                        {
+                            if (!((BasicProjectile) playerCollision.collidedObject)
+                                .firedByPlayer)
+                            {
+                                this.currentLevel.player
+                                    .receiveDamageFromBasicProjectile();
+                                playerCollision.collidedObject.shouldBeDespawned = true;
+                            }
+
+                            break;
+                        }
+
+                        case PLAYER_COLLIDED_SPHERE_BOSS:
+                        case PLAYER_COLLIDED_SPHERE_MOB:
+                        {
+                            inputMoveVector[0] = inputMoveVector[1] = 0;
+                            this.currentLevel.player.receiveDamageFromCollisionWithMob();
                         }
 
                         default:
@@ -554,6 +570,9 @@ public class Engine extends WindowAdapter implements KeyListener
     {
         this.gui.init(this, this.currentLevel);
 
+        // WouldBeBetter add all common interface objects here (Player's hit points bar,
+        //  mobs HP bar etc.)
+
         new Thread(this::gameLoop).start();
     }
 
@@ -588,7 +607,7 @@ public class Engine extends WindowAdapter implements KeyListener
         while (!this.closeGame)
         {
             // Update
-            if (this.currentLevel.player.isNotDead())
+            if (!this.currentLevel.player.isDead())
                 this.levelUpdater.updateLevel();
 
             // Render
