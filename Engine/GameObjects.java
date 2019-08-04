@@ -96,6 +96,11 @@ public class GameObjects
 
         private int hitPoints = this.getHitPointsMax();
 
+        public boolean isNotDead()
+        {
+            return hitPoints != 0;
+        }
+
         private void addToHitPoints(int addendum)
         {
             this.hitPoints += addendum;
