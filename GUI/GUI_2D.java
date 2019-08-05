@@ -87,6 +87,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
             Image SPHERE_BOSS_BELOW;
 
             Image GAME_OVER_INSCRIPTION;
+            Image COMPLETED_INSCRIPTION;
 
             private Image loadSphereMobImage(String spritesPath, String imageName)
             {
@@ -187,6 +188,23 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
                 }
             }
 
+            private void loadCompletedInscription(String spritesPath)
+            {
+                File inscriptionImageFile = new File(
+                    Paths
+                        .get(spritesPath, "CompletedInscription.png")
+                        .toString());
+
+                try
+                {
+                    this.COMPLETED_INSCRIPTION = ImageIO.read(inscriptionImageFile);
+                }
+                catch (IOException occurredExc)
+                {
+                    occurredExc.printStackTrace();
+                }
+            }
+
             private void loadImages()
             {
                 String executionFolderPath =
@@ -208,6 +226,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
                 this.loadSphereBossImages(spritesPath);
 
                 this.loadGameOverInscription(spritesPath);
+                this.loadCompletedInscription(spritesPath);
             }
         }
 
@@ -470,6 +489,17 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
                 null);
         }
 
+        private void paintCompletedInscription(
+            @NotNull Graphics graphics,
+            @NotNull CompletedInscription completedInscription)
+        {
+            graphics.drawImage(
+                this.gameImages.COMPLETED_INSCRIPTION,
+                completedInscription.location[0],
+                completedInscription.location[1],
+                null);
+        }
+
         private void paintInterfaceObject(
             Graphics graphics,
             @NotNull InterfaceObject interfaceObject)
@@ -482,6 +512,14 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
                         graphics,
                         (GameOverInscription) interfaceObject);
 
+                    break;
+                }
+
+                case "CompletedInscription":
+                {
+                    this.paintCompletedInscription(
+                        graphics,
+                        (CompletedInscription) interfaceObject);
                     break;
                 }
 
