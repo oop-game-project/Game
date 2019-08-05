@@ -132,7 +132,7 @@ public class GameObjects
             super(inputLocation);
         }
 
-        public int getHitPointsMax() { return 10; }  // Optimize
+        public int getHitPointsMax() { return 10; }
 
         @Override
         public Object clone() throws CloneNotSupportedException
@@ -204,7 +204,7 @@ public class GameObjects
             this.autoMovingVector = inputMovingVector.clone();
         }
 
-        public int getHitPointsMax() { return 30; }  // Optimize
+        public int getHitPointsMax() { return 30; }
     }
 
 //
