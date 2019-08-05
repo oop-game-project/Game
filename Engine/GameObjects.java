@@ -163,8 +163,8 @@ public class GameObjects
         public boolean borderWasCrossed;
 
         public SphereMob(
-            int[] inputLocation,
-            int[] inputMovingVector,
+            @NotNull int[] inputLocation,
+            @NotNull int[] inputMovingVector,
             boolean inputBorderWasCrossed)
         {
             super(inputLocation);
@@ -173,7 +173,7 @@ public class GameObjects
             this.borderWasCrossed = inputBorderWasCrossed;
         }
 
-        public int getHitPointsMax() { return 5; }  // Optimize
+        public int getHitPointsMax() { return 3; }
 
         @Override
         public Object clone() throws CloneNotSupportedException
@@ -219,7 +219,8 @@ public class GameObjects
     }
 
 //
-
+// Interface objects
+//
 
     public class InterfaceObject extends GameObject
     {
