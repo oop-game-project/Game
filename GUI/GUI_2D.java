@@ -463,8 +463,11 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
             @NotNull Graphics graphics,
             @NotNull GameOverInscription gameOverInscription)
         {
-
-
+            graphics.drawImage(
+                this.gameImages.GAME_OVER_INSCRIPTION,
+                gameOverInscription.location[0],
+                gameOverInscription.location[1],
+                null);
         }
 
         private void paintInterfaceObject(
@@ -509,6 +512,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
      * For rendering ONLY when method "render" invokes
      **/
     private boolean levelRenderingIsNeeded = false;
+
     private GameObjectsPainter gameObjectsPainter;
 
     @Override
