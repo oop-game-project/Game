@@ -19,6 +19,7 @@ public class LevelsProcessor
 
         public Player player;
         public ArrayList<MortalObject> mobs;
+        public MortalObject boss;
         public ArrayList<MovableObject> projectiles = new ArrayList<>();
         public ArrayList<InterfaceObject> interfaceObjects = new ArrayList<>();
 
@@ -32,11 +33,13 @@ public class LevelsProcessor
             int[] inputGameFieldSize,
             Player inputPlayer,
             ArrayList<MortalObject> inputMobs,
+            MortalObject inputBoss,
             HashMap<Long, ArrayList<MortalObject>> inputNonSpawnedMobs)
         {
             this.gameFieldSize = inputGameFieldSize;
             this.player = inputPlayer;
             this.mobs = inputMobs;
+            this.boss = inputBoss;
             this.nonSpawnedMobs = inputNonSpawnedMobs;
         }
     }
@@ -44,8 +47,8 @@ public class LevelsProcessor
 //
 // Auto moving constants
 //
-    private static final int MINIMAL_MOVING_SPEED = 1;
-    private static final int SPHERE_BOSS_MOVING_SPEED = 2;
+    public static final int MINIMAL_MOVING_SPEED = 1;
+    public static final int SPHERE_BOSS_MOVING_SPEED = 2;
 
     private static final int[] MOVEMENT_RIGHT = new int[] { 1, 0, 0 };
     private static final int[] MOVEMENT_DOWN = new int[] { 0, 1, 0 };
@@ -112,7 +115,7 @@ public class LevelsProcessor
 
     @NotNull
     private HashMap<Long, ArrayList<MortalObject>>
-        getLevelOneNonSpawnedMobs()
+        getLevelOneNonSpawnedMobs(SphereBoss sphereBoss)
     {
         HashMap<Long, ArrayList<MortalObject>> nonSpawnedMobs = new HashMap<>();
 
@@ -131,16 +134,11 @@ public class LevelsProcessor
                 new int[]{ 45, 0, 0 },
                 14));
 
-        ArrayList<MortalObject> sphereBoss = new ArrayList<>();
-        sphereBoss.add(this.gameObjects.new SphereBoss(
-            new int[]{ 250, -200, 1 },
-            productAutoMovingVector(
-                MOVEMENT_DOWN,
-                MINIMAL_MOVING_SPEED),
-            false));
+        ArrayList<MortalObject> sphereBossArray = new ArrayList<>();
+        sphereBossArray.add(sphereBoss);
         nonSpawnedMobs.put(
             2000L,
-            sphereBoss);
+            sphereBossArray);
 
         return nonSpawnedMobs;
     }
@@ -150,10 +148,18 @@ public class LevelsProcessor
         Player levelOnePlayer = this.gameObjects.new Player(
             new int[] { 175, 350, 0 });
 
+        SphereBoss levelOneSphereBoss = this.gameObjects.new SphereBoss(
+            new int[]{ 250, -200, 1 },
+            productAutoMovingVector(
+                MOVEMENT_DOWN,
+                MINIMAL_MOVING_SPEED),
+            false);
+
         return new SinglePlayerLevel(
             new int[] { 700, 700, 0 },
             levelOnePlayer,
             this.getLevelOneMobs(),
-            this.getLevelOneNonSpawnedMobs());
+            levelOneSphereBoss,
+            this.getLevelOneNonSpawnedMobs(levelOneSphereBoss));
     }
 }
