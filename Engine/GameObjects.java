@@ -190,32 +190,21 @@ public class GameObjects
         public int[] autoMovingVector;
 
         /**
-         * When a mob spawns outside game field it prevents engine from
-         * despawning this mob immediately. I.e., every GameObject in the game
-         * should eventually be fully on the game field
-         *
-         * WouldBeBetter place it in "GameMob" class between mob classes
-         *  and MortalObject
-         **/
-        public boolean borderWasCrossed;
-
-        /**
          * Time in game loop iterations
          **/
         public long lastVolleyIteration = 0;
 
         public SphereBoss(
-            int[] inputLocation,
-            int[] inputMovingVector,
+            @NotNull int[] inputLocation,
+            @NotNull int[] inputMovingVector,
             boolean inputBorderWasCrossed)
         {
             super(inputLocation);
 
             this.autoMovingVector = inputMovingVector.clone();
-            this.borderWasCrossed = inputBorderWasCrossed;
         }
 
-        public int getHitPointsMax() { return 100; }  // Optimize
+        public int getHitPointsMax() { return 30; }  // Optimize
     }
 
 //
@@ -237,6 +226,14 @@ public class GameObjects
     public class GameOverInscription extends InterfaceObject
     {
         public GameOverInscription(@NotNull int[] inputLocation)
+        {
+            super(inputLocation);
+        }
+    }
+
+    public class CompletedInscription extends InterfaceObject
+    {
+        public CompletedInscription(@NotNull int[] inputLocation)
         {
             super(inputLocation);
         }
