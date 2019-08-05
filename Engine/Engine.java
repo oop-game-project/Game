@@ -116,9 +116,6 @@ public class Engine extends WindowAdapter implements KeyListener
 
     private class LevelUpdater
     {
-        private final GameObjectsSpawner gameObjectsSpawner = new GameObjectsSpawner();
-        private final StateUpdater stateUpdater = new StateUpdater();
-
         private class GameObjectsSpawner
         {
             private final SinglePlayerLevel currentLevel = Engine.this.currentLevel;
@@ -297,6 +294,28 @@ public class Engine extends WindowAdapter implements KeyListener
                 return inputMoveVector;
             }
 
+            @NotNull
+            @Contract(value = "_ -> new", pure = true)
+            private int[] getBasicProjectileAutoMoveVector(
+                @NotNull BasicProjectile basicProjectile)
+            {
+                if (basicProjectile.firedByPlayer)
+                    return new int[]{ 0, -10, 0 };
+                else
+                    return new int[]{ 0, 10, 0 };
+            }
+
+            /**
+             * This method every second change output Z position based on order in an
+             * array "CYCLIC_Z_CHANGE"
+             **/
+            @Contract(pure = true)
+            private int getCyclicZChange()
+            {
+                return new int[]{ 0, -1, 0, 1 }
+                    [(int) (Engine.this.gameLoopIterationsCounter / 100 % 4)];
+            }
+
             private void updatePlayerState()
             {
                 int[] inputMoveVector = this.getInputMoveVector();
@@ -364,28 +383,6 @@ public class Engine extends WindowAdapter implements KeyListener
                 }
             }
 
-            @NotNull
-            @Contract(value = "_ -> new", pure = true)
-            private int[] getBasicProjectileAutoMoveVector(
-                @NotNull BasicProjectile basicProjectile)
-            {
-                if (basicProjectile.firedByPlayer)
-                    return new int[]{ 0, -10, 0 };
-                else
-                    return new int[]{ 0, 10, 0 };
-            }
-
-            /**
-             * This method every second change output Z position based on order in an
-             * array "CYCLIC_Z_CHANGE"
-             **/
-            @Contract(pure = true)
-            private int getCyclicZChange()
-            {
-                return new int[]{ 0, -1, 0, 1 }
-                    [(int) (Engine.this.gameLoopIterationsCounter / 100 % 4)];
-            }
-
             private void updateBasicProjectileState(BasicProjectile basicProjectile)
             {
                 int[] projectileMoveVector = this.getBasicProjectileAutoMoveVector(
@@ -444,6 +441,23 @@ public class Engine extends WindowAdapter implements KeyListener
                 }
             }
 
+            private void updateSphereMobState(@NotNull SphereMob mob)
+            {
+                // TODO: Check collisions here
+
+                mob.modifyLocation(mob.autoMovingVector);
+                mob.currentLocation[2] = this.getCyclicZChange();
+            }
+
+            private void updateSphereBossState(@NotNull SphereBoss mob)
+            {
+                // TODO: Check collisions. Boss moves horizontally to the right and to the
+                //  left. Do "autoMovingVector" direction swapping if boss hit vertical
+                //  border
+
+                mob.currentLocation[2] = this.getCyclicZChange();
+            }
+
             private void updateProjectilesState()
             {
                 // Despawning
@@ -478,23 +492,6 @@ public class Engine extends WindowAdapter implements KeyListener
                         }
                     }
                 }
-            }
-
-            private void updateSphereMobState(@NotNull SphereMob mob)
-            {
-                // TODO: Check collisions here
-
-                mob.modifyLocation(mob.autoMovingVector);
-                mob.currentLocation[2] = this.getCyclicZChange();
-            }
-
-            private void updateSphereBossState(@NotNull SphereBoss mob)
-            {
-                // TODO: Check collisions. Boss moves horizontally to the right and to the
-                //  left. Do "autoMovingVector" direction swapping if boss hit vertical
-                //  border
-
-                mob.currentLocation[2] = this.getCyclicZChange();
             }
 
             private void updateMobsState()
@@ -534,7 +531,11 @@ public class Engine extends WindowAdapter implements KeyListener
                     }
                 }
             }
+
         }
+
+        private final GameObjectsSpawner gameObjectsSpawner = new GameObjectsSpawner();
+        private final StateUpdater stateUpdater = new StateUpdater();
 
         private void updateLevel()
         {
