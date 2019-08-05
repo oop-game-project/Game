@@ -44,7 +44,7 @@ public class LevelsProcessor
 //
 // Auto moving constants
 //
-    private static final int SPHERE_MOB_MOVING_SPEED = 1;
+    private static final int MINIMAL_MOVING_SPEED = 1;
     private static final int SPHERE_BOSS_MOVING_SPEED = 2;
 
     private static final int[] MOVEMENT_RIGHT = new int[] { 1, 0, 0 };
@@ -100,7 +100,7 @@ public class LevelsProcessor
                 new int[]{ -400, 300, 0 },
                 productAutoMovingVector(
                     MOVEMENT_RIGHT,
-                    SPHERE_MOB_MOVING_SPEED),
+                    MINIMAL_MOVING_SPEED),
                 false);
         mobs = new ArrayList<>(this.createWaveOfSphereMobs(
             firstWaveSphereMob,
@@ -121,7 +121,7 @@ public class LevelsProcessor
                 new int[]{ 20, -30, 0 },
                 productAutoMovingVector(
                     MOVEMENT_DOWN,
-                    SPHERE_MOB_MOVING_SPEED),
+                    MINIMAL_MOVING_SPEED),
                 false);
 
         nonSpawnedMobs.put(
@@ -133,15 +133,13 @@ public class LevelsProcessor
 
         ArrayList<MortalObject> sphereBoss = new ArrayList<>();
         sphereBoss.add(this.gameObjects.new SphereBoss(
-            new int[]{ 250, 50, 1 },  /*
-                Optimize Y coordinate with collisions. "50" - final position after boss
-                 entrance */
+            new int[]{ 250, -200, 1 },
             productAutoMovingVector(
-                MOVEMENT_RIGHT,
-                SPHERE_BOSS_MOVING_SPEED),
+                MOVEMENT_DOWN,
+                MINIMAL_MOVING_SPEED),
             false));
         nonSpawnedMobs.put(
-            0L,  // Optimize: 2000L
+            2000L,
             sphereBoss);
 
         return nonSpawnedMobs;
