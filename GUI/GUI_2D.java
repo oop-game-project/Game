@@ -76,16 +76,6 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 
     private class GameObjectsPainter
     {
-        ImagesContainer gameImages = new ImagesContainer();
-        private final SinglePlayerLevel renderingLevel;
-
-        private GameObjectsPainter(SinglePlayerLevel inputLevel)
-        {
-            this.renderingLevel = inputLevel;
-
-            this.gameImages.loadImages();
-        }
-
         private class ImagesContainer
         {
             Image SPHERE_MOB_DEFAULT;
@@ -95,6 +85,8 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
             Image SPHERE_BOSS_DEFAULT;
             Image SPHERE_BOSS_ABOVE;
             Image SPHERE_BOSS_BELOW;
+
+            Image GAME_OVER_INSCRIPTION;
 
             private Image loadSphereMobImage(String spritesPath, String imageName)
             {
@@ -178,6 +170,23 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
                     "SphereMob-Below.png");
             }
 
+            private void loadGameOverInscription(String spritesPath)
+            {
+                File inscriptionImageFile = new File(
+                    Paths
+                        .get(spritesPath, "GameOverInscription.png")
+                        .toString());
+
+                try
+                {
+                    this.GAME_OVER_INSCRIPTION = ImageIO.read(inscriptionImageFile);
+                }
+                catch (IOException occurredExc)
+                {
+                    occurredExc.printStackTrace();
+                }
+            }
+
             private void loadImages()
             {
                 String executionFolderPath =
@@ -194,12 +203,23 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
                         .get(executionFolderPath, "Sprites")
                         .toString();
 
-                loadSphereMobImages(spritesPath);
+                this.loadSphereMobImages(spritesPath);
 
-                loadSphereBossImages(spritesPath);
+                this.loadSphereBossImages(spritesPath);
+
+                this.loadGameOverInscription(spritesPath);
             }
         }
 
+        ImagesContainer gameImages = new ImagesContainer();
+        private final SinglePlayerLevel renderingLevel;
+
+        private GameObjectsPainter(SinglePlayerLevel inputLevel)
+        {
+            this.renderingLevel = inputLevel;
+
+            this.gameImages.loadImages();
+        }
         private void paintPlayer(@NotNull Graphics graphics)
         {
             int[] playerLocation = this.renderingLevel.player.currentLocation;
@@ -438,6 +458,51 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
                         this.paintMovableObject(graphics, mobObject);
                 });
         }
+
+        private void paintGameOverInscription(
+            @NotNull Graphics graphics,
+            @NotNull GameOverInscription gameOverInscription)
+        {
+
+
+        }
+
+        private void paintInterfaceObject(
+            Graphics graphics,
+            @NotNull InterfaceObject interfaceObject)
+        {
+            switch (interfaceObject.getClass().getSimpleName())
+            {
+                case "GameOverInscription":
+                {
+                    this.paintGameOverInscription(
+                        graphics,
+                        (GameOverInscription) interfaceObject);
+
+                    break;
+                }
+
+                default:
+                    try
+                    {
+                        throw new NotImplementedException(
+                            "\""
+                            + interfaceObject.getClass().getName()
+                            + "\""
+                            + ": painting of this class is not implemented");
+                    }
+                    catch (NotImplementedException occurredExc)
+                    {
+                        occurredExc.printStackTrace();
+                    }
+            }
+        }
+
+        private void paintInterfaceObjects(Graphics graphics)
+        {
+            this.renderingLevel.interfaceObjects.forEach(
+                interfaceObject -> this.paintInterfaceObject(graphics, interfaceObject));
+        }
     }
 
     /**
@@ -459,8 +524,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
 
             this.gameObjectsPainter.paintMovableObjectsAbove(graphics);
 
-            // WouldBeBetter paint interface objects (Last painting for overall
-            //  overlapping by interface objects)
+            this.gameObjectsPainter.paintInterfaceObjects(graphics);
 
             this.levelRenderingIsNeeded = false;
         }

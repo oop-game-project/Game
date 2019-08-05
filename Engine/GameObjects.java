@@ -217,7 +217,7 @@ public class GameObjects
 
         public int getHitPointsMax() { return 100; }  // Optimize
     }
-/
+
 //
 
 
