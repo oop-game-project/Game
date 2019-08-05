@@ -118,6 +118,11 @@ public class Engine extends WindowAdapter implements KeyListener
     {
         private class GameObjectsSpawner
         {
+//            private GameObjectsSpawner()
+//            {
+//                // Spawn initial interface objects here
+//            }
+
             private final SinglePlayerLevel currentLevel = Engine.this.currentLevel;
             private final KeysInfo keysInfo = Engine.this.keysInfo;
             private final GameObjects gameObjects = new GameObjects();
@@ -139,6 +144,12 @@ public class Engine extends WindowAdapter implements KeyListener
              * released yet
              **/
             private boolean playerFiringWasSwitched = false;
+
+            private void spawnGameOverInscription()
+            {
+                this.currentLevel.interfaceObjects.add(
+                    this.gameObjects.new GameOverInscription(new int[] {175, 326, 0}));
+            }
 
             private void spawnPlayerProjectiles()
             {
@@ -571,9 +582,6 @@ public class Engine extends WindowAdapter implements KeyListener
     {
         this.gui.init(this, this.currentLevel);
 
-        // WouldBeBetter add all common interface objects here (Player's hit points bar,
-        //  mobs HP bar etc.)
-
         new Thread(this::gameLoop).start();
     }
 
@@ -610,6 +618,11 @@ public class Engine extends WindowAdapter implements KeyListener
             // Update
             if (!this.currentLevel.player.isDead())
                 this.levelUpdater.updateLevel();
+            else if (this.currentLevel.interfaceObjects
+                .stream()
+                .noneMatch(
+                    interfaceObject -> interfaceObject instanceof GameOverInscription))
+                this.levelUpdater.gameObjectsSpawner.spawnGameOverInscription();
 
             // Render
             this.closeGameLock.lock();
