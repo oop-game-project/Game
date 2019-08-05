@@ -123,8 +123,8 @@ public class Engine extends WindowAdapter implements KeyListener
 //                // Spawn initial interface objects here
 //            }
 
+            // 'currentLevel' reference shortening
             private final SinglePlayerLevel currentLevel = Engine.this.currentLevel;
-            private final KeysInfo keysInfo = Engine.this.keysInfo;
             private final GameObjects gameObjects = new GameObjects();
 
             /**
@@ -153,22 +153,22 @@ public class Engine extends WindowAdapter implements KeyListener
 
             private void spawnPlayerProjectiles()
             {
-                if (this.keysInfo.keysReleased.contains(KeyEvent.VK_Z))
+                if (Engine.this.keysInfo.keysReleased.contains(KeyEvent.VK_Z))
                 {
-                    this.keysInfo.keysReleasedLock.lock();
+                    Engine.this.keysInfo.keysReleasedLock.lock();
                     try
                     {
-                        this.keysInfo.keysReleased.remove(KeyEvent.VK_Z);
+                        Engine.this.keysInfo.keysReleased.remove(KeyEvent.VK_Z);
                     }
                     finally
                     {
-                        this.keysInfo.keysReleasedLock.unlock();
+                        Engine.this.keysInfo.keysReleasedLock.unlock();
                     }
 
                     this.playerFiringWasSwitched = false;
                 }
 
-                if (this.keysInfo.keysPressed.contains(KeyEvent.VK_Z)
+                if (Engine.this.keysInfo.keysPressed.contains(KeyEvent.VK_Z)
                     && !this.playerFiringWasSwitched)
                 {
                     this.playerIsFiring = !this.playerIsFiring;
@@ -260,8 +260,8 @@ public class Engine extends WindowAdapter implements KeyListener
 
         private class StateUpdater
         {
+            // 'currentLevel' reference shortening
             private final SinglePlayerLevel currentLevel = Engine.this.currentLevel;
-            private final KeysInfo keysInfo = Engine.this.keysInfo;
             private final CollisionsProcessor collisionsProcessor =
                 new CollisionsProcessor(this.currentLevel.gameFieldSize);
 
@@ -274,10 +274,10 @@ public class Engine extends WindowAdapter implements KeyListener
             private int[] getInputMoveVector()
             {
                 int[] inputMoveVector = new int[]{0, 0, 0};
-                this.keysInfo.keysPressedLock.lock();
+                Engine.this.keysInfo.keysPressedLock.lock();
                 try
                 {
-                    for (int keyCode : this.keysInfo.keysPressed)
+                    for (int keyCode : Engine.this.keysInfo.keysPressed)
                         switch (keyCode)
                         {
                             case KeyEvent.VK_RIGHT:
@@ -299,7 +299,7 @@ public class Engine extends WindowAdapter implements KeyListener
                 }
                 finally
                 {
-                    this.keysInfo.keysPressedLock.unlock();
+                    Engine.this.keysInfo.keysPressedLock.unlock();
                 }
 
                 return inputMoveVector;
@@ -367,7 +367,8 @@ public class Engine extends WindowAdapter implements KeyListener
                         case PLAYER_COLLIDED_BASIC_PROJECTILE:
                         {
                             if (!((BasicProjectile) playerCollision.collidedObject)
-                                .firedByPlayer)
+                                    .firedByPlayer
+                                && !playerCollision.collidedObject.shouldBeDespawned)
                             {
                                 this.currentLevel.player
                                     .receiveDamageFromBasicProjectile();
@@ -380,8 +381,12 @@ public class Engine extends WindowAdapter implements KeyListener
                         case PLAYER_COLLIDED_SPHERE_BOSS:
                         case PLAYER_COLLIDED_SPHERE_MOB:
                         {
-                            inputMoveVector[0] = inputMoveVector[1] = 0;
-                            this.currentLevel.player.receiveDamageFromCollisionWithMob();
+                            if (!playerCollision.collidedObject.shouldBeDespawned)
+                            {
+                                inputMoveVector[0] = inputMoveVector[1] = 0;
+                                this.currentLevel.player
+                                    .receiveDamageFromCollisionWithMob();
+                            }
                         }
 
                         default:
@@ -452,29 +457,32 @@ public class Engine extends WindowAdapter implements KeyListener
                 }
             }
 
-            private void updateSphereMobState(@NotNull SphereMob mob)
+            private void updateSphereMobState(@NotNull SphereMob sphereMob)
             {
-                // TODO: Check collisions here
+                Collision sphereMobCollision = this.collisionsProcessor.getCollision(
+                    this.currentLevel, sphereMob.autoMovingVector, sphereMob);
 
-                mob.modifyLocation(mob.autoMovingVector);
-                mob.currentLocation[2] = this.getCyclicZChange();
+                switch (sphereMobCollision.event)
+                {
+                    case OK:
+                    {
+
+                    }
+                }
+
+                sphereMob.modifyLocation(sphereMob.autoMovingVector);
+                sphereMob.currentLocation[2] = this.getCyclicZChange();
             }
 
             private void updateSphereBossState(@NotNull SphereBoss mob)
             {
-                // TODO: Check collisions. Boss moves horizontally to the right and to the
-                //  left. Do "autoMovingVector" direction swapping if boss hit vertical
-                //  border
+                // TODO: Collisions
 
                 mob.currentLocation[2] = this.getCyclicZChange();
             }
 
             private void updateProjectilesState()
             {
-                // Despawning
-                this.currentLevel.projectiles.removeIf(
-                    projectile -> projectile.shouldBeDespawned);
-
                 // State updating
                 for (MovableObject projectileObject : this.currentLevel.projectiles)
                 {
@@ -507,8 +515,6 @@ public class Engine extends WindowAdapter implements KeyListener
 
             private void updateMobsState()
             {
-                this.currentLevel.mobs.removeIf(mob -> mob.shouldBeDespawned);
-
                 for (MovableObject mob : this.currentLevel.mobs)
                 {
                     switch (mob.getClass().getSimpleName())
@@ -548,6 +554,17 @@ public class Engine extends WindowAdapter implements KeyListener
         private final GameObjectsSpawner gameObjectsSpawner = new GameObjectsSpawner();
         private final StateUpdater stateUpdater = new StateUpdater();
 
+        private void despawnProjectiles()
+        {
+            Engine.this.currentLevel.projectiles.removeIf(
+                projectile -> projectile.shouldBeDespawned);
+        }
+
+        private void despawnMobs()
+        {
+            Engine.this.currentLevel.mobs.removeIf(mob -> mob.shouldBeDespawned);
+        }
+
         private void updateLevel()
         {
             // WouldBeBetter check if pause is active (Latin 'P' was pressed)
@@ -555,17 +572,33 @@ public class Engine extends WindowAdapter implements KeyListener
             // Move player
             this.stateUpdater.updatePlayerState();
 
-            // Despawn or move projectiles
+            // Despawn projectiles that were collided with player AND were collided with
+            // mobs on previous updating when 'updateMobsState' happened. The latter
+            // implies that Player cannot do a thing to itself with it's projectiles, so
+            // 'despawnProjectiles' can be performed here, not just after
+            // 'updateMobsState'
+            this.despawnProjectiles();
+
             this.stateUpdater.updateProjectilesState();
 
-            // Despawn or move mobs
+            // Despawn projectiles that were collided
+            this.despawnProjectiles();
+            // Despawn mobs that were killed
+            this.despawnMobs();
+
             this.stateUpdater.updateMobsState();
+
+            // Despawn mobs that were killed
+            this.despawnMobs();
 
             // Spawn all projectiles
             this.gameObjectsSpawner.spawnProjectiles();
 
             // Spawn all mobs
             this.gameObjectsSpawner.spawnMobs();
+
+            if (Engine.this.currentLevel.player.isDead())
+                this.gameObjectsSpawner.spawnGameOverInscription();
         }
     }
 
@@ -618,11 +651,6 @@ public class Engine extends WindowAdapter implements KeyListener
             // Update
             if (!this.currentLevel.player.isDead())
                 this.levelUpdater.updateLevel();
-            else if (this.currentLevel.interfaceObjects
-                .stream()
-                .noneMatch(
-                    interfaceObject -> interfaceObject instanceof GameOverInscription))
-                this.levelUpdater.gameObjectsSpawner.spawnGameOverInscription();
 
             // Render
             this.closeGameLock.lock();
