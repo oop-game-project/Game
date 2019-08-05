@@ -92,10 +92,6 @@ public class GameObjects
             return super.clone();
         }
 
-//
-// Damage receiving methods
-//
-
         private int hitPoints = this.getHitPointsMax();
 
         public boolean isDead()
@@ -132,7 +128,7 @@ public class GameObjects
             super(inputLocation);
         }
 
-        public int getHitPointsMax() { return 10; }
+        public int getHitPointsMax() { return 20; }
 
         @Override
         public Object clone() throws CloneNotSupportedException
@@ -173,7 +169,7 @@ public class GameObjects
             this.borderWasCrossed = inputBorderWasCrossed;
         }
 
-        public int getHitPointsMax() { return 3; }
+        public int getHitPointsMax() { return 2; }
 
         @Override
         public Object clone() throws CloneNotSupportedException
@@ -204,7 +200,7 @@ public class GameObjects
             this.autoMovingVector = inputMovingVector.clone();
         }
 
-        public int getHitPointsMax() { return 30; }
+        public int getHitPointsMax() { return 50; }
     }
 
 //
