@@ -3,6 +3,7 @@ package Engine;
 import GUI.GUI;
 import GUI.GUI_2D;
 import Engine.LevelsProcessor.SinglePlayerLevel;
+import static Engine.LevelsProcessor.*;
 import Engine.CollisionsProcessor.*;
 import Engine.GameObjects.*;
 
@@ -148,7 +149,13 @@ public class Engine extends WindowAdapter implements KeyListener
             private void spawnGameOverInscription()
             {
                 this.currentLevel.interfaceObjects.add(
-                    this.gameObjects.new GameOverInscription(new int[] {175, 326, 0}));
+                    this.gameObjects.new GameOverInscription(new int[] {145, 326, 0}));
+            }
+
+            private void spawnCompletedInscription()
+            {
+                this.currentLevel.interfaceObjects.add(
+                    this.gameObjects.new CompletedInscription(new int[] {132, 326, 0}));
             }
 
             private void spawnPlayerProjectiles()
@@ -367,8 +374,7 @@ public class Engine extends WindowAdapter implements KeyListener
                         case PLAYER_COLLIDED_BASIC_PROJECTILE:
                         {
                             if (!((BasicProjectile) playerCollision.collidedObject)
-                                    .firedByPlayer
-                                && !playerCollision.collidedObject.shouldBeDespawned)
+                                    .firedByPlayer)
                             {
                                 this.currentLevel.player
                                     .receiveDamageFromBasicProjectile();
@@ -381,12 +387,9 @@ public class Engine extends WindowAdapter implements KeyListener
                         case PLAYER_COLLIDED_SPHERE_BOSS:
                         case PLAYER_COLLIDED_SPHERE_MOB:
                         {
-                            if (!playerCollision.collidedObject.shouldBeDespawned)
-                            {
-                                inputMoveVector[0] = inputMoveVector[1] = 0;
-                                this.currentLevel.player
-                                    .receiveDamageFromCollisionWithMob();
-                            }
+                            this.currentLevel.player.receiveDamageFromCollisionWithMob();
+
+                            break;
                         }
 
                         default:
@@ -461,24 +464,107 @@ public class Engine extends WindowAdapter implements KeyListener
             {
                 Collision sphereMobCollision = this.collisionsProcessor.getCollision(
                     this.currentLevel, sphereMob.autoMovingVector, sphereMob);
-
                 switch (sphereMobCollision.event)
                 {
                     case OK:
                     {
-
+                        if (!sphereMob.borderWasCrossed)
+                            sphereMob.borderWasCrossed = true;
+                        break;
                     }
+
+                    case SPHERE_MOB_COLLIDED_BASIC_PROJECTILE:
+                    {
+                        if (((BasicProjectile) sphereMobCollision.collidedObject)
+                            .firedByPlayer)
+                        {
+                            sphereMob.receiveDamageFromBasicProjectile();
+                            sphereMobCollision.collidedObject.shouldBeDespawned = true;
+                            if (sphereMob.isDead())
+                                sphereMob.shouldBeDespawned = true;
+                        }
+                        break;
+                    }
+
+                    case SPHERE_MOB_COLLIDED_PLAYER:
+                    {
+                        ((Player) sphereMobCollision.collidedObject)
+                            .receiveDamageFromCollisionWithMob();
+                        break;
+                    }
+
+                    case SPHERE_MOB_IS_OUT_HORIZONTAL:
+                    case SPHERE_MOB_IS_OUT_VERTICAL:
+                    {
+                        if (sphereMob.borderWasCrossed)
+                            sphereMob.shouldBeDespawned = true;
+                        break;
+                    }
+
+                    default:
+                        throw new IllegalArgumentException(
+                            "Unknown collision received while updating state of "
+                            + "SphereMob: "
+                            + sphereMobCollision.event.toString());
                 }
 
                 sphereMob.modifyLocation(sphereMob.autoMovingVector);
                 sphereMob.currentLocation[2] = this.getCyclicZChange();
             }
 
-            private void updateSphereBossState(@NotNull SphereBoss mob)
+            private void updateSphereBossState(@NotNull SphereBoss sphereBoss)
             {
-                // TODO: Collisions
+                Collision sphereBossCollision = this.collisionsProcessor.getCollision(
+                    this.currentLevel, sphereBoss.autoMovingVector, sphereBoss);
+                switch (sphereBossCollision.event)
+                {
+                    case OK:
+                    {
+                        if (sphereBoss.autoMovingVector[1] == MINIMAL_MOVING_SPEED)
+                        {
+                            sphereBoss.autoMovingVector[0] = SPHERE_BOSS_MOVING_SPEED;
+                            sphereBoss.autoMovingVector[1] = 0;
+                        }
 
-                mob.currentLocation[2] = this.getCyclicZChange();
+                        sphereBoss.currentLocation[2] = this.getCyclicZChange();
+                        break;
+                    }
+
+                    case SPHERE_BOSS_IS_GOING: break;
+
+                    case SPHERE_BOSS_IS_OUT_HORIZONTAL:
+                    {
+                        sphereBoss.autoMovingVector[0] *= -1;
+                        sphereBoss.currentLocation[2] = this.getCyclicZChange();
+                        break;
+                    }
+
+                    case SPHERE_BOSS_COLLIDED_PLAYER:
+                    {
+                        this.currentLevel.player.receiveDamageFromCollisionWithMob();
+                        break;
+                    }
+
+                    case SPHERE_BOSS_COLLIDED_BASIC_PROJECTILE:
+                    {
+                        if (((BasicProjectile) sphereBossCollision.collidedObject)
+                            .firedByPlayer)
+                        {
+                            sphereBoss.receiveDamageFromBasicProjectile();
+                            if (sphereBoss.isDead())
+                                sphereBoss.shouldBeDespawned = true;
+                        }
+                        break;
+                    }
+
+                    default:
+                        throw new IllegalArgumentException(
+                            "Unknown collision received while updating state of "
+                            + "SphereBoss: "
+                            + sphereBossCollision.event.toString());
+                }
+
+                sphereBoss.modifyLocation(sphereBoss.autoMovingVector);
             }
 
             private void updateProjectilesState()
@@ -599,6 +685,9 @@ public class Engine extends WindowAdapter implements KeyListener
 
             if (Engine.this.currentLevel.player.isDead())
                 this.gameObjectsSpawner.spawnGameOverInscription();
+
+            if (Engine.this.currentLevel.boss.isDead())
+                this.gameObjectsSpawner.spawnCompletedInscription();
         }
     }
 
@@ -649,15 +738,8 @@ public class Engine extends WindowAdapter implements KeyListener
         while (!this.closeGame)
         {
             // Update
-            if (!this.currentLevel.player.isDead())
+            if (!this.currentLevel.player.isDead() && !this.currentLevel.boss.isDead())
                 this.levelUpdater.updateLevel();
-            else if (this.currentLevel.interfaceObjects
-                .stream()
-                .noneMatch(
-                    interfaceObject -> interfaceObject instanceof GameOverInscription))
-            {
-                this.levelUpdater.gameObjectsSpawner.spawnGameOverInscription();
-            }
 
             // Render
             this.closeGameLock.lock();
