@@ -651,6 +651,13 @@ public class Engine extends WindowAdapter implements KeyListener
             // Update
             if (!this.currentLevel.player.isDead())
                 this.levelUpdater.updateLevel();
+            else if (this.currentLevel.interfaceObjects
+                .stream()
+                .noneMatch(
+                    interfaceObject -> interfaceObject instanceof GameOverInscription))
+            {
+                this.levelUpdater.gameObjectsSpawner.spawnGameOverInscription();
+            }
 
             // Render
             this.closeGameLock.lock();
