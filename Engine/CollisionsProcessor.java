@@ -59,10 +59,10 @@ public class CollisionsProcessor {
             if (sphereMob.currentLocation[2] != 0) continue;
             if (sphereMob instanceof SphereBoss)
                 if (checkCollided(player, sphereMob, PaintingConst.PLAYER_SIDE_LENGTH,
-                        PaintingConst.SPHERE_BOSS_DIAMETER))
+                        PaintingConst.SPHERE_BOSS_DIAMETER, PaintingConst.PLAYER_SIDE_LENGTH / 2))
                     return new Collision(player, GameEvent.PLAYER_COLLIDED_SPHERE_BOSS, sphereMob);
             if (checkCollided(player, sphereMob, PaintingConst.PLAYER_SIDE_LENGTH,
-                    PaintingConst.SPHERE_MOB_DIAMETER))
+                    PaintingConst.SPHERE_MOB_DIAMETER, PaintingConst.PLAYER_SIDE_LENGTH / 2))
                 return new Collision(player, GameEvent.PLAYER_COLLIDED_SPHERE_MOB, sphereMob);
         }
 
@@ -125,7 +125,7 @@ public class CollisionsProcessor {
         if (sphereBoss.currentLocation[2] == 0 &&
                 checkCollided(currentLevel.player, sphereBoss, PaintingConst.PLAYER_SIDE_LENGTH,
                 PaintingConst.SPHERE_BOSS_DIAMETER, PaintingConst.PLAYER_SIDE_LENGTH / 2))
-            new Collision(sphereBoss, GameEvent.SPHERE_BOSS_COLLIDED_PLAYER, currentLevel.player);
+            return new Collision(sphereBoss, GameEvent.SPHERE_BOSS_COLLIDED_PLAYER, currentLevel.player);
         if (sphereBoss.currentLocation[0] <= 0 || sphereBoss.currentLocation[0] + PaintingConst.SPHERE_BOSS_DIAMETER >= sizeY)
             return new Collision(sphereBoss, GameEvent.SPHERE_BOSS_IS_OUT_HORIZONTAL, null);
         for (int i = 0; i < currentLevel.projectiles.size(); i++) {
