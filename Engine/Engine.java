@@ -119,10 +119,10 @@ public class Engine extends WindowAdapter implements KeyListener
     {
         private class GameObjectsSpawner
         {
-//            private GameObjectsSpawner()
-//            {
-//                // Spawn initial interface objects here
-//            }
+            // private GameObjectsSpawner()
+            // {
+            //    // Spawn initial interface objects here
+            // }
 
             // 'currentLevel' reference shortening
             private final SinglePlayerLevel currentLevel = Engine.this.currentLevel;
@@ -139,7 +139,7 @@ public class Engine extends WindowAdapter implements KeyListener
              */
             private static final long SPHERE_BOSS_VOLLEY_FREQUENCY = 15;
 
-            private boolean playerIsFiring = false;
+            private boolean playerIsFiring = true;
             /**
              * "Player firing was switched" by currently pressed 'Z' and this key wasn't
              * released yet
