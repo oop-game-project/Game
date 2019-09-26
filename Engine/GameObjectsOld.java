@@ -2,7 +2,7 @@ package Engine;
 
 import org.jetbrains.annotations.NotNull;
 
-public class GameObjects
+public class GameObjectsOld
 {
     abstract class GameObject implements Cloneable
     {
@@ -207,7 +207,7 @@ public class GameObjects
 // Interface objects
 //
 
-    public class InterfaceObject extends GameObject
+    public abstract class InterfaceObject extends GameObject
     {
         public int[] location;
 

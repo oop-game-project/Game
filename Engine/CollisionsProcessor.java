@@ -2,9 +2,6 @@ package Engine;
 
 import Engine.GameObjects.*;
 import Engine.LevelsProcessor.SinglePlayerLevel;
-import org.lwjgl.system.CallbackI;
-
-import java.util.ArrayList;
 
 public class CollisionsProcessor {
 

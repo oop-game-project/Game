@@ -69,8 +69,6 @@ public class LevelsProcessor
 // Manual level init section
 //
 
-    GameObjects gameObjects = new GameObjects();
-
     @NotNull
     private ArrayList<MortalObject> createWaveOfSphereMobs(
         SphereMob waveMob, int[] locationModifier, int mobsCount)
@@ -81,7 +79,7 @@ public class LevelsProcessor
         for (int i = 0; i < mobsCount; i++)
         {
             waveMob =
-                this.gameObjects.new SphereMob(
+                new SphereMob(
                     waveMob.currentLocation,
                     waveMob.autoMovingVector,
                     waveMob.borderWasCrossed);
@@ -99,7 +97,7 @@ public class LevelsProcessor
         ArrayList<MortalObject> mobs;
 
         SphereMob firstWaveSphereMob =
-            this.gameObjects.new SphereMob(
+            new SphereMob(
                 new int[]{ -400, 300, 0 },
                 productAutoMovingVector(
                     MOVEMENT_RIGHT,
@@ -120,7 +118,7 @@ public class LevelsProcessor
         HashMap<Long, ArrayList<MortalObject>> nonSpawnedMobs = new HashMap<>();
 
         SphereMob secondWaveSphereMob =
-            this.gameObjects.new SphereMob(
+            new SphereMob(
                 new int[]{ 20, -30, 0 },
                 productAutoMovingVector(
                     MOVEMENT_DOWN,
@@ -145,10 +143,10 @@ public class LevelsProcessor
 
     public SinglePlayerLevel getLevelOne()
     {
-        Player levelOnePlayer = this.gameObjects.new Player(
+        Player levelOnePlayer = new Player(
             new int[] { 175, 350, 0 });
 
-        SphereBoss levelOneSphereBoss = this.gameObjects.new SphereBoss(
+        SphereBoss levelOneSphereBoss = new SphereBoss(
             new int[]{ 250, -200, 1 },
             productAutoMovingVector(
                 MOVEMENT_DOWN,

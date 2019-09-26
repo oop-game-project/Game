@@ -126,7 +126,6 @@ public class Engine extends WindowAdapter implements KeyListener
 
             // 'currentLevel' reference shortening
             private final SinglePlayerLevel currentLevel = Engine.this.currentLevel;
-            private final GameObjects gameObjects = new GameObjects();
 
             /**
              * Fire per this amount of milliseconds
@@ -149,13 +148,13 @@ public class Engine extends WindowAdapter implements KeyListener
             private void spawnGameOverInscription()
             {
                 this.currentLevel.interfaceObjects.add(
-                    this.gameObjects.new GameOverInscription(new int[] {145, 326, 0}));
+                    new GameOverInscription(new int[] {145, 326, 0}));
             }
 
             private void spawnCompletedInscription()
             {
                 this.currentLevel.interfaceObjects.add(
-                    this.gameObjects.new CompletedInscription(new int[] {132, 326, 0}));
+                    new CompletedInscription(new int[] {132, 326, 0}));
             }
 
             private void spawnPlayerProjectiles()
@@ -197,7 +196,7 @@ public class Engine extends WindowAdapter implements KeyListener
                         this.currentLevel.player.currentLocation[1] - 10,
                         this.currentLevel.player.currentLocation[2]};
                     this.currentLevel.projectiles.add(
-                        this.gameObjects.new BasicProjectile(
+                        new BasicProjectile(
                             BasicProjectileSpawnLocation,
                             this.currentLevel.player));
 
@@ -225,7 +224,7 @@ public class Engine extends WindowAdapter implements KeyListener
 
                     for (int i = 0; i < 5; i++)
                         this.currentLevel.projectiles.add(
-                            this.gameObjects.new BasicProjectile(
+                            new BasicProjectile(
                                 new int[] {
                                     sphereBoss.currentLocation[0]
                                     + spawnLocationsModifiers[i * 2],
