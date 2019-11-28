@@ -212,7 +212,8 @@ public class Engine extends WindowAdapter implements KeyListener
                 // 2. When last projectile was fired
                 if (sphereBoss.currentLocation[2] == 0
                     && Engine.this.gameLoopIterationsCounter
-                       - sphereBoss.lastVolleyIteration > SPHERE_BOSS_VOLLEY_FREQUENCY)
+                       - sphereBoss.getLastVolleyIteration()
+                       > SPHERE_BOSS_VOLLEY_FREQUENCY)
                 {
                     int[] spawnLocationsModifiers = new int[]{
                         15 - 5,         100 + 15,   // Left tower
@@ -234,8 +235,8 @@ public class Engine extends WindowAdapter implements KeyListener
                                 },
                                 sphereBoss));
 
-                    sphereBoss.lastVolleyIteration =
-                        Engine.this.gameLoopIterationsCounter;
+                    sphereBoss.setLastVolleyIteration(
+                        Engine.this.gameLoopIterationsCounter);
                 }
             }
 

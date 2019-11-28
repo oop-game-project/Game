@@ -7,12 +7,12 @@ public class SphereBoss extends MortalObject
     /**
      * It sets moving speed and direction
      **/
-    public int[] autoMovingVector;
+    public final int[] autoMovingVector;
 
     /**
      * Time in game loop iterations
      **/
-    public long lastVolleyIteration = 0;
+    private long lastVolleyIteration = 0;
 
     public SphereBoss(
         @NotNull int[] inputLocation,
@@ -25,4 +25,17 @@ public class SphereBoss extends MortalObject
     }
 
     public int getHitPointsMax() { return 50; }
+
+    public long getLastVolleyIteration()
+    {
+        return this.lastVolleyIteration;
+    }
+
+    public void setLastVolleyIteration(long newValue)
+    {
+        if (newValue > 0)
+            this.lastVolleyIteration = newValue;
+        else
+            this.lastVolleyIteration = 0;
+    }
 }
