@@ -1,7 +1,6 @@
 package Engine;
 
 import Engine.GameObjects.*;
-import Engine.LevelsProcessor.SinglePlayerLevel;
 
 public class CollisionsProcessor {
 
@@ -16,7 +15,7 @@ public class CollisionsProcessor {
         sizeZ = gameFieldSize[2];
     }
 
-    public Collision getCollision(SinglePlayerLevel currentLevel, int[] moveVector, MovableObject movableObject) {
+    public Collision getCollision(LevelsProcessor.GameLevel currentLevel, int[] moveVector, MovableObject movableObject) {
 
         if (movableObject instanceof Player) {
             return getPlayerCollision((Player)movableObject, moveVector, currentLevel);
@@ -33,7 +32,7 @@ public class CollisionsProcessor {
         throw new IllegalArgumentException("unknown movableObject");
     }
 
-    private Collision getPlayerCollision(Player player, int[] moveVector, SinglePlayerLevel currentLevel) {
+    private Collision getPlayerCollision(Player player, int[] moveVector, LevelsProcessor.GameLevel currentLevel) {
 
         if (playerOutOfHorizontalBorders(moveVector[0], player.currentLocation[0]) &&
                 playerOutOfVerticalBorders(moveVector[1], player.currentLocation[1]))
@@ -67,7 +66,7 @@ public class CollisionsProcessor {
     }
 
     private Collision getBasicProjectileCollision(BasicProjectile basicProjectile, int[] moveVector,
-                                                  SinglePlayerLevel currentLevel) {
+                                                  LevelsProcessor.GameLevel currentLevel) {
 
         if (basicProjectile.currentLocation[1] > sizeY ||
                 basicProjectile.currentLocation[1] < 0)
@@ -93,7 +92,7 @@ public class CollisionsProcessor {
         return new Collision(basicProjectile, GameEvent.OK, null);
     }
 
-    private Collision getSphereMobCollision(SphereMob sphereMob, int[] moveVector, SinglePlayerLevel currentLevel) {
+    private Collision getSphereMobCollision(SphereMob sphereMob, int[] moveVector, LevelsProcessor.GameLevel currentLevel) {
         if (sphereMob.currentLocation[2] == 0 &&
                 checkCollided(currentLevel.player, sphereMob, PaintingConst.PLAYER_SIDE_LENGTH,
                         PaintingConst.SPHERE_MOB_DIAMETER, PaintingConst.PLAYER_SIDE_LENGTH / 2))
@@ -116,7 +115,7 @@ public class CollisionsProcessor {
         return new Collision(sphereMob, GameEvent.OK, null);
     }
 
-    private Collision getSphereBossCollision(SphereBoss sphereBoss, int[] moveVector, SinglePlayerLevel currentLevel) {
+    private Collision getSphereBossCollision(SphereBoss sphereBoss, int[] moveVector, LevelsProcessor.GameLevel currentLevel) {
         if (sphereBoss.currentLocation[1] < 50)
             return new Collision(sphereBoss, GameEvent.SPHERE_BOSS_IS_GOING, null);
         if (sphereBoss.currentLocation[2] == 0 &&

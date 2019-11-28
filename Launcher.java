@@ -97,9 +97,9 @@ public class Launcher extends JFrame
     private void startGame()
     {
         LevelsProcessor levelsProcessor = new LevelsProcessor();
-        LevelsProcessor.SinglePlayerLevel singlePlayerLevel = levelsProcessor.getLevelOne();
+        LevelsProcessor.GameLevel gameLevel = levelsProcessor.getLevelOne();
         Runnable setLauncherVisible = () -> this.setVisible(true);
-        Engine engine = new Engine(singlePlayerLevel, setLauncherVisible);
+        Engine engine = new Engine(gameLevel, setLauncherVisible);
 
         this.setVisible(false);
 

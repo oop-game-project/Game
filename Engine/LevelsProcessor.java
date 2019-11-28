@@ -13,7 +13,7 @@ import java.util.HashMap;
  **/
 public class LevelsProcessor
 {
-    public class SinglePlayerLevel
+    public class GameLevel
     {
         public final int[] gameFieldSize;
 
@@ -29,7 +29,7 @@ public class LevelsProcessor
          **/
         public HashMap<Long, ArrayList<MortalObject>> nonSpawnedMobs;
 
-        public SinglePlayerLevel(
+        public GameLevel(
             int[] inputGameFieldSize,
             Player inputPlayer,
             ArrayList<MortalObject> inputMobs,
@@ -141,7 +141,7 @@ public class LevelsProcessor
         return nonSpawnedMobs;
     }
 
-    public SinglePlayerLevel getLevelOne()
+    public LevelsProcessor.GameLevel getLevelOne()
     {
         Player levelOnePlayer = new Player(
             new int[] { 175, 350, 0 });
@@ -153,7 +153,7 @@ public class LevelsProcessor
                 MINIMAL_MOVING_SPEED),
             false);
 
-        return new SinglePlayerLevel(
+        return new LevelsProcessor.GameLevel(
             new int[] { 700, 700, 0 },
             levelOnePlayer,
             this.getLevelOneMobs(),

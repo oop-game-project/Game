@@ -1,6 +1,6 @@
 package GUI;
 
-import Engine.LevelsProcessor.SinglePlayerLevel;
+import Engine.LevelsProcessor.GameLevel;
 
 import java.awt.event.KeyListener;
 
@@ -8,6 +8,6 @@ public interface GUI
 {
     void init(
         KeyListener engineAsKeyListener,
-        SinglePlayerLevel inputLevel);
+        GameLevel inputLevel);
     void render();
 }

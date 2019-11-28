@@ -25,7 +25,7 @@ class CollisionsProcessorTest {
         SphereBoss sphereBoss = new SphereBoss(new int[] {200, 200, 1},
                                                                         new int [] {0, 0, 0}, false);
 
-        LevelsProcessor.SinglePlayerLevel level = levelsProcessor.new SinglePlayerLevel(
+        LevelsProcessor.GameLevel level = levelsProcessor.new GameLevel(
                 fieldSize, player, mobs, sphereBoss, null);
         level.projectiles.add(new BasicProjectile(new int[]{250, 250, 0}, mobs.get(0)));
         level.projectiles.add(new BasicProjectile(new int[]{300, 300, 0}, player));
@@ -35,7 +35,7 @@ class CollisionsProcessorTest {
     }
     @Test
     void getPlayerCollisions() {
-        LevelsProcessor.SinglePlayerLevel level = levelsProcessor.new SinglePlayerLevel(
+        LevelsProcessor.GameLevel level = levelsProcessor.new GameLevel(
                 fieldSize, player, new ArrayList<>(), null, null);
         collision = collisionsProcessor.getCollision(level, new int[]{401, 0, 0}, player);
         assertEquals(collision.event, CollisionsProcessor.GameEvent.OUT_HORIZONTAL);
@@ -68,7 +68,7 @@ class CollisionsProcessorTest {
     }
     @Test
     void getSphereMobCollision() {
-        LevelsProcessor.SinglePlayerLevel level = levelsProcessor.new SinglePlayerLevel(
+        LevelsProcessor.GameLevel level = levelsProcessor.new GameLevel(
                 fieldSize, player, new ArrayList<>(), null, null);
         SphereMob sphereMob = new SphereMob(new int[]{300, 290, 0}, new int[]{0,0,0}, false);
         level.mobs.add(sphereMob);
@@ -81,7 +81,7 @@ class CollisionsProcessorTest {
     }
     @Test
     void getSphereBossCollision() {
-        LevelsProcessor.SinglePlayerLevel level = levelsProcessor.new SinglePlayerLevel(
+        LevelsProcessor.GameLevel level = levelsProcessor.new GameLevel(
                 fieldSize, player, new ArrayList<>(), null, null);
         SphereBoss sphereBoss = new SphereBoss(new int[]{100, 300, 0}, new int[]{0,0,0}, false);
         level.mobs.add(sphereBoss);
@@ -97,7 +97,7 @@ class CollisionsProcessorTest {
         mobs.add(new SphereMob(new int[] {100, 100, 0}, new int[] {0,0,0}, false));
         SphereBoss sphereBoss = new SphereBoss(new int[] {600, 600, 0},
                                                                         new int [] {0, 0, 0}, false);
-        LevelsProcessor.SinglePlayerLevel level = levelsProcessor.new SinglePlayerLevel(
+        LevelsProcessor.GameLevel level = levelsProcessor.new GameLevel(
                 fieldSize, player, mobs, sphereBoss, null);
         BasicProjectile projectileKilledPlayer = new BasicProjectile(new int[]{290, 290, 0}, sphereBoss);
         level.projectiles.add(projectileKilledPlayer);

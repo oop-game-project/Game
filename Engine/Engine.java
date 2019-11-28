@@ -2,7 +2,7 @@ package Engine;
 
 import GUI.GUI;
 import GUI.GUI_2D;
-import Engine.LevelsProcessor.SinglePlayerLevel;
+
 import static Engine.LevelsProcessor.*;
 import Engine.CollisionsProcessor.*;
 import Engine.GameObjects.*;
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class Engine extends WindowAdapter implements KeyListener
 {
-    public Engine(SinglePlayerLevel inputLevel, Runnable setLauncherVisibleInput)
+    public Engine(LevelsProcessor.GameLevel inputLevel, Runnable setLauncherVisibleInput)
     {
         this.setLauncherVisible = setLauncherVisibleInput;
         this.currentLevel = inputLevel;
@@ -125,7 +125,7 @@ public class Engine extends WindowAdapter implements KeyListener
             // }
 
             // 'currentLevel' reference shortening
-            private final SinglePlayerLevel currentLevel = Engine.this.currentLevel;
+            private final LevelsProcessor.GameLevel currentLevel = Engine.this.currentLevel;
 
             /**
              * Fire per this amount of milliseconds
@@ -268,7 +268,7 @@ public class Engine extends WindowAdapter implements KeyListener
         private class StateUpdater
         {
             // 'currentLevel' reference shortening
-            private final SinglePlayerLevel currentLevel = Engine.this.currentLevel;
+            private final LevelsProcessor.GameLevel currentLevel = Engine.this.currentLevel;
             private final CollisionsProcessor collisionsProcessor =
                 new CollisionsProcessor(this.currentLevel.gameFieldSize);
 
@@ -691,7 +691,7 @@ public class Engine extends WindowAdapter implements KeyListener
         }
     }
 
-    private final SinglePlayerLevel currentLevel;
+    private final LevelsProcessor.GameLevel currentLevel;
     private final LevelUpdater levelUpdater;
     /**
      * Change main GUI here: GUI_2D or GUI_3D

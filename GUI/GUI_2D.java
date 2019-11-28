@@ -3,7 +3,7 @@ package GUI;
 // Inner imports
 import Engine.GameObjects.*;
 import static Engine.GameObjects.PaintingConst.*;
-import Engine.LevelsProcessor.SinglePlayerLevel;
+import Engine.LevelsProcessor.GameLevel;
 
 import java.awt.Image;
 import java.awt.Color;
@@ -33,7 +33,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
     private final JFrame gameMainFrame = new JFrame();
 
     @Override
-    public void init(KeyListener engine, SinglePlayerLevel inputLevel)
+    public void init(KeyListener engine, GameLevel inputLevel)
     {
         this.gameObjectsPainter = new GameObjectsPainter(inputLevel);
 
@@ -231,9 +231,9 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         }
 
         ImagesContainer gameImages = new ImagesContainer();
-        private final SinglePlayerLevel renderingLevel;
+        private final GameLevel renderingLevel;
 
-        private GameObjectsPainter(SinglePlayerLevel inputLevel)
+        private GameObjectsPainter(GameLevel inputLevel)
         {
             this.renderingLevel = inputLevel;
 
