@@ -241,7 +241,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         }
         private void paintPlayer(@NotNull Graphics graphics)
         {
-            int[] playerLocation = this.renderingLevel.player.currentLocation;
+            int[] playerLocation = this.renderingLevel.player.getCurrentLocation();
 
             graphics.setColor(Color.BLUE);
             graphics.fillPolygon(
@@ -263,7 +263,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         private void paintSphereMob(Graphics graphics, @NotNull SphereMob sphereMob)
         {
             Image drawingImage;
-            switch (sphereMob.currentLocation[2])
+            switch (sphereMob.getCurrentLocation()[2])
             {
                 case 0:
                 {
@@ -287,14 +287,14 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
                 {
                     throw new IllegalStateException(
                         "SphereMob have incorrect third coordinate: "
-                        + sphereMob.currentLocation[2]);
+                        + sphereMob.getCurrentLocation()[2]);
                 }
             }
 
             graphics.drawImage(
                 drawingImage,
-                sphereMob.currentLocation[0],
-                sphereMob.currentLocation[1],
+                sphereMob.getCurrentLocation()[0],
+                sphereMob.getCurrentLocation()[1],
                 null);
         }
 
@@ -307,8 +307,8 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
             else
                 graphics.setColor(Color.RED);
             graphics.fillOval(
-                projectile.currentLocation[0],
-                projectile.currentLocation[1],
+                projectile.getCurrentLocation()[0],
+                projectile.getCurrentLocation()[1],
                 BASIC_PROJECTILE_DIAMETER,
                 BASIC_PROJECTILE_DIAMETER);
         }
@@ -317,7 +317,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         {
             Image drawingImage;
             Image auxiliaryDrawingImage;
-            switch (sphereBoss.currentLocation[2])
+            switch (sphereBoss.getCurrentLocation()[2])
             {
                 case 0:
                 {
@@ -344,22 +344,22 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
                 {
                     throw new IllegalStateException(
                         "SphereBoss instance has incorrect third coordinate: "
-                        + sphereBoss.currentLocation[2]);
+                        + sphereBoss.getCurrentLocation()[2]);
                 }
             }
 
             graphics.drawImage(
                 drawingImage,
-                sphereBoss.currentLocation[0],
-                sphereBoss.currentLocation[1],
+                sphereBoss.getCurrentLocation()[0],
+                sphereBoss.getCurrentLocation()[1],
                 null);
 
             BiConsumer<Integer, Integer> drawBossTower =
                 (Integer xModifier, Integer yModifier) ->
                     graphics.drawImage(
                         auxiliaryDrawingImage,
-                        sphereBoss.currentLocation[0] + xModifier,
-                        sphereBoss.currentLocation[1] + yModifier,
+                        sphereBoss.getCurrentLocation()[0] + xModifier,
+                        sphereBoss.getCurrentLocation()[1] + yModifier,
                         null);
 
             // Left tower
@@ -440,7 +440,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
             this.renderingLevel.mobs.forEach(
                 mobObject ->
                 {
-                    if (mobObject.currentLocation[2] == -1)
+                    if (mobObject.getCurrentLocation()[2] == -1)
                         this.paintMovableObject(graphics, mobObject);
                 });
         }
@@ -454,7 +454,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
             this.renderingLevel.mobs.forEach(
                 mobObject ->
                 {
-                    if (mobObject.currentLocation[2] == 0)
+                    if (mobObject.getCurrentLocation()[2] == 0)
                         this.paintMovableObject(graphics, mobObject);
                 });
 
@@ -473,7 +473,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
             this.renderingLevel.mobs.forEach(
                 mobObject ->
                 {
-                    if (mobObject.currentLocation[2] == 1)
+                    if (mobObject.getCurrentLocation()[2] == 1)
                         this.paintMovableObject(graphics, mobObject);
                 });
         }

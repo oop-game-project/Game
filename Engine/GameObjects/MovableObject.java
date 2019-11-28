@@ -10,7 +10,7 @@ public abstract class MovableObject extends GameObject implements Cloneable
          * Improvement: if this coordinates were in GameObject because all game
          *  objects have coordinates actually
          */
-        public int[] currentLocation;
+        private int[] currentLocation;
 
         MovableObject(@NotNull int[] inputLocation)
         {
@@ -19,13 +19,37 @@ public abstract class MovableObject extends GameObject implements Cloneable
             this.currentLocation = inputLocation.clone();
         }
 
+        public int[] getCurrentLocation()
+        {
+            return this.currentLocation.clone();
+        }
+
+        public void setCurrentLocation(@NotNull int[] newValue)
+        {
+            this.currentLocation = newValue.clone();
+        }
+
+        public void setCurrentLocationX(int newValue)
+        {
+            this.currentLocation[0] = newValue;
+        }
+
+        public void setCurrentLocationY(int newValue)
+        {
+            this.currentLocation[1] = newValue;
+        }
+
+        public void setCurrentLocationZ(int newValue)
+        {
+            this.currentLocation[2] = newValue;
+        }
+
         public void modifyLocation(@NotNull int[] locationModifier)
         {
             this.currentLocation[0] += locationModifier[0];
             this.currentLocation[1] += locationModifier[1];
             this.currentLocation[2] += locationModifier[2];
         }
-
         @Override
         public Object clone() throws CloneNotSupportedException
         {

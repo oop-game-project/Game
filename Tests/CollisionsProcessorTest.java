@@ -74,7 +74,7 @@ class CollisionsProcessorTest {
         level.mobs.add(sphereMob);
         collision = collisionsProcessor.getCollision(level, new int[]{0,0,0}, sphereMob);
         assertEquals(collision.event, CollisionsProcessor.GameEvent.SPHERE_MOB_COLLIDED_PLAYER);
-        sphereMob.currentLocation = new int[]{100, 100, 0};
+        sphereMob.setCurrentLocation(new int[]{100, 100, 0});
         level.projectiles.add(new BasicProjectile(new int[]{90, 90, 0}, player));
         collision = collisionsProcessor.getCollision(level, new int[]{0,0,0}, sphereMob);
         assertEquals(collision.event, CollisionsProcessor.GameEvent.SPHERE_MOB_COLLIDED_BASIC_PROJECTILE);
@@ -87,7 +87,7 @@ class CollisionsProcessorTest {
         level.mobs.add(sphereBoss);
         collision = collisionsProcessor.getCollision(level, new int[]{0,0,0}, sphereBoss);
         assertEquals(collision.event, CollisionsProcessor.GameEvent.SPHERE_BOSS_COLLIDED_PLAYER);
-        sphereBoss.currentLocation = new int[]{50, 50, 0};
+        sphereBoss.setCurrentLocation(new int[]{50, 50, 0});
         level.projectiles.add(new BasicProjectile(new int[]{90, 90, 0}, player));
         collision = collisionsProcessor.getCollision(level, new int[]{0,0,0}, sphereBoss);
         assertEquals(collision.event, CollisionsProcessor.GameEvent.SPHERE_BOSS_COLLIDED_BASIC_PROJECTILE);

@@ -192,9 +192,9 @@ public class Engine extends WindowAdapter implements KeyListener
                     // BasicProjectile is a circle that should be spawned in front of
                     // player when fired
                     int[] BasicProjectileSpawnLocation = new int[]{
-                        this.currentLevel.player.currentLocation[0] - 5,
-                        this.currentLevel.player.currentLocation[1] - 10,
-                        this.currentLevel.player.currentLocation[2]};
+                        this.currentLevel.player.getCurrentLocation()[0] - 5,
+                        this.currentLevel.player.getCurrentLocation()[1] - 10,
+                        this.currentLevel.player.getCurrentLocation()[2]};
                     this.currentLevel.projectiles.add(
                         new BasicProjectile(
                             BasicProjectileSpawnLocation,
@@ -210,7 +210,7 @@ public class Engine extends WindowAdapter implements KeyListener
                 // Spawn SphereBoss' projectiles based on:
                 // 1. If SphereBoss is currently on surface
                 // 2. When last projectile was fired
-                if (sphereBoss.currentLocation[2] == 0
+                if (sphereBoss.getCurrentLocation()[2] == 0
                     && Engine.this.gameLoopIterationsCounter
                        - sphereBoss.getLastVolleyIteration()
                        > SPHERE_BOSS_VOLLEY_FREQUENCY)
@@ -227,11 +227,11 @@ public class Engine extends WindowAdapter implements KeyListener
                         this.currentLevel.projectiles.add(
                             new BasicProjectile(
                                 new int[] {
-                                    sphereBoss.currentLocation[0]
+                                    sphereBoss.getCurrentLocation()[0]
                                     + spawnLocationsModifiers[i * 2],
-                                    sphereBoss.currentLocation[1]
+                                    sphereBoss.getCurrentLocation()[1]
                                     + spawnLocationsModifiers[i * 2 + 1],
-                                    sphereBoss.currentLocation[2]
+                                    sphereBoss.getCurrentLocation()[2]
                                 },
                                 sphereBoss));
 
@@ -509,7 +509,7 @@ public class Engine extends WindowAdapter implements KeyListener
                 }
 
                 sphereMob.modifyLocation(sphereMob.autoMovingVector);
-                sphereMob.currentLocation[2] = this.getCyclicZChange();
+                sphereMob.setCurrentLocationZ(this.getCyclicZChange());
             }
 
             private void updateSphereBossState(@NotNull SphereBoss sphereBoss)
@@ -526,7 +526,7 @@ public class Engine extends WindowAdapter implements KeyListener
                             sphereBoss.autoMovingVector[1] = 0;
                         }
 
-                        sphereBoss.currentLocation[2] = this.getCyclicZChange();
+                        sphereBoss.setCurrentLocationZ(this.getCyclicZChange());
                         break;
                     }
 
@@ -535,7 +535,7 @@ public class Engine extends WindowAdapter implements KeyListener
                     case SPHERE_BOSS_IS_OUT_HORIZONTAL:
                     {
                         sphereBoss.autoMovingVector[0] *= -1;
-                        sphereBoss.currentLocation[2] = this.getCyclicZChange();
+                        sphereBoss.setCurrentLocationZ(this.getCyclicZChange());
                         break;
                     }
 

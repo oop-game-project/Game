@@ -34,17 +34,17 @@ public class CollisionsProcessor {
 
     private Collision getPlayerCollision(Player player, int[] moveVector, LevelsProcessor.GameLevel currentLevel) {
 
-        if (playerOutOfHorizontalBorders(moveVector[0], player.currentLocation[0]) &&
-                playerOutOfVerticalBorders(moveVector[1], player.currentLocation[1]))
+        if (playerOutOfHorizontalBorders(moveVector[0], player.getCurrentLocation()[0]) &&
+                playerOutOfVerticalBorders(moveVector[1], player.getCurrentLocation()[1]))
             return new Collision(player, GameEvent.OUT_DIAGONAL, null);
-        if (playerOutOfHorizontalBorders(moveVector[0], player.currentLocation[0]))
+        if (playerOutOfHorizontalBorders(moveVector[0], player.getCurrentLocation()[0]))
             return new Collision(player, GameEvent.OUT_HORIZONTAL, null);
-        if (playerOutOfVerticalBorders(moveVector[1], player.currentLocation[1]))
+        if (playerOutOfVerticalBorders(moveVector[1], player.getCurrentLocation()[1]))
             return new Collision(player, GameEvent.OUT_VERTICAL, null);
 
         for (int i = 0; i < currentLevel.projectiles.size(); i++) {
             BasicProjectile projectile = (BasicProjectile)currentLevel.projectiles.get(i);
-            if (projectile.currentLocation[2] != 0) continue;
+            if (projectile.getCurrentLocation()[2] != 0) continue;
             if (!projectile.firedByPlayer &&
                     checkCollided(player, projectile, PaintingConst.PLAYER_SIDE_LENGTH,
                             PaintingConst.BASIC_PROJECTILE_DIAMETER, PaintingConst.PLAYER_SIDE_LENGTH / 2))
@@ -52,7 +52,7 @@ public class CollisionsProcessor {
         }
         for (int i = 0; i < currentLevel.mobs.size(); i++) {
             MovableObject sphereMob = currentLevel.mobs.get(i);
-            if (sphereMob.currentLocation[2] != 0) continue;
+            if (sphereMob.getCurrentLocation()[2] != 0) continue;
             if (sphereMob instanceof SphereBoss)
                 if (checkCollided(player, sphereMob, PaintingConst.PLAYER_SIDE_LENGTH,
                         PaintingConst.SPHERE_BOSS_DIAMETER, PaintingConst.PLAYER_SIDE_LENGTH / 2))
@@ -68,16 +68,16 @@ public class CollisionsProcessor {
     private Collision getBasicProjectileCollision(BasicProjectile basicProjectile, int[] moveVector,
                                                   LevelsProcessor.GameLevel currentLevel) {
 
-        if (basicProjectile.currentLocation[1] > sizeY ||
-                basicProjectile.currentLocation[1] < 0)
+        if (basicProjectile.getCurrentLocation()[1] > sizeY ||
+                basicProjectile.getCurrentLocation()[1] < 0)
             return new Collision(basicProjectile, GameEvent.BASIC_PROJECTILE_IS_OUT, null);
-        if (basicProjectile.currentLocation[2] == 0 && !basicProjectile.firedByPlayer &&
+        if (basicProjectile.getCurrentLocation()[2] == 0 && !basicProjectile.firedByPlayer &&
                 checkCollided(currentLevel.player, basicProjectile, PaintingConst.PLAYER_SIDE_LENGTH,
                         PaintingConst.BASIC_PROJECTILE_DIAMETER, PaintingConst.PLAYER_SIDE_LENGTH / 2))
             return new Collision(basicProjectile, GameEvent.BASIC_PROJECTILE_COLLIDED_PLAYER, currentLevel.player);
         for (int i = 0; i < currentLevel.mobs.size(); i++) {
             MovableObject sphereMob = currentLevel.mobs.get(i);
-            if (sphereMob.currentLocation[2] != basicProjectile.currentLocation[2]) continue;
+            if (sphereMob.getCurrentLocation()[2] != basicProjectile.getCurrentLocation()[2]) continue;
             if (sphereMob instanceof SphereBoss)
                 if (basicProjectile.firedByPlayer &&
                         checkCollided(basicProjectile, sphereMob, PaintingConst.BASIC_PROJECTILE_DIAMETER,
@@ -93,18 +93,18 @@ public class CollisionsProcessor {
     }
 
     private Collision getSphereMobCollision(SphereMob sphereMob, int[] moveVector, LevelsProcessor.GameLevel currentLevel) {
-        if (sphereMob.currentLocation[2] == 0 &&
+        if (sphereMob.getCurrentLocation()[2] == 0 &&
                 checkCollided(currentLevel.player, sphereMob, PaintingConst.PLAYER_SIDE_LENGTH,
                         PaintingConst.SPHERE_MOB_DIAMETER, PaintingConst.PLAYER_SIDE_LENGTH / 2))
             return new Collision(sphereMob, GameEvent.SPHERE_MOB_COLLIDED_PLAYER, currentLevel.player);
-        if (sphereMob.currentLocation[0] > sizeX || sphereMob.currentLocation[0] < 0)
+        if (sphereMob.getCurrentLocation()[0] > sizeX || sphereMob.getCurrentLocation()[0] < 0)
             return new Collision(sphereMob, GameEvent.SPHERE_MOB_IS_OUT_HORIZONTAL, null);
-        if (sphereMob.currentLocation[1] > sizeY || sphereMob.currentLocation[1] < 0)
+        if (sphereMob.getCurrentLocation()[1] > sizeY || sphereMob.getCurrentLocation()[1] < 0)
             return new Collision(sphereMob, GameEvent.SPHERE_MOB_IS_OUT_VERTICAL, null);
 
         for (int i = 0; i < currentLevel.projectiles.size(); i++) {
             BasicProjectile basicProjectile = (BasicProjectile)currentLevel.projectiles.get(i);
-            if (basicProjectile.currentLocation[2] != sphereMob.currentLocation[2]) continue;
+            if (basicProjectile.getCurrentLocation()[2] != sphereMob.getCurrentLocation()[2]) continue;
             if (basicProjectile.firedByPlayer &&
                     checkCollided(basicProjectile, sphereMob, PaintingConst.BASIC_PROJECTILE_DIAMETER,
                             PaintingConst.SPHERE_MOB_DIAMETER))
@@ -116,17 +116,17 @@ public class CollisionsProcessor {
     }
 
     private Collision getSphereBossCollision(SphereBoss sphereBoss, int[] moveVector, LevelsProcessor.GameLevel currentLevel) {
-        if (sphereBoss.currentLocation[1] < 50)
+        if (sphereBoss.getCurrentLocation()[1] < 50)
             return new Collision(sphereBoss, GameEvent.SPHERE_BOSS_IS_GOING, null);
-        if (sphereBoss.currentLocation[2] == 0 &&
+        if (sphereBoss.getCurrentLocation()[2] == 0 &&
                 checkCollided(currentLevel.player, sphereBoss, PaintingConst.PLAYER_SIDE_LENGTH,
                 PaintingConst.SPHERE_BOSS_DIAMETER, PaintingConst.PLAYER_SIDE_LENGTH / 2))
             return new Collision(sphereBoss, GameEvent.SPHERE_BOSS_COLLIDED_PLAYER, currentLevel.player);
-        if (sphereBoss.currentLocation[0] <= 0 || sphereBoss.currentLocation[0] + PaintingConst.SPHERE_BOSS_DIAMETER >= sizeY)
+        if (sphereBoss.getCurrentLocation()[0] <= 0 || sphereBoss.getCurrentLocation()[0] + PaintingConst.SPHERE_BOSS_DIAMETER >= sizeY)
             return new Collision(sphereBoss, GameEvent.SPHERE_BOSS_IS_OUT_HORIZONTAL, null);
         for (int i = 0; i < currentLevel.projectiles.size(); i++) {
             BasicProjectile projectile = (BasicProjectile)currentLevel.projectiles.get(i);
-            if (projectile.currentLocation[2] != sphereBoss.currentLocation[2]) continue;
+            if (projectile.getCurrentLocation()[2] != sphereBoss.getCurrentLocation()[2]) continue;
             if (projectile.firedByPlayer &&
             checkCollided(projectile, sphereBoss, PaintingConst.BASIC_PROJECTILE_DIAMETER,
                     PaintingConst.SPHERE_BOSS_DIAMETER))
@@ -137,10 +137,10 @@ public class CollisionsProcessor {
 
     private boolean checkCollided(MovableObject firstObject, MovableObject secondObject,
                                   int firstConst, int secondConst, int accurary) {
-        return firstObject.currentLocation[0] - accurary + firstConst >= secondObject.currentLocation[0] &&
-                firstObject.currentLocation[0] - accurary <= secondObject.currentLocation[0] + secondConst &&
-                firstObject.currentLocation[1] <= secondObject.currentLocation[1] + secondConst &&
-                firstObject.currentLocation[1] + firstConst >= secondObject.currentLocation[1];
+        return firstObject.getCurrentLocation()[0] - accurary + firstConst >= secondObject.getCurrentLocation()[0] &&
+                firstObject.getCurrentLocation()[0] - accurary <= secondObject.getCurrentLocation()[0] + secondConst &&
+                firstObject.getCurrentLocation()[1] <= secondObject.getCurrentLocation()[1] + secondConst &&
+                firstObject.getCurrentLocation()[1] + firstConst >= secondObject.getCurrentLocation()[1];
     }
     private boolean checkCollided(MovableObject firstObject, MovableObject secondObject,
                                   int firstConst, int secondConst) {
