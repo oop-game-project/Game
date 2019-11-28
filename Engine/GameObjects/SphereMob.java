@@ -21,7 +21,7 @@ public class SphereMob extends MortalObject implements Cloneable
      * Improvement: place it in "GameMob" class between mob classes
      *  and MortalObject
      **/
-    public boolean borderWasCrossed;
+    private boolean borderWasCrossed;
 
     public SphereMob(
         @NotNull int[] inputLocation,
@@ -35,6 +35,16 @@ public class SphereMob extends MortalObject implements Cloneable
     }
 
     public int getHitPointsMax() { return 2; }
+
+    public boolean getBorderWasCrossed()
+    {
+        return this.borderWasCrossed;
+    }
+
+    public void setBorderWasCrossed()
+    {
+        this.borderWasCrossed = true;
+    }
 
     @Override
     public Object clone() throws CloneNotSupportedException

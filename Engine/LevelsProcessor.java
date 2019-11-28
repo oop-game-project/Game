@@ -82,7 +82,7 @@ public class LevelsProcessor
                 new SphereMob(
                     waveMob.currentLocation,
                     waveMob.autoMovingVector,
-                    waveMob.borderWasCrossed);
+                    waveMob.getBorderWasCrossed());
             waveMob.modifyLocation(locationModifier);
 
             mobs.add(waveMob);

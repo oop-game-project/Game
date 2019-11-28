@@ -468,8 +468,8 @@ public class Engine extends WindowAdapter implements KeyListener
                 {
                     case OK:
                     {
-                        if (!sphereMob.borderWasCrossed)
-                            sphereMob.borderWasCrossed = true;
+                        if (!sphereMob.getBorderWasCrossed())
+                            sphereMob.setBorderWasCrossed();
                         break;
                     }
 
@@ -496,7 +496,7 @@ public class Engine extends WindowAdapter implements KeyListener
                     case SPHERE_MOB_IS_OUT_HORIZONTAL:
                     case SPHERE_MOB_IS_OUT_VERTICAL:
                     {
-                        if (sphereMob.borderWasCrossed)
+                        if (sphereMob.getBorderWasCrossed())
                             sphereMob.setShouldBeDespawned();
                         break;
                     }
