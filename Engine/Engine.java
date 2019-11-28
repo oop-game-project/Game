@@ -130,7 +130,7 @@ public class Engine extends WindowAdapter implements KeyListener
             /**
              * Fire per this amount of milliseconds
              *
-             * WouldBeBetter change to "per this amount of game loop iterations"
+             * Improvement: change to "per this amount of game loop iterations"
              **/
             private static final int PLAYER_FIRING_FREQUENCY = 50;
             /**
@@ -349,7 +349,7 @@ public class Engine extends WindowAdapter implements KeyListener
                         case OK:
                             break;
 
-                        // WouldBeBetter teleport player to the right position, whether
+                        // Improvement: teleport player to the right position, whether
                         //  player deep out of bounds or not. Not just leave player
                         //  standing still
                         case OUT_HORIZONTAL:
@@ -377,7 +377,7 @@ public class Engine extends WindowAdapter implements KeyListener
                             {
                                 this.currentLevel.player
                                     .receiveDamageFromBasicProjectile();
-                                playerCollision.collidedObject.shouldBeDespawned = true;
+                                playerCollision.collidedObject.setShouldBeDespawned();
                             }
 
                             break;
@@ -419,7 +419,7 @@ public class Engine extends WindowAdapter implements KeyListener
 
                     case BASIC_PROJECTILE_IS_OUT:
                     {
-                        basicProjectile.shouldBeDespawned = true;
+                        basicProjectile.setShouldBeDespawned();
                         break;
                     }
 
@@ -430,7 +430,7 @@ public class Engine extends WindowAdapter implements KeyListener
                         else
                         {
                             this.currentLevel.player.receiveDamageFromBasicProjectile();
-                            basicProjectile.shouldBeDespawned = true;
+                            basicProjectile.setShouldBeDespawned();
                         }
 
                         break;
@@ -445,7 +445,7 @@ public class Engine extends WindowAdapter implements KeyListener
                         {
                             ((MortalObject) basicProjectileCollision.collidedObject)
                                 .receiveDamageFromBasicProjectile();
-                            basicProjectile.shouldBeDespawned = true;
+                            basicProjectile.setShouldBeDespawned();
                         }
 
                         break;
@@ -478,9 +478,9 @@ public class Engine extends WindowAdapter implements KeyListener
                             .firedByPlayer)
                         {
                             sphereMob.receiveDamageFromBasicProjectile();
-                            sphereMobCollision.collidedObject.shouldBeDespawned = true;
+                            sphereMobCollision.collidedObject.setShouldBeDespawned();
                             if (sphereMob.isDead())
-                                sphereMob.shouldBeDespawned = true;
+                                sphereMob.setShouldBeDespawned();
                         }
                         break;
                     }
@@ -496,7 +496,7 @@ public class Engine extends WindowAdapter implements KeyListener
                     case SPHERE_MOB_IS_OUT_VERTICAL:
                     {
                         if (sphereMob.borderWasCrossed)
-                            sphereMob.shouldBeDespawned = true;
+                            sphereMob.setShouldBeDespawned();
                         break;
                     }
 
@@ -551,7 +551,7 @@ public class Engine extends WindowAdapter implements KeyListener
                         {
                             sphereBoss.receiveDamageFromBasicProjectile();
                             if (sphereBoss.isDead())
-                                sphereBoss.shouldBeDespawned = true;
+                                sphereBoss.setShouldBeDespawned();
                         }
                         break;
                     }
@@ -642,17 +642,17 @@ public class Engine extends WindowAdapter implements KeyListener
         private void despawnProjectiles()
         {
             Engine.this.currentLevel.projectiles.removeIf(
-                projectile -> projectile.shouldBeDespawned);
+                GameObject::getShouldBeDespawned);
         }
 
         private void despawnMobs()
         {
-            Engine.this.currentLevel.mobs.removeIf(mob -> mob.shouldBeDespawned);
+            Engine.this.currentLevel.mobs.removeIf(GameObject::getShouldBeDespawned);
         }
 
         private void updateLevel()
         {
-            // WouldBeBetter check if pause is active (Latin 'P' was pressed)
+            // Improvement: check if pause is active (Latin 'P' was pressed)
 
             // Move player
             this.stateUpdater.updatePlayerState();

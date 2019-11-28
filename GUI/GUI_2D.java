@@ -2,8 +2,8 @@ package GUI;
 
 // Inner imports
 import Engine.GameObjects.*;
-import Engine.LevelsProcessor.SinglePlayerLevel;
 import static Engine.GameObjects.PaintingConst.*;
+import Engine.LevelsProcessor.SinglePlayerLevel;
 
 import java.awt.Image;
 import java.awt.Color;
@@ -584,7 +584,7 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         // in GUI and gameLoop threads level is shared. When level is updating and
         // rendering at the same time, concurrent level modification occurs
         //
-        // WouldBeBetter implement solution without thread sleeping. Level cloning maybe?
+        // Improvement: implement solution without thread sleeping. Level cloning maybe?
         while (levelRenderingIsNeeded)
             try
             {

@@ -18,7 +18,7 @@ public class SphereMob extends MortalObject implements Cloneable
      * despawning this mob immediately. I.e., every GameObject in the game
      * should eventually be fully on the game field
      *
-     * WouldBeBetter place it in "GameMob" class between mob classes
+     * Improvement: place it in "GameMob" class between mob classes
      *  and MortalObject
      **/
     public boolean borderWasCrossed;

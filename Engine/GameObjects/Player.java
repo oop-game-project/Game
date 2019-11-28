@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class Player extends MortalObject implements Cloneable
 {
-    // WouldBeBetter check iterations count, not amount of time
+    // Improvement: check iterations count, not amount of time
     public long lastProjectileWasFiredTime = 0;
 
     public Player(@NotNull int[] inputLocation)

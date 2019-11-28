@@ -16,9 +16,9 @@ public class GameObjectsOld
     public abstract class MovableObject extends GameObject implements Cloneable
     {
         /**
-         * WouldBeBetter actually have "double" coordinates for moving
+         * Improvement: actually have "double" coordinates for moving
          *  speed less than 1 pixel per iteration
-         * WouldBeBetter if this coordinates were in GameObject because all game
+         * Improvement: if this coordinates were in GameObject because all game
          *  objects have coordinates actually
          */
         public int[] currentLocation;
@@ -120,7 +120,7 @@ public class GameObjectsOld
 
     public class Player extends MortalObject implements Cloneable
     {
-        // WouldBeBetter check iterations count, not amount of time
+        // Improvement: check iterations count, not amount of time
         public long lastProjectileWasFiredTime = 0;
 
         public Player(@NotNull int[] inputLocation)
@@ -153,7 +153,7 @@ public class GameObjectsOld
          * despawning this mob immediately. I.e., every GameObject in the game
          * should eventually be fully on the game field
          *
-         * WouldBeBetter place it in "GameMob" class between mob classes
+         * Improvement: place it in "GameMob" class between mob classes
          *  and MortalObject
          **/
         public boolean borderWasCrossed;

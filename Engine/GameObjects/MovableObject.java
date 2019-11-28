@@ -5,9 +5,9 @@ import org.jetbrains.annotations.NotNull;
 public abstract class MovableObject extends GameObject implements Cloneable
 {
         /**
-         * WouldBeBetter actually have "double" coordinates for moving
+         * Improvement: actually have "double" coordinates for moving
          *  speed less than 1 pixel per iteration
-         * WouldBeBetter if this coordinates were in GameObject because all game
+         * Improvement: if this coordinates were in GameObject because all game
          *  objects have coordinates actually
          */
         public int[] currentLocation;
