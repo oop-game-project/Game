@@ -186,7 +186,7 @@ public class Engine extends WindowAdapter implements KeyListener
                 // 2. When last projectile was fired
                 if (this.playerIsFiring
                     && System.currentTimeMillis()
-                       - this.currentLevel.player.lastProjectileWasFiredTime
+                       - this.currentLevel.player.getLastProjectileWasFiredTime()
                        > PLAYER_FIRING_FREQUENCY)
                 {
                     // BasicProjectile is a circle that should be spawned in front of
@@ -200,8 +200,8 @@ public class Engine extends WindowAdapter implements KeyListener
                             BasicProjectileSpawnLocation,
                             this.currentLevel.player));
 
-                    this.currentLevel.player.lastProjectileWasFiredTime =
-                        System.currentTimeMillis();
+                    this.currentLevel.player.setLastProjectileWasFiredTime(
+                        System.currentTimeMillis());
                 }
             }
 
