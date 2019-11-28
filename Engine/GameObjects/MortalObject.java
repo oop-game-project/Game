@@ -1,22 +1,15 @@
 package Engine.GameObjects;
 
-public abstract class MortalObject extends MovableObject
-    implements Cloneable
+public abstract class MortalObject extends MovableObject implements Cloneable
 {
+    private int hitPoints = this.getHitPointsMax();
+
     public MortalObject(int[] inputLocation)
     {
         super(inputLocation);
     }
 
     public abstract int getHitPointsMax();
-
-    @Override
-    public Object clone() throws CloneNotSupportedException
-    {
-        return super.clone();
-    }
-
-    private int hitPoints = this.getHitPointsMax();
 
     public boolean isDead()
     {
@@ -39,5 +32,11 @@ public abstract class MortalObject extends MovableObject
     public void receiveDamageFromCollisionWithMob()
     {
         this.addToHitPoints(-1);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException
+    {
+        return super.clone();
     }
 }
