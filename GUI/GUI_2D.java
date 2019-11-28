@@ -484,8 +484,8 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         {
             graphics.drawImage(
                 this.gameImages.GAME_OVER_INSCRIPTION,
-                gameOverInscription.location[0],
-                gameOverInscription.location[1],
+                gameOverInscription.getLocation()[0],
+                gameOverInscription.getLocation()[1],
                 null);
         }
 
@@ -495,8 +495,8 @@ public class GUI_2D extends JPanel implements GUI, KeyListener
         {
             graphics.drawImage(
                 this.gameImages.COMPLETED_INSCRIPTION,
-                completedInscription.location[0],
-                completedInscription.location[1],
+                completedInscription.getLocation()[0],
+                completedInscription.getLocation()[1],
                 null);
         }
 
